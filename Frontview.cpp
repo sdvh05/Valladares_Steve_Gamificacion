@@ -1,4 +1,6 @@
 #include "FrontView.h"
+#include "interior.h"
+
 #include <QPixmap>
 #include <QDebug>
 #include <QLabel>
@@ -7,6 +9,7 @@
 #include <QPropertyAnimation>
 #include <QMessageBox>
 #include <QApplication>
+
 
 FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     : ControlPersonaje(jugadorExistente, parent)
@@ -18,6 +21,8 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
 
     configurarEscena();
     configurarObstaculos();
+    ActualizarCorazones();
+    //mostrarHitboxes();
 
     jugador = jugadorExistente;
 
@@ -82,21 +87,72 @@ void FrontView::configurarObstaculos()
     obstaculos.clear();
 
     // Bordes del mapa
-    obstaculos.append(QRect(0, 0, width(), 100));      // parte superior
-    obstaculos.append(QRect(0, height() - 50, width(), 50)); // parte inferior
+    obstaculos.append(QRect(0, 0, width(), 100));      // arriba
+    obstaculos.append(QRect(0, height() - 50, width(), 50)); // abajo
     obstaculos.append(QRect(0, 0, 40, height()));      // izquierda
     obstaculos.append(QRect(width() - 40, 0, 40, height())); // derecha
 
     // Puerta
-    obstaculos.append(QRect(280, 650, 180, 40)); // puerta, justo delante del jugador
+    obstaculos.append(QRect(280, 650, 180, 40));
+
+    //Puente
+    obstaculos.append(QRect(70,730, 10,10));
+
+    obstaculos.append(QRect(102,706, 10,10));
+    obstaculos.append(QRect(134,690, 10,10));
+    obstaculos.append(QRect(134,690, 10,10));
+    obstaculos.append(QRect(152,686, 10,10));
+
+    obstaculos.append(QRect(660,842, 5,5));
+    obstaculos.append(QRect(600,804, 5,5));
+    obstaculos.append(QRect(548,770, 5,5));
+    obstaculos.append(QRect(506,738, 5,5));
+    obstaculos.append(QRect(480,720, 5,5));
+    obstaculos.append(QRect(70,730, 5,5));
+    obstaculos.append(QRect(462,690, 5,5));
+    obstaculos.append(QRect(462,668, 5,5));
+
+
 }
 
+
+void FrontView::mostrarHitboxes()
+{
+    if (!hitboxLabels.isEmpty()) {
+        qDeleteAll(hitboxLabels);
+        hitboxLabels.clear();
+    }
+
+    for (int i = 0; i < obstaculos.size(); ++i) {
+        QRect obstaculo = obstaculos[i];
+
+        QLabel *label = new QLabel(this);
+        label->setGeometry(obstaculo);
+
+        // Color diferente para bordes vs obstáculos pequeños
+        QString style;
+
+            style = "background-color: rgba(255, 0, 0, 150); border: 2px solid red; color: white; font: bold 8pt;";
+
+        label->setStyleSheet(style);
+        label->setText(QString("%1").arg(i));
+        label->setAlignment(Qt::AlignCenter);
+        label->show();
+
+        hitboxLabels.append(label);
+
+        // Debug en consola
+        qDebug() << "Hitbox" << i
+                 << "Pos: (" << obstaculo.x() << "," << obstaculo.y() << ")"
+                 << "Size:" << obstaculo.width() << "x" << obstaculo.height();
+    }
+}
 
 void FrontView::onMovimientoUpdate()
 {
 
     QRect rectJugador = jugador->geometry();
-     QRect zonaPuerta(280, 680, 180, 100);
+    QRect zonaPuerta(280, 680, 180, 100);
     if (rectJugador.intersects(zonaPuerta)) {
         mostrarHintPuerta();
         hayPuertaCerca = true;
@@ -105,6 +161,8 @@ void FrontView::onMovimientoUpdate()
         hayPuertaCerca = false;
     }
 }
+
+
 
 void FrontView::detectarZonaPuerta() {
     if (!jugador) return;
@@ -137,9 +195,8 @@ void FrontView::EntrarCastillo(){
 
     ResetearMovimiento();
 
-    // Crear la nueva escena pasando el mismo jugador
-    //InsideCastle* interior = new InsideCastle(jugador);
-    //interior->show();
+    Interior* interior = new Interior(jugador);
+    interior->show();
 
     this->close();
 }
@@ -157,6 +214,7 @@ void FrontView::keyPressEvent(QKeyEvent* event){
     if (event->key() == Qt::Key_Q && hayPuertaCerca) {
         EntrarCastillo();
     }
+
 }
 
 

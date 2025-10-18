@@ -25,7 +25,7 @@ Pregunta ColaPreguntas::dequeueCircular() {
     cola.pop();
 
     if (esCircular) {
-        cola.push(pregunta); // Reencolar para modo circular
+        cola.push(pregunta); // Reencolar batalla
     }
 
     return pregunta;
@@ -70,7 +70,7 @@ void ColaPreguntas::cargarPreguntasPorTipo(const QString& tipo) {
     }
 }
 
-// Implementación de las funciones de carga de preguntas
+// CARGAR PREGUNTAS
 void ColaPreguntas::cargarPreguntasArte() {
     clear();
 
@@ -86,7 +86,25 @@ void ColaPreguntas::cargarPreguntasArte() {
         'A', "arte"
         ));
 
-    // ...
+    enqueue(Pregunta(
+        "Durante el renacimiento el estilo artístico que impregnó el arte, la filosofía, la pintura escritura fue el:",
+        "El Gótico", "El barroco", "El clasicismo", "Romanticismo",
+        'B', "arte"
+        ));
+
+    enqueue(Pregunta(
+        "Durante el renacimiento surge una nueva visión del hombre, que se vio reflejada en el arte, en la política "
+        "y en las ciencias sociales y humanas, a lo que se denomina:",
+        "Antropocentrismo", "Humanismo", "Paradigma antropológico", "Teocentrismo",
+        'B', "arte"
+        ));
+
+    enqueue(Pregunta(
+        "Cuatro genios del renacimiento (Leonardo, Donatello, Rafael y Michelangelo) han sido llevados a la "
+        "pantalla en los comics de:",
+        "Las tortugas ninjas", "Los caballeros del Zodiaco", "Los cuatro fantásticos", "Los antagonistas de Attack Titan",
+        'A', "arte"
+        ));
 }
 
 void ColaPreguntas::cargarPreguntasPolitica() {

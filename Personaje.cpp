@@ -135,10 +135,7 @@ void Personaje::MoverSiNoColisiona(int dx, int dy, const QVector<QRect> &obstacu
 
         if(nuevaPos.intersects(obs))
         {
-
-
             return;
-
         }
 
     }
@@ -151,7 +148,18 @@ void Personaje::MoverSiNoColisiona(int dx, int dy, const QVector<QRect> &obstacu
 
 }
 
+int Personaje::getCorazones(){
+    return this->corazones;
+}
 
+void Personaje::AumentarCorazones(){
+    int nuevaCantidad=this->getCorazones()+1;
+
+    if (nuevaCantidad < 0) nuevaCantidad = 0;
+    if (nuevaCantidad > 4) nuevaCantidad = 4;
+
+    corazones = nuevaCantidad;
+}
 
 
 
@@ -176,7 +184,7 @@ Personaje::DatosAnimacion Personaje::obtenerAnimacion(const QString &tipo){
 
 void Personaje::SetAnimacionMovimiento(int velocidad)
 {
-
+        //qDebug() << "velocidad" << velocidad;
         this->velocidadMovimiento=velocidad;
 
 }

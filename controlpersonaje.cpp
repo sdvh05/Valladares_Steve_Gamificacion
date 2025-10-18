@@ -16,7 +16,7 @@ ControlPersonaje::ControlPersonaje(Personaje *jugadorExistente, QWidget *parent)
     // Inicializar corazones vacíos
     for (int i = 0; i < 4; ++i) {
         QLabel* corazon = new QLabel(this);
-        corazon->setPixmap(QPixmap(":/recursos/corazon_vacio.png").scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        corazon->setPixmap(QPixmap("Sprites/Recursos/NullHeart.png").scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         corazon->setGeometry(10 + i * 36, 10, 32, 32);
         corazon->show();
         iconosCorazones.append(corazon);
@@ -126,20 +126,32 @@ void ControlPersonaje::ResetearMovimiento() {
     }
 }
 
-void ControlPersonaje::ActualizarCorazones(int nuevaCantidad) {
-    if (nuevaCantidad < 0) nuevaCantidad = 0;
-    if (nuevaCantidad > 4) nuevaCantidad = 4;
-    cantidadCorazones = nuevaCantidad;
+void ControlPersonaje::ActualizarCorazones(bool gano) {
+
+    if(gano){
+        jugador->AumentarCorazones();
+    }
+    cantidadCorazones=jugador->getCorazones();
+
 
     for (int i = 0; i < 4; ++i) {
         if (i < cantidadCorazones)
-            iconosCorazones[i]->setPixmap(QPixmap(":/recursos/corazon_lleno.png").scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            iconosCorazones[i]->setPixmap(QPixmap("Sprites/Recursos/FullHeart.png").scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         else
-            iconosCorazones[i]->setPixmap(QPixmap(":/recursos/corazon_vacio.png").scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            iconosCorazones[i]->setPixmap(QPixmap("Sprites/Recursos/NullHeart.png").scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 
-//controlPersonaje->ActualizarCorazones(controlPersonaje->cantidadCorazones + 1); al completar las misiones
+void ControlPersonaje::PuertaSeleccionada(int indice){
+
+        if (indice >= 0 && indice < puertas.size()) {
+            puertas[indice] = true;
+            qDebug() << "Minijuego de puerta #" << indice << " terminado";
+
+            // Debug: mostrar estado actual
+            qDebug() << "Estado puertas:" << puertas;
+        }
+}
 
 
 

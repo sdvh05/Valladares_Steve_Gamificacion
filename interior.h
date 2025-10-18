@@ -1,14 +1,12 @@
-#ifndef FRONTVIEW_H
-#define FRONTVIEW_H
+#ifndef INTERIOR_H
+#define INTERIOR_H
 
 #include "ControlPersonaje.h"
 #include <QLabel>
 #include <QList>
 #include <QPushButton>
-#include <QGraphicsScene>
-#include <QGraphicsView>
 
-class FrontView : public ControlPersonaje {
+class Interior : public ControlPersonaje {
     Q_OBJECT
 
 private:
@@ -16,24 +14,21 @@ private:
     bool hayPuertaCerca = false;
 
     void detectarZonaPuerta();
-    void EntrarCastillo();
+    void SalirCastillo();
     void mostrarHintPuerta();
     void ocultarHintPuerta();
+
     void configurarEscena() override;
     void configurarObstaculos() override;
-
-    void crearVistaDebug();
-    void dibujarHitboxesEnScene();
-    void mostrarHitboxes();
-
 
 protected:
     void onMovimientoUpdate() override;
 
 public:
-    explicit FrontView(Personaje* jugadorExistente, QWidget* parent = nullptr);
+    explicit Interior(Personaje* jugadorExistente, QWidget* parent = nullptr, int PasilloActual=1);
+    int pasilloActual;
     void keyPressEvent(QKeyEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
 };
 
-#endif // FRONTVIEW_H
+#endif // Interior_H

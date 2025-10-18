@@ -16,6 +16,9 @@ protected:
     Personaje* jugador;
     QTimer* movimientoTimer;
     QList<QRect> obstaculos;
+    QList<bool> puertas = {false, false, false, false};
+
+    QList<QLabel*> hitboxLabels;
 
     // Estado de teclas
     bool shiftPresionado;
@@ -24,9 +27,10 @@ protected:
     bool arribaPresionado;
     bool abajoPresionado;
 
+
     // Corazones
     QVector<QLabel*> iconosCorazones;
-    int cantidadCorazones; // 0 a 4
+    int cantidadCorazones =0; // 0 a 4
 
     virtual void configurarEscena() = 0;
     virtual void configurarObstaculos() = 0;
@@ -45,7 +49,9 @@ public:
     void keyReleaseEvent(QKeyEvent* event) override;
     void ResetearMovimiento();
 
-    void ActualizarCorazones(int nuevaCantidad);
+    void ActualizarCorazones(bool gano = false);
+
+    void PuertaSeleccionada(int indice);
 };
 
 #endif // CONTROLPERSONAJE_H

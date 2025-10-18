@@ -37,6 +37,9 @@ public:
     DatosAnimacion obtenerAnimacion(const QString& tipo);
     QString animacionActual;
 
+    int getCorazones();
+    void AumentarCorazones();
+
     void setVidas(int vidas) {
         vida = vidas;
     }
@@ -56,6 +59,7 @@ private:
 
     QVector<QRect> obstaculos;
     int vida;
+    int corazones = 0;
     int velocidadMovimiento;
 
 };

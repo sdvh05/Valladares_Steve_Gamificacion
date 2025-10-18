@@ -14,6 +14,7 @@ SOURCES += \
     Mainmenu.cpp \
     Personaje.cpp \
     controlpersonaje.cpp \
+    interior.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -24,6 +25,7 @@ HEADERS += \
     Personaje.h \
     Pregunta.h \
     controlpersonaje.h \
+    interior.h \
     mainwindow.h
 
 FORMS += \
