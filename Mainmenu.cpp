@@ -114,12 +114,6 @@ MainMenu::MainMenu(QWidget *parent)
 void MainMenu::AbrirJuego()
 {
 
-    // Crear nuevo jugador
-    //if (jugador) {
-      //  delete jugador;
-        //jugador = nullptr;
-    //}
-    //QFile::remove("jugador.dat");
 
     if (!jugador) {
         jugador = new Personaje();
@@ -127,8 +121,11 @@ void MainMenu::AbrirJuego()
         jugador->SetAnimacion(anim.ruta, anim.frames);
     }
 
-    FrontView *ventanaJuego = new FrontView(jugador);
+   FrontView *ventanaJuego = new FrontView(jugador);
     ventanaJuego->show();
+
+
+
 
     this->close();
 }

@@ -53,24 +53,25 @@ void ColaPreguntas::clear() {
 }
 
 void ColaPreguntas::cargarPreguntasPorTipo(const QString& tipo) {
-    if (tipo == "arte") {
+    if (tipo == "Arte") {
         cargarPreguntasArte();
-    } else if (tipo == "politica") {
+    } else if (tipo == "Politica") {
         cargarPreguntasPolitica();
-    } else if (tipo == "ciencia") {
+    } else if (tipo == "Ciencia") {
         cargarPreguntasCiencia();
-    } else if (tipo == "historia") {
+    } else if (tipo == "Historia") {
         cargarPreguntasHistoria();
-    } else if (tipo == "epistemologia") {
-        cargarPreguntasEpistemologia();
-    } else if (tipo == "kant") {
+    } else if (tipo == "Combate") {
+        cargarPreguntasCombate();
+    } else if (tipo == "Kant") {
         cargarPreguntasKant();
-    } else if (tipo == "descartes") {
+    } else if (tipo == "Descartes") {
         cargarPreguntasDescartes();
     }
 }
 
 // CARGAR PREGUNTAS
+//-------------------------------------------------------------------------------------------------------------------------
 void ColaPreguntas::cargarPreguntasArte() {
     clear();
 
@@ -122,8 +123,25 @@ void ColaPreguntas::cargarPreguntasPolitica() {
         'A', "politica"
         ));
 
-    // ...
+    enqueue(Pregunta(
+        "Durante el siglo XV, la sociedad se estratifica en tres estamentos definidos:",
+        "Clase media, baja y alta", "Nobleza, clero y estado llano", "Artesanos, guardianes y gobernantes", "Reyes, nobles y plebeyos",
+        'B', "politica"
+        ));
+
+    enqueue(Pregunta(
+        "Aparece el realismo político, que se basaba en un orden establecido, explicación de un sistema y recomendaciones de como gobernar:",
+        "Tomás Moro", "Jean Bodín", "Nicolás Maquiavelo", "Erasmo de Rotterdam",
+        'C', "politica"
+        ));
+
+    enqueue(Pregunta(
+        "Terminada la edad media, en el contexto de la política resulta que:",
+        "La Iglesia resalta su poder", "La Iglesia pierde el papel rector en la política", "La Iglesia evangélica se posiciona en la política", "La política desaparece",
+        'B', "politica"
+        ));
 }
+
 
 void ColaPreguntas::cargarPreguntasCiencia() {
     clear();
@@ -134,8 +152,31 @@ void ColaPreguntas::cargarPreguntasCiencia() {
         'B', "ciencia"
         ));
 
-    // ...
+    enqueue(Pregunta(
+        "El método científico se introduce por el interés de tres filósofos. Entre los siguientes uno de los mencionados no es precursor del método científico:",
+        "Francis Bacon", "Galileo Galilei", "Nicolas Maquiavelo", "René Descartes",
+        'C', "ciencia"
+        ));
+
+    enqueue(Pregunta(
+        "Es uno de los precursores del pensamiento Moderno:",
+        "Isaac Newton", "René Descartes", "Erasmo de Roterdam", "Francis Bacon",
+        'B', "ciencia"
+        ));
+
+    enqueue(Pregunta(
+        "De los siguientes filósofos niega el geocentrismo (teoría que afirma que el centro de nuestro sistema solar es la tierra):",
+        "Aristóteles", "Nicolás Copérnico", "Tomás de Aquino", "Isaac Newton",
+        'B', "ciencia"
+        ));
+
+    enqueue(Pregunta(
+        "Uno de los inventos que suscitó un conocimiento ilimitado, fue el de Gutenberg:",
+        "El astrolabio", "La imprenta", "La Nao y la Carabela", "El Telescopio",
+        'B', "ciencia"
+        ));
 }
+
 
 void ColaPreguntas::cargarPreguntasHistoria() {
     clear();
@@ -146,26 +187,86 @@ void ColaPreguntas::cargarPreguntasHistoria() {
         'C', "historia"
         ));
 
-    // ...
-}
+    enqueue(Pregunta(
+        "El renacimiento supone una época de absolutismo y nacionalismos, como el nacimiento de fuertes monarquías europeas centralizadas como:",
+        "Grecia", "Inglaterra", "Yugoslavia", "Egipto",
+        'B', "historia"
+        ));
 
-void ColaPreguntas::cargarPreguntasEpistemologia() {
+    enqueue(Pregunta(
+        "Antes de la consolidación del estado moderno, Italia estuvo divida en pequeñas ciudades-estado normalmente enfrentadas entre si, como es el caso de:",
+        "Florencia-Napoli", "Ámsterdam-Cracovia", "Reims-Colonia", "Milán-Lourdes",
+        'A', "historia"
+        ));
+
+    enqueue(Pregunta(
+        "La toma de Constantinopla supone un bloqueo comercial entre Europa y Asia (la ruta de la seda) y ocurrió en lo que hoy es actualmente:",
+        "Eslovaquia", "Estambul en Turquía", "Mesopotamia", "Jerusalén",
+        'B', "historia"
+        ));
+
+    enqueue(Pregunta(
+        "Resurge el interés por Grecia y Roma, junto al declive del sistema feudal, el crecimiento del comercio e innovaciones entre las que mencionamos:",
+        "La imprenta y la brújula", "La rueda y la escritura", "Las máquinas de vapor y la producción en masa", "La pólvora y La rueda",
+        'A', "historia"
+        ));
+}
+//-------------------------------------------------------------------------------------------------------------------------
+
+void ColaPreguntas::cargarPreguntasCombate() {
     clear();
 
     enqueue(Pregunta(
         "Para algunos de los siguientes filósofos, el criterio de verdad es la evidencia sensible:",
         "Empiristas", "Criticistas", "Racionalistas", "Dogmáticos",
-        'A', "epistemologia"
+        'A', "combate"
         ));
 
     enqueue(Pregunta(
-        "Filósofos para quienes la única fuente del conocimiento es la razón:",
-        "Epistemólogos", "Racionalistas", "Empiristas", "Escépticos",
-        'B', "epistemologia"
+        "De las siguientes, una de ellas es la corriente filosófica que en general tiende a negar la posibilidad de la metafísica y a sostener que hay conocimiento únicamente de los fenómenos.",
+        "Racionalistas", "Empiristas", "Escolásticos", "Escépticos",
+        'B', "combate"
         ));
 
-    // ...
+    enqueue(Pregunta(
+        "Para unos de los siguientes filósofos, la experiencia como única fuente del conocimiento.",
+        "Epistemólogos", "Racionalistas", "Empiristas", "Escépticos",
+        'C', "combate"
+        ));
+
+    enqueue(Pregunta(
+        "Filósofos para quienes la única fuente del conocimiento es la razón.",
+        "Epistemólogos", "Racionalistas", "Empiristas", "Escépticos",
+        'B', "combate"
+        ));
+
+    enqueue(Pregunta(
+        "Filósofos que postulan las ideas innatas en el sujeto.",
+        "Empiristas", "Idealistas", "Racionalistas", "Innatistas",
+        'C', "combate"
+        ));
+
+    enqueue(Pregunta(
+        "De los siguientes filósofos selecciones el que no se considera Racionalista:",
+        "David Hume", "John Locke", "Nicolas Malebranch", "Francis Bacon",
+        'C', "combate"
+        ));
+
+    enqueue(Pregunta(
+        "Es la doctrina que establece que todos nuestros conocimientos provienen de la razón.",
+        "Empirismo", "Criticismo", "Racionalismo", "Epistemología",
+        'C', "combate"
+        ));
+
+    enqueue(Pregunta(
+        "Uno de los siguientes filósofos, postula las ideas innatas en el sujeto:",
+        "George Berkeley", "David Hume", "Leibniz", "Hipatía",
+        'C', "combate"
+        ));
 }
+//-------------------------------------------------------------------------------------------------------------------------
+
+
 
 void ColaPreguntas::cargarPreguntasKant() {
     clear();
@@ -182,8 +283,32 @@ void ColaPreguntas::cargarPreguntasKant() {
         'B', "kant"
         ));
 
-    // ...
+    enqueue(Pregunta(
+        "Kant decía que el lema de la ilustración era 'Sapere aude', que significa:",
+        "Sopesa tus acciones", "Atrévete a saber por ti mismo", "Saber a la fuerza", "Someterse al conocimiento",
+        'B', "kant"
+        ));
+
+    enqueue(Pregunta(
+        "Kant (igual que Copérnico cambió el centro del universo de la tierra al sol), cambia el centro del conocimiento del objeto al sujeto, a esto se le llama:",
+        "Subjetivismo", "Prejuicio", "Giro copernicano", "Suerte",
+        'C', "kant"
+        ));
+
+    enqueue(Pregunta(
+        "La postura conciliadora de Kant respecto a los empiristas y racionalistas define que los datos experimentales son la fuente del conocimiento racional del sujeto:",
+        "Racionalismo", "Empirismo", "Criticismo", "Escepticismo",
+        'C', "kant"
+        ));
+
+    enqueue(Pregunta(
+        "De las siguientes obras de Emanuel Kant, seleccione aquella que define su epistemología:",
+        "Critica de la razón práctica", "Critica de la razón pura", "Critica del juicio", "Critica fenomenológica",
+        'B', "kant"
+        ));
 }
+
+
 
 void ColaPreguntas::cargarPreguntasDescartes() {
     clear();
@@ -201,5 +326,22 @@ void ColaPreguntas::cargarPreguntasDescartes() {
         'C', "descartes"
         ));
 
-    // ...
+    enqueue(Pregunta(
+        "En relación con los datos experimentales que otorgan los sentidos en el conocimiento, Descartes define como:",
+        "Los sentidos son una fuente confiable para conocer", "Desconfianza de lo que los sentidos nos proporcionan",
+        "Los sentidos son complementarios", "Los sentidos son determinantes",
+        'B', "descartes"
+        ));
+
+    enqueue(Pregunta(
+        "Solo debemos aceptar como verdadero aquel conocimiento que sea EVIDENTE, CLARO Y DISTINTO:",
+        "René Descartes", "David Hume", "George Berkeley", "Aristóteles",
+        'A', "descartes"
+        ));
+
+    enqueue(Pregunta(
+        "En cuanto a la certeza del conocimiento, René Descartes afirma lo siguiente:",
+        "Es preciso dudar", "Debemos confiar ciegamente", "Nada es importante", "Todo es posible",
+        'A', "descartes"
+        ));
 }

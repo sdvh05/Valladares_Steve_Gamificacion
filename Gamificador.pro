@@ -12,7 +12,9 @@ SOURCES += \
     ColaPreguntas.cpp \
     Frontview.cpp \
     Mainmenu.cpp \
+    Minijuegohistoria.cpp \
     Personaje.cpp \
+    Ruleta.cpp \
     controlpersonaje.cpp \
     interior.cpp \
     main.cpp \
@@ -22,8 +24,10 @@ HEADERS += \
     ColaPreguntas.h \
     Frontview.h \
     Mainmenu.h \
+    Minijuegohistoria.h \
     Personaje.h \
     Pregunta.h \
+    Ruleta.h \
     controlpersonaje.h \
     interior.h \
     mainwindow.h

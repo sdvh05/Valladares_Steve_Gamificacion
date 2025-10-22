@@ -1,5 +1,8 @@
 #include "Interior.h"
 #include "Frontview.h"
+#include "Ruleta.h"
+
+#include "Minijuegohistoria.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -9,6 +12,8 @@
 #include <QPropertyAnimation>
 #include <QMessageBox>
 #include <QApplication>
+#include <QRandomGenerator>
+#include <QList>
 
 Interior::Interior(Personaje* jugadorExistente, QWidget* parent, int PasilloActual)
     : ControlPersonaje(jugadorExistente, parent), pasilloActual(PasilloActual)
@@ -16,7 +21,9 @@ Interior::Interior(Personaje* jugadorExistente, QWidget* parent, int PasilloActu
     this->resize(1000, 1200);
     this->setWindowTitle("Interior del Castillo");
 
-
+    fondoLabel = new QLabel(this);
+    fondoLabel->setGeometry(0, 0, width(), height());
+    fondoLabel->lower();
 
     configurarEscena();
     configurarObstaculos();
@@ -26,7 +33,9 @@ Interior::Interior(Personaje* jugadorExistente, QWidget* parent, int PasilloActu
 
     jugador->setParent(this);
 
-    jugador->move(400,818);
+    if(pasilloActual == 1)
+        jugador->move(400,818);
+
     jugador->show();
     jugador->raise();
 
@@ -53,11 +62,31 @@ void Interior::configurarEscena(){
         rutaFondo = "Sprites/Castle/Interior.jpg";
         break;
     case 2: //izquierda
-        rutaFondo = "Sprites/Castle/Interior_2.jpg";
+        rutaFondo = "Sprites/Castle/Pasillo.jpg";
         break;
     case 3: //derecha
-        rutaFondo = "Sprites/Castle/Interior_3.jpg";
+        rutaFondo = "Sprites/Castle/.jpg";
         break;
+
+    case 4: //Ruleta
+        rutaFondo = "Sprites/Castle/Ruleta/Ruleta.png";
+        break;
+    case 5: //Ruleta Arte
+        rutaFondo = "Sprites/Castle/Ruleta/ArteOpen.png";
+        break;
+    case 6: //Ruleta Politica
+         rutaFondo = "Sprites/Castle/Ruleta/PoliticaOpen.png";
+        break;
+    case 7: //Ruleta Ciencia
+         rutaFondo = "Sprites/Castle/Ruleta/CienciaOpen.png";
+        break;
+    case 8: //Ruleta Historia
+         rutaFondo = "Sprites/Castle/Ruleta/HistoriaOpen.png";
+        break;
+    case 9:
+
+        break;
+
     default:
         rutaFondo = "Sprites/Castle/Interior.jpg";
         break;
@@ -69,10 +98,10 @@ void Interior::configurarEscena(){
         return;
     }
 
-    QLabel* fondoLabel = new QLabel(this);
     fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    fondoLabel->setGeometry(0, 0, width(), height());
     fondoLabel->lower();
+    fondoLabel->show();
+
 }
 
 void Interior::configurarObstaculos(){
@@ -91,6 +120,11 @@ void Interior::configurarObstaculos(){
     case 3:
 
         break;
+
+    case 4:
+        obstaculos.append(QRect(140, 442, 1000, 4)); //pared puerta arriba
+        obstaculos.append(QRect(490,650, 20, 4)); //ruleta
+        break;
     }
 }
 
@@ -102,9 +136,10 @@ void Interior::onMovimientoUpdate()
 {
 
     QRect rectJugador = jugador->geometry();
-    QRect zonaPuerta(400,888, 180, 100);
+    detectarZonaPuerta();
+
     if (rectJugador.intersects(zonaPuerta)) {
-        mostrarHintPuerta();
+        mostrarHintPuerta(zonaPuerta);
         hayPuertaCerca = true;
     } else {
         ocultarHintPuerta();
@@ -113,18 +148,62 @@ void Interior::onMovimientoUpdate()
 
     // --- Transiciones automáticas ---
 
-        //MAIN ENTRADA
-    if (pasilloActual == 1 && rectJugador.intersects(QRect(998, 784, 10, 100))) {
-        //pasilloActual=2;
-        //cambiarPasillo();
+    //MAIN ENTRADA
+    //-------------------------------------------------------------------------------------------------------------------------
+    if (pasilloActual == 1 && rectJugador.intersects(QRect(998, 784, 10, 100))) { //ir a izquierda
+
+        this->pasilloActual=2;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(190,770);
+        this->update();
         qDebug()<<"transision izquierda";
     }
-    else if (pasilloActual == 1 && rectJugador.intersects(QRect(-54, 784, 10, 100))) {
-        //cambiarPasillo();
+    else if (pasilloActual == 1 && rectJugador.intersects(QRect(-54, 784, 10, 100))) { //ir a derecha
+
         qDebug()<<"transision derecha";
     }
 
     //PASILLOS
+    //-------------------------------------------------------------------------------------------------------------------------
+        //Pasillo izquierda
+    if(pasilloActual==2 && rectJugador.intersects(QRect(-54, 784, 10, 100))){ // volver a main de izq
+
+        this->pasilloActual=1;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(820,826);
+        this->update();
+        qDebug()<<"Vuelta a Main ";
+    }
+
+    else if(pasilloActual==2 && rectJugador.intersects(QRect(200, 450, 10, 100))){ //entrar ruleta izq
+        this->pasilloActual=4;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(746,794);
+        this->update();
+        qDebug()<<"Entrar Ruleta I";
+    }
+
+
+        //Pasillo derecha
+     else if(pasilloActual==3 && rectJugador.intersects(QRect(998, 784, 10, 100))){ // volver a main de der
+
+    }
+
+     //Ruleta
+    //-------------------------------------------------------------------------------------------------------------------------
+    if (pasilloActual>=4 && rectJugador.intersects(QRect(910,852, 10, 100))){ //salir a izq
+        this->pasilloActual=2;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(250,500);
+        this->update();
+        qDebug()<<"Salirs Ruleta I";
+    }
+
+
 }
 
 void Interior::detectarZonaPuerta() {
@@ -132,24 +211,144 @@ void Interior::detectarZonaPuerta() {
 
     QPoint pos = jugador->pos();
 
-    // Rango en el que se considera "frente a la puerta"
-    QRect zonaPuerta(400,888, 180, 100);
+
+    // --- Detectar la puerta según el pasillo actual ---
+    switch (pasilloActual) {
+    case 1:
+        zonaPuerta = QRect(400, 888, 180, 100);
+        break;
+    case 2:
+        zonaPuerta = QRect(820, 600, 150, 100);
+        break;
+    case 3:
+        zonaPuerta = QRect(408,680, 150, 100);
+        break;
+
+
+    case 4:
+        zonaPuerta = QRect(400, 888, 180, 100); //ruleta
+        break;
+    case 5:
+        zonaPuerta = QRect(-48,574, 50, 50); //Arte
+        break;
+    case 6:
+        zonaPuerta = QRect(86,506, 50, 50); //Politica
+        break;
+    case 7:
+        zonaPuerta = QRect(374,446, 50, 50); //Ciencia
+        break;
+    case 8:
+        zonaPuerta = QRect(718,590, 50, 50); //Historia
+        break;
+
+
+    default:
+        zonaPuerta = QRect();
+        break;
+    }
+
 
     if (zonaPuerta.contains(pos)) {
-        mostrarHintPuerta();
+        mostrarHintPuerta(zonaPuerta);
+        hayPuertaCerca = true;
     } else {
-        labelPuerta->hide();
+        ocultarHintPuerta();
+        hayPuertaCerca = false;
     }
 }
 
 
-void Interior::mostrarHintPuerta(){
+void Interior::mostrarHintPuerta(const QRect& zonaPuerta) {
     if (!labelPuerta->isVisible()) {
-        QRect zonaPuerta(400,888, 180, 100);
-        labelPuerta->move(zonaPuerta.center().x() - labelPuerta->width()/2,
-                          zonaPuerta.top() - labelPuerta->height() - 10);
+
+        QString textoHint;
+
+        // --- Mensaje personalizado según el pasillo ---
+        switch (pasilloActual) {
+        case 1:
+            textoHint = "Presiona Q para salir";
+            break;
+        case 4:
+            textoHint = "Presiona R para girar";
+            break;
+        case 5:
+            textoHint = "Minijuego Arte";
+            break;
+        case 6:
+            textoHint = "Minijuego Politica";
+            break;
+        case 7:
+            textoHint = "Minijuego Ciencia";
+            break;
+        case 8:
+            textoHint = "Minijuego Historia";
+            break;
+        default:
+            textoHint = "Puerta cerrada";
+            break;
+        }
+
+        labelPuerta->setText(textoHint);
+        labelPuerta->move(
+            zonaPuerta.center().x() - labelPuerta->width() / 2,
+            zonaPuerta.top() - labelPuerta->height() - 10
+            );
         labelPuerta->show();
         labelPuerta->raise();
+    }
+}
+
+
+void Interior::ocultarHintPuerta() {
+    labelPuerta->hide();
+}
+
+
+void Interior::keyPressEvent(QKeyEvent* event) {
+    ControlPersonaje::keyPressEvent(event);
+
+    if (event->key() == Qt::Key_Q && hayPuertaCerca) {
+
+        switch (pasilloActual) {
+        case 1:
+            SalirCastillo();
+            break;
+        case 2:
+
+            break;
+        case 3:
+
+            break;
+
+        case 8:
+            EntrarMinijuego();
+            break;
+
+        default:
+
+            break;
+        }
+    }
+
+    if (event->key() == Qt::Key_R && hayPuertaCerca) {
+        if(pasilloActual==4){
+            if (!puertas.contains(false)) {
+                qDebug() << "No hay puertas disponibles.";
+            }
+
+            int indice; //guardamos el indice
+            do {
+                indice = QRandomGenerator::global()->bounded(0, 4); // genera 0,1,2 o 3
+            } while (puertas[indice]);
+
+            qDebug() << indice;
+
+            this->ResetearMovimiento();
+            RuletaWidget* r = new RuletaWidget(puertas, indice, this);
+            r->setAttribute(Qt::WA_DeleteOnClose);
+            r->show();
+        }
+
     }
 }
 
@@ -158,29 +357,42 @@ void Interior::SalirCastillo(){
 
     ResetearMovimiento();
 
-    // Crear la nueva escena pasando el mismo jugador
     FrontView* FV = new FrontView(jugador);
     FV->show();
 
     this->close();
 }
 
-void Interior::ocultarHintPuerta()
-{
-    labelPuerta->hide();
+void Interior::EntrarMinijuego(){
+    if (!jugador) return;
 
-}
-
+    ResetearMovimiento();
 
 
+    if(pasilloActual==5){ //Arte
 
-void Interior::keyPressEvent(QKeyEvent* event){
-    ControlPersonaje::keyPressEvent(event);
+    } else if(pasilloActual==6){ //Politica
 
-    if (event->key() == Qt::Key_Q && hayPuertaCerca) {
-        SalirCastillo();
+    }else if(pasilloActual==7){ //Ciencia
+
+    }else if(pasilloActual==8){ //Historia
+       MinijuegoHistoria* MH = new MinijuegoHistoria(jugador);
+        MH->show();
     }
+
+    this->close();
 }
+
+
+
+void Interior::actualizarPasilloRuleta(int indice) {
+    this->pasilloActual = 5 + indice;
+    //this->pasilloActual=8;
+    configurarEscena();
+    configurarObstaculos();
+    this->update();
+}
+
 
 
 void Interior::mousePressEvent(QMouseEvent* event)
@@ -190,5 +402,11 @@ void Interior::mousePressEvent(QMouseEvent* event)
 
     this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
+
+    if(pasilloActual>4){
+        pasilloActual=4;
+        configurarEscena();
+        configurarObstaculos();
+    }
 
 }

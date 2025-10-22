@@ -25,6 +25,9 @@ public:
     void cargarPreguntasPolitica();
     void cargarPreguntasCiencia();
     void cargarPreguntasHistoria();
+
+    void cargarPreguntasCombate();
+
     void cargarPreguntasEpistemologia();
     void cargarPreguntasKant();
     void cargarPreguntasDescartes();

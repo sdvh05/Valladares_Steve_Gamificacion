@@ -1,12 +1,13 @@
-#ifndef INTERIOR_H
-#define INTERIOR_H
+#ifndef MINIJUEGOHISTORIA_H
+#define MINIJUEGOHISTORIA_H
 
 #include "ControlPersonaje.h"
-#include <QLabel>
-#include <QList>
-#include <QPushButton>
+#include "ColaPreguntas.h"
 
-class Interior : public ControlPersonaje {
+#include <QLabel>
+#include <QRect>
+
+class MinijuegoHistoria : public ControlPersonaje {
     Q_OBJECT
 
 private:
@@ -17,24 +18,32 @@ private:
 
 
     void detectarZonaPuerta();
-    void SalirCastillo();
-    void EntrarMinijuego();
+    void SalirMinijuego();
     void mostrarHintPuerta(const QRect& zonaPuerta);
     void ocultarHintPuerta();
 
     void configurarEscena() override;
     void configurarObstaculos() override;
 
+    QLabel* labelPregunta;
+    QLabel* labelRespuestas;
+
+    ColaPreguntas preguntas;
+    Pregunta preguntaActual;
+
+    void cargarPreguntaActual();
+
 protected:
     void onMovimientoUpdate() override;
 
 public:
-    explicit Interior(Personaje* jugadorExistente, QWidget* parent = nullptr, int PasilloActual=1);
+    explicit MinijuegoHistoria (Personaje* jugadorExistente, QWidget* parent = nullptr, int Actual=1);
 
-    int pasilloActual;
-    void actualizarPasilloRuleta(int indice);
+    int EstadoActual;
+    int NumPregunta;
+    void actualizarEstado(int indice);
     void keyPressEvent(QKeyEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
 };
 
-#endif // Interior_H
+#endif // MINIJUEGOHISTORIA_H
