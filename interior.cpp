@@ -3,6 +3,7 @@
 #include "Ruleta.h"
 
 #include "Minijuegohistoria.h"
+#include "Minijuegociencia.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -320,6 +321,9 @@ void Interior::keyPressEvent(QKeyEvent* event) {
 
             break;
 
+        case 5:
+        case 6:
+        case 7:
         case 8:
             EntrarMinijuego();
             break;
@@ -333,7 +337,7 @@ void Interior::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_R && hayPuertaCerca) {
         if(pasilloActual==4){
             if (!puertas.contains(false)) {
-                qDebug() << "No hay puertas disponibles.";
+                qDebug() << "Ya jugaste todos los minijuegos";
             }
 
             int indice; //guardamos el indice
@@ -346,6 +350,7 @@ void Interior::keyPressEvent(QKeyEvent* event) {
             this->ResetearMovimiento();
             RuletaWidget* r = new RuletaWidget(puertas, indice, this);
             r->setAttribute(Qt::WA_DeleteOnClose);
+            puertas[indice]=true;
             r->show();
         }
 
@@ -370,10 +375,14 @@ void Interior::EntrarMinijuego(){
 
 
     if(pasilloActual==5){ //Arte
+        qDebug()<<"minijuego Arte";
 
     } else if(pasilloActual==6){ //Politica
+        qDebug()<<"minijuego Politica";
 
     }else if(pasilloActual==7){ //Ciencia
+        MinijuegoCiencia *MC = new MinijuegoCiencia(jugador);
+        MC->show();
 
     }else if(pasilloActual==8){ //Historia
        MinijuegoHistoria* MH = new MinijuegoHistoria(jugador);

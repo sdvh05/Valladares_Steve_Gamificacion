@@ -20,7 +20,7 @@ RuletaWidget::RuletaWidget(const QList<bool>& puertas, int resultado, Interior* 
     girando(true)
 {
     setFixedSize(520, 520);
-    setWindowTitle("Ruleta de Categorías - Estilo Medieval");
+    setWindowTitle("Ruleta");
 
     lblResultado = new QLabel(this);
     lblResultado->setAlignment(Qt::AlignCenter);

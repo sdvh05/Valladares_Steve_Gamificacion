@@ -50,15 +50,15 @@ MinijuegoHistoria::MinijuegoHistoria(Personaje* jugadorExistente, QWidget* paren
     labelPregunta = new QLabel(this);
     labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: white; padding: 6px; border-radius: 6px; font: bold 14px 'Courier New';");
     labelPregunta->setAlignment(Qt::AlignCenter);
-    labelPregunta->setFixedSize(800, 50);
-    labelPregunta->move(24, 20);
+    labelPregunta->setFixedSize(800, 80);
+    labelPregunta->move(24, 30);
     labelPregunta->show();
 
     labelRespuestas = new QLabel(this);
     labelRespuestas->setStyleSheet("background: rgba(0,0,0,180); color: white; padding: 6px; border-radius: 6px; font: bold 14px 'Courier New';");
     labelRespuestas->setAlignment(Qt::AlignLeft);
-    labelRespuestas->setFixedSize(800, 150);
-    labelRespuestas->move(24, 80);
+    labelRespuestas->setFixedSize(800, 100);
+    labelRespuestas->move(24, 130);
     labelRespuestas->hide();
 
     // --- Inicializar preguntas ---
@@ -72,43 +72,40 @@ MinijuegoHistoria::MinijuegoHistoria(Personaje* jugadorExistente, QWidget* paren
 }
 
 void MinijuegoHistoria::configurarEscena(){
-    int pasillo=EstadoActual;
-    QString rutaFondo;
+    calcularEstadoDesdePuentes();
+    fondoLabel->lower();
+    fondoLabel->show();
+}
 
-    switch (pasillo) {
-    case 1: //normal
-        rutaFondo = "Sprites/Castle/Minijuegos/Bridges/AllBridges.png";
-        break;
-    case 2: //A X
-        rutaFondo = "Sprites/Castle//MinijuegosBridges/A Wrong.png";
-        break;
-    case 3: //B X
-        rutaFondo = "Sprites/Castle//MinijuegosBridges/B Wrong.png";
-        break;
+void MinijuegoHistoria::calcularEstadoDesdePuentes() {
+    QString nombreArchivoBase = "Sprites/Castle/Minijuegos/Bridges/";
 
-    case 4: //C X
-        rutaFondo = "Sprites/Castle//MinijuegosBridges/C Wrong.png";
-        break;
-    case 5: //D X
-        rutaFondo = "Sprites/Castle//MinijuegosBridges/D Wrong.png";
-        break;
+    QString errorCombo = "";
+    if (!puentes[0]) errorCombo += "A";
+    if (!puentes[1]) errorCombo += "B";
+    if (!puentes[2]) errorCombo += "C";
+    if (!puentes[3]) errorCombo += "D";
 
-    default:
-        rutaFondo = "Sprites/Castle/Interior.jpg";
-        break;
+    if (errorCombo.isEmpty()) {
+        EstadoActual = 1;
+        fondoLabel->setPixmap(QPixmap(nombreArchivoBase + "AllBridges.png")
+                                  .scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        return;
     }
 
-    QPixmap fondo(rutaFondo);
+    // Crear nombre del archivo tipo "AB Wrong.png"
+    QString ruta = nombreArchivoBase + errorCombo + " Wrong.png";
+
+    QPixmap fondo(ruta);
     if (fondo.isNull()) {
-        qDebug() << "Error al cargar el fondo:" << rutaFondo;
+        qDebug() << "Error al cargar:" << ruta;
         return;
     }
 
     fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    fondoLabel->lower();
-    fondoLabel->show();
-
+    //EstadoActual = 2;
 }
+
 
 void MinijuegoHistoria::configurarObstaculos(){
     obstaculos.clear();
@@ -137,9 +134,7 @@ void MinijuegoHistoria::configurarObstaculos(){
 
 
 
-void MinijuegoHistoria::onMovimientoUpdate()
-{
-
+void MinijuegoHistoria::onMovimientoUpdate() {
     QRect rectJugador = jugador->geometry();
     detectarZonaPuerta();
 
@@ -151,8 +146,58 @@ void MinijuegoHistoria::onMovimientoUpdate()
         hayPuertaCerca = false;
     }
 
+    // --- PUENTES ---
+    bool huboCambio = false;
 
+    if (rectJugador.intersects(QRect(116,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'A' && puentes[0]) {
+        puentes[0] = false;
+        huboCambio = true;
+        qDebug() << "A cayó";
+    }
+    else if (rectJugador.intersects(QRect(278,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'B' && puentes[1]) {
+        puentes[1] = false;
+        huboCambio = true;
+        qDebug() << "B cayó";
+    }
+    else if (rectJugador.intersects(QRect(438,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'C' && puentes[2]) {
+        puentes[2] = false;
+        huboCambio = true;
+        qDebug() << "C cayó";
+    }
+    else if (rectJugador.intersects(QRect(608,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'D' && puentes[3]) {
+        puentes[3] = false;
+        huboCambio = true;
+        qDebug() << "D cayó";
+    }
+
+    if (huboCambio) {
+        calcularEstadoDesdePuentes();
+        configurarObstaculos();
+        ResetearMovimiento();
+        jugador->move(400,818);
+        this->update();
+        ganaste = false;
+        actualizarRespuestas();
+    }
+
+    // --- Final ---
+    if (rectJugador.intersects(QRect(222,200, 200, 100))) {
+        jugador->move(400,818);
+        ResetearMovimiento();
+        cargarPreguntaActual();
+        respuestasActivas = false;
+        labelRespuestas->hide();
+        puentes = {true, true, true, true}; // restaurar todos
+        calcularEstadoDesdePuentes();
+        actualizarRespuestas();
+
+        if (preguntas.isEmpty()) {
+            qDebug() << "Se terminó el minijuego";
+            ActualizarCorazones(ganaste);
+        }
+    }
 }
+
 
 void MinijuegoHistoria::detectarZonaPuerta() {
     if (!jugador) return;
@@ -232,19 +277,38 @@ void MinijuegoHistoria::ocultarHintPuerta() {
 void MinijuegoHistoria::keyPressEvent(QKeyEvent* event) {
     ControlPersonaje::keyPressEvent(event);
 
-    if (event->key() == Qt::Key_Z) {
-        if (!preguntaActual.texto.isEmpty()) {
-            QString textoRespuestas;
-            textoRespuestas += "A: " + preguntaActual.respuestaA + "\n";
-            textoRespuestas += "B: " + preguntaActual.respuestaB + "\n";
-            textoRespuestas += "C: " + preguntaActual.respuestaC + "\n";
-            textoRespuestas += "D: " + preguntaActual.respuestaD + "\n";
+    if (event->key() == Qt::Key_Z && !preguntaActual.texto.isEmpty()) {
+        respuestasActivas = !respuestasActivas;
 
-            labelRespuestas->setText(textoRespuestas);
+        if (respuestasActivas) {
+            actualizarRespuestas();
             labelRespuestas->show();
+        } else {
+            labelRespuestas->hide();
         }
     }
 }
+
+
+void MinijuegoHistoria::actualizarRespuestas() {
+    if (!respuestasActivas || preguntaActual.texto.isEmpty()) return;
+
+    QString textoRespuestas;
+
+    QString colorA = puentes[0] ? "white" : "red";
+    QString colorB = puentes[1] ? "white" : "red";
+    QString colorC = puentes[2] ? "white" : "red";
+    QString colorD = puentes[3] ? "white" : "red";
+
+    textoRespuestas += QString("<font color='%1'>A: %2</font><br>").arg(colorA, preguntaActual.respuestaA);
+    textoRespuestas += QString("<font color='%1'>B: %2</font><br>").arg(colorB, preguntaActual.respuestaB);
+    textoRespuestas += QString("<font color='%1'>C: %2</font><br>").arg(colorC, preguntaActual.respuestaC);
+    textoRespuestas += QString("<font color='%1'>D: %2</font>").arg(colorD, preguntaActual.respuestaD);
+
+    labelRespuestas->setTextFormat(Qt::RichText);
+    labelRespuestas->setText(textoRespuestas);
+}
+
 
 void MinijuegoHistoria::SalirMinijuego(){
     if (!jugador) return;
@@ -271,15 +335,13 @@ void MinijuegoHistoria::mousePressEvent(QMouseEvent* event)
 {
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
+    qDebug() << "Respuesta: " <<preguntaActual.respuestaCorrecta;
+    ResetearMovimiento();
 
     this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
 
-    if(EstadoActual>4){
-        EstadoActual=4;
-        configurarEscena();
-        configurarObstaculos();
-    }
+
 
 }
 
@@ -287,10 +349,10 @@ void MinijuegoHistoria::cargarPreguntaActual() {
     if (!preguntas.isEmpty()) {
         preguntaActual = preguntas.dequeue();
         labelPregunta->setText(preguntaActual.texto);
-        labelRespuestas->hide(); // ocultar respuestas al cargar nueva pregunta
+        labelRespuestas->hide();
     } else {
         qDebug() << "No hay más preguntas en la cola.";
-        labelPregunta->setText("¡Has respondido todas las preguntas!");
+        labelPregunta->setText("¡Has Completado el Minijuegos!");
         labelRespuestas->hide();
     }
 }

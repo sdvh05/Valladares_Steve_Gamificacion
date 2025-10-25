@@ -182,31 +182,31 @@ void ColaPreguntas::cargarPreguntasHistoria() {
     clear();
 
     enqueue(Pregunta(
-        "Después del feudalismo medieval acudimos al surgimiento de una nueva clase social conocida como la:",
+        "Después del feudalismo medieval acudimos al surgimiento \n de una nueva clase social conocida como la:",
         "La monarquía", "El mercantilismo", "La burguesía", "El proletariado",
         'C', "historia"
         ));
 
     enqueue(Pregunta(
-        "El renacimiento supone una época de absolutismo y nacionalismos, como el nacimiento de fuertes monarquías europeas centralizadas como:",
+        "El renacimiento supone una época de absolutismo y nacionalismos, \n como el nacimiento de fuertes monarquías europeas centralizadas como:",
         "Grecia", "Inglaterra", "Yugoslavia", "Egipto",
         'B', "historia"
         ));
 
     enqueue(Pregunta(
-        "Antes de la consolidación del estado moderno, Italia estuvo divida en pequeñas ciudades-estado normalmente enfrentadas entre si, como es el caso de:",
+        "Antes de la consolidación del estado moderno, Italia estuvo divida en pequeñas \n ciudades-estado normalmente enfrentadas entre si, como es el caso de:",
         "Florencia-Napoli", "Ámsterdam-Cracovia", "Reims-Colonia", "Milán-Lourdes",
         'A', "historia"
         ));
 
     enqueue(Pregunta(
-        "La toma de Constantinopla supone un bloqueo comercial entre Europa y Asia (la ruta de la seda) y ocurrió en lo que hoy es actualmente:",
+        "La toma de Constantinopla supone un bloqueo comercial entre Europa y Asia \n (la ruta de la seda) y ocurrió en lo que hoy es actualmente:",
         "Eslovaquia", "Estambul en Turquía", "Mesopotamia", "Jerusalén",
         'B', "historia"
         ));
 
     enqueue(Pregunta(
-        "Resurge el interés por Grecia y Roma, junto al declive del sistema feudal, el crecimiento del comercio e innovaciones entre las que mencionamos:",
+        "Resurge el interés por Grecia y Roma, junto al declive del sistema feudal, \n el crecimiento del comercio e innovaciones entre las que mencionamos:",
         "La imprenta y la brújula", "La rueda y la escritura", "Las máquinas de vapor y la producción en masa", "La pólvora y La rueda",
         'A', "historia"
         ));

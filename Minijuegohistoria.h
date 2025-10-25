@@ -6,6 +6,8 @@
 
 #include <QLabel>
 #include <QRect>
+#include <QList>
+
 
 class MinijuegoHistoria : public ControlPersonaje {
     Q_OBJECT
@@ -16,6 +18,10 @@ private:
     QLabel* fondoLabel;
     QRect zonaPuerta;
 
+     QList<bool> puentes = {true, true, true, true}; // A, B, C, D
+
+    bool ganaste=true;
+    bool respuestasActivas=false;
 
     void detectarZonaPuerta();
     void SalirMinijuego();
@@ -31,7 +37,15 @@ private:
     ColaPreguntas preguntas;
     Pregunta preguntaActual;
 
+
+
     void cargarPreguntaActual();
+    void calcularEstadoDesdePuentes();
+    void actualizarRespuestas();
+
+
+
+
 
 protected:
     void onMovimientoUpdate() override;
