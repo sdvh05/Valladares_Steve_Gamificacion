@@ -413,7 +413,8 @@ void Interior::mousePressEvent(QMouseEvent* event)
     qDebug() << "Vidas:" << jugador->getCorazones();
 
     if(pasilloActual>4){
-        pasilloActual=4;
+       // pasilloActual=4;
+        pasilloActual=7;
         configurarEscena();
         configurarObstaculos();
     }

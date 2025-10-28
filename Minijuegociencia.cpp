@@ -63,8 +63,8 @@ MinijuegoCiencia::MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent,
 
     // ✅ Timer del patrón
     timerPatron = new QTimer(this);
-    connect(timerPatron, &QTimer::timeout,
-            this, &MinijuegoCiencia::reproducirSiguientePasoPatron);
+    timerPatron->setInterval(1000);
+    connect(timerPatron, &QTimer::timeout, this, &MinijuegoCiencia::reproducirSiguientePasoPatron);
 
     // ✅ Preparar colas
     preguntas.cargarPreguntasPorTipo("Ciencia");
@@ -72,7 +72,7 @@ MinijuegoCiencia::MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent,
     patronJugador.clear();
     playbackList.clear();
 
-    // ✅ Cargar primera pregunta AHORA
+
     cargarPreguntaActual();
 
     // ✅ Activar movimiento
@@ -83,12 +83,41 @@ MinijuegoCiencia::MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent,
 
 
 
-void MinijuegoCiencia::configurarEscena()
-{
-    calcularEstadoDesdeFrascos();
+void MinijuegoCiencia::configurarEscena() {
+    QString ruta = "Sprites/Castle/Minijuegos/Ciencia/Ciencia.png";
+    QPixmap fondo(ruta);
+
+
+    if(fondo.isNull()) {
+        qDebug() << "No se encontró la imagen" << ruta;
+    }
+
+    fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     fondoLabel->lower();
-    fondoLabel->show();
+    this->update();
+    labelPregunta->update();
 }
+
+void MinijuegoCiencia::cambiarEscena(int valor)
+{
+    QString letra = letraParaIndice(valor);
+    QString ruta = "Sprites/Castle/Minijuegos/Ciencia/Ciencia " + letra + ".png";
+    QPixmap fondo(ruta);
+     qDebug() << ruta;
+
+    if(fondo.isNull()) {
+        qDebug() << "No se encontró la imagen" << ruta;
+        return;
+    }
+
+    fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+    QTimer::singleShot(2000, this, [this]() {
+        configurarEscena();
+    });
+}
+
+
 
 void MinijuegoCiencia::configurarObstaculos()
 {
@@ -109,25 +138,24 @@ QString MinijuegoCiencia::letraParaIndice(int i) const
 
 void MinijuegoCiencia::cargarPreguntaActual()
 {
-    // Toma la siguiente pregunta y la muestra; agrega su respuesta correcta a la cola patronCorrecto
+
     if (!preguntas.isEmpty()) {
         preguntaActual = preguntas.dequeue();
         labelPregunta->setText(preguntaActual.texto);
 
-        // enqueue la respuesta correcta al patrón correcto
         patronCorrecto.enqueue(preguntaActual.respuestaCorrecta);
 
-        // ocultar respuestas hasta que el jugador presione Z
         respuestasActivas = false;
         labelRespuestas->hide();
 
-        // NO reproducir automáticamente el patrón al entrar; reproducción será manual con reproducirPatron()
-        // Si quieres reproducirlo manualmente: llama reproducirPatron() desde UI o tras cierto evento.
+        QTimer::singleShot(1000, this, [this]() {
+            reproducirPatron();
+        });
+
+
     } else {
-        // fin del minijuego
         labelPregunta->setText("¡Has completado el minijuego Ciencia!");
         labelRespuestas->hide();
-        // evaluar resultado final (opcional)
         bool correcto = true;
         if (patronJugador.size() != patronCorrecto.size()) correcto = false;
         else {
@@ -142,98 +170,152 @@ void MinijuegoCiencia::cargarPreguntaActual()
     }
 }
 
-void MinijuegoCiencia::calcularEstadoDesdeFrascos()
-{
-    // Imagen base
-    const QString rutaBase = "Sprites/Castle/Minijuegos/Ciencia/Ciencia.png";
-    QPixmap fondo(rutaBase);
-    if (fondo.isNull()) {
-        qDebug() << "No se pudo cargar fondo base:" << rutaBase;
-    } else {
-        fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    }
-}
 
-void MinijuegoCiencia::actualizarVisualPatron(int valor)
-{
-    // valor: 0->A,1->B,2->C,3->D ; muestra imagen "Ciencia A.png" etc.
-    QString rutaBase = "Sprites/Castle/Minijuegos/Ciencia/";
-    QString letra = letraParaIndice(valor);
-    QString ruta = rutaBase + "Ciencia " + letra + ".png";
-    QPixmap fondo(ruta);
-    if (fondo.isNull()) {
-        qDebug() << "No se pudo cargar imagen de letra:" << ruta;
+
+void MinijuegoCiencia::actualizarRespuestas(int nuevaRespuesta){
+    if (!respuestasActivas) return;
+
+    char letra = 'A' + nuevaRespuesta;
+    patronJugador.enqueue(letra);
+    qDebug() << "Jugador eligió:" << letra;
+
+
+    if (patronJugador.back() != patronCorrecto.at(patronJugador.size() - 1)) {
+        qDebug() << "Error, reiniciando turno.";
+
+        //mensaje de error en rojo
+        labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: red; font-weight: bold;");
+        labelPregunta->setText("Error, reiniciando turno...");
+
+        patronJugador.clear();
+        respuestasActivas = false;
+
+
+        QTimer::singleShot(1200, this, [this]() {
+            // Restaurar estilo original
+            labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: white;");
+            labelPregunta->setText(preguntaActual.texto);
+            reproducirPatron();
+        });
         return;
     }
-    fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+    //Si se completó correctamente el patrón
+    if (patronJugador.size() == patronCorrecto.size()) {
+        qDebug() << "Secuencia correcta. Cargando siguiente pregunta...";
+        respuestasActivas = false;
+        patronJugador.clear();
+
+        labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: lightgreen; font-weight: bold;");
+        labelPregunta->setText("✅ Correcto, avanzando...");
+
+        QTimer::singleShot(1000, this, [this]() {
+            labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: white;");
+            cargarPreguntaActual();
+        });
+    }
 }
 
-void MinijuegoCiencia::actualizarRespuestas(int nuevaRespuesta)
-{
-    // nuevaRespuesta: 0..3 -> A..D
-    char letra = 'A';
-    if (nuevaRespuesta == 0) letra = 'A';
-    else if (nuevaRespuesta == 1) letra = 'B';
-    else if (nuevaRespuesta == 2) letra = 'C';
-    else if (nuevaRespuesta == 3) letra = 'D';
 
-    patronJugador.enqueue(letra);
 
-    // Mostrar la última elección visualmente
-    actualizarVisualPatron(nuevaRespuesta);
 
-    QTimer::singleShot(600, this, [this]() {
-        cargarPreguntaActual();
-    });
-}
 
 void MinijuegoCiencia::reproducirPatron()
 {
+    if (reproduciendoPatron) return;
+    if (patronCorrecto.isEmpty()) return;
+
+    reproduciendoPatron = true;
+    patronIndex = 0;
     playbackList.clear();
+
     QQueue<char> copia = patronCorrecto;
-    while (!copia.isEmpty()) {
-        char c = copia.dequeue();
-        int idx = 0;
-        if (c == 'A') idx = 0;
-        else if (c == 'B') idx = 1;
-        else if (c == 'C') idx = 2;
-        else if (c == 'D') idx = 3;
-        playbackList.append(idx);
+    int copiasize = copia.size();
+
+    //no reproducir el ultimo
+    for (int i = 0; i < copiasize - 1; ++i) {
+        char letra = copia.dequeue();
+        int indice = 0;
+        if (letra == 'A') indice = 0;
+        else if (letra == 'B') indice = 1;
+        else if (letra == 'C') indice = 2;
+        else if (letra == 'D') indice = 3;
+        playbackList.append(indice);
     }
 
-    if (playbackList.isEmpty()) return;
-
+    qDebug() << "Reproduciendo patrón:" << playbackList;
     patronIndex = 0;
-    reproduciendoPatron = true;
-    if (timerPatron) timerPatron->start();
+    timerPatron->start(700);
 }
+
+
 
 void MinijuegoCiencia::reproducirSiguientePasoPatron()
 {
-    if (!reproduciendoPatron) {
-        if (timerPatron) timerPatron->stop();
-        return;
-    }
-
-    if (patronIndex >= playbackList.size()) {
-        // fin del patron: volver a fondo base
-        calcularEstadoDesdeFrascos();
-        if (timerPatron) timerPatron->stop();
+    if (patronIndex < playbackList.size()) {
+        int indice = playbackList[patronIndex];
+        cambiarEscena(indice);
+        patronIndex++;
+    } else {
+        timerPatron->stop();
         reproduciendoPatron = false;
-        patronIndex = 0;
-        return;
+        qDebug() << "✅ Fin de reproducción del patrón.";
+
+        configurarEscena();
+        respuestasActivas = true;
+        patronJugador.clear();
+    }
+}
+
+
+
+
+void MinijuegoCiencia::ConfirmarRespuestas()
+{
+    if (patronJugador.isEmpty()) return;
+
+    QQueue<char> copiaCorrecto = patronCorrecto;
+    QQueue<char> copiaJugador = patronJugador;
+
+    bool correctoHastaAhora = true;
+
+    int index = 1;
+    while (!copiaJugador.isEmpty() && !copiaCorrecto.isEmpty()) {
+        char respJ = copiaJugador.dequeue();
+        char respC = copiaCorrecto.dequeue();
+
+        if (respJ != respC) {
+            correctoHastaAhora = false;
+            qDebug() << "Error en la respuesta #" << index
+                     << "Jugador:" << respJ << "Correcta:" << respC;
+            break;
+        }
+        index++;
     }
 
-    int idx = playbackList[patronIndex];
-    actualizarVisualPatron(idx);
-
-    patronIndex++;
+    if (correctoHastaAhora) {
+        if (patronJugador.size() == patronCorrecto.size()) {
+            qDebug() << "Patrón completo y correcto!";
+            labelPregunta->setText("¡Has completado correctamente el patrón!");
+            ActualizarCorazones(true);
+            QTimer::singleShot(2000, this, [this]() { SalirMinijuego(); });
+        } else {
+            qDebug() << "Correcto hasta ahora (" << patronJugador.size() << "/" << patronCorrecto.size() << ")";
+        }
+    } else {
+        qDebug() << "Error: patrón incorrecto. Reiniciando...";
+        ActualizarCorazones(false);
+        patronJugador.clear();
+    }
 }
+
+
 
 void MinijuegoCiencia::detectarZonaSeleccion()
 {
     if (!jugador) return;
 
+    // Refrescar rectángulos por si el tamaño cambia
     zonaA = QRect(44, 624, 60, 120);
     zonaB = QRect(184, 606, 60, 120);
     zonaC = QRect(356, 578, 60, 120);
@@ -241,28 +323,28 @@ void MinijuegoCiencia::detectarZonaSeleccion()
 
     QRect r = jugador->geometry();
 
-    //Tengo que mostrar y Ocultar el Hint Seleccion
-    if (r.intersects(zonaA)){
-         cercaA = r.intersects(zonaA);
-        qDebug()<<"Cerca del Frasco Rojo (A)";
-    }
-    else if (r.intersects(zonaB)){
-        cercaB = r.intersects(zonaB);
-        qDebug()<<"Cerca del Frasco Amarillo (B)";
-    }
-    else if (r.intersects(zonaC)){
-        cercaC = r.intersects(zonaC);
-        qDebug()<<"Cerca del Frasco Azul (C)";
-    }
-    else if (r.intersects(zonaD)){
-        cercaA = r.intersects(zonaD);
-        qDebug()<<"Cerca del Frasco Verde (D)";
-    } else{
+    //Reiniciar estado siempre
+    bool prevA = cercaA;
+    bool prevB = cercaB;
+    bool prevC = cercaC;
+    bool prevD = cercaD;
 
+    cercaA = r.intersects(zonaA);
+    cercaB = r.intersects(zonaB);
+    cercaC = r.intersects(zonaC);
+    cercaD = r.intersects(zonaD);
+
+    // Debug solo si cambió algo
+    if (cercaA && !prevA) qDebug() << "Cerca del Frasco Rojo (A)";
+    if (cercaB && !prevB) qDebug() << "Cerca del Frasco Amarillo (B)";
+    if (cercaC && !prevC) qDebug() << "Cerca del Frasco Azul (C)";
+    if (cercaD && !prevD) qDebug() << "Cerca del Frasco Verde (D)";
+    if (!cercaA && !cercaB && !cercaC && !cercaD &&
+        (prevA || prevB || prevC || prevD)) {
+        qDebug() << "Lejos de todos los frascos";
     }
-
-
 }
+
 
 void MinijuegoCiencia::seleccionarLetra(int letra)
 {
@@ -334,12 +416,19 @@ void MinijuegoCiencia::keyPressEvent(QKeyEvent* event)
     // seleccionar letra con Q si estamos cerca
     if (event->key() == Qt::Key_Q) {
         detectarZonaSeleccion();
-        if (cercaA) seleccionarLetra(0);
-        else if (cercaB) seleccionarLetra(1);
-        else if (cercaC) seleccionarLetra(2);
-        else if (cercaD) seleccionarLetra(3);
 
-        // si estamos en la zonaPuerta y queremos salir
+        int respuesta = -1;
+        if (cercaA) { cambiarEscena(0); respuesta = 0; }
+        else if (cercaB) { cambiarEscena(1); respuesta = 1; }
+        else if (cercaC) { cambiarEscena(2); respuesta = 2; }
+        else if (cercaD) { cambiarEscena(3); respuesta = 3; }
+
+        if (respuesta != -1) {
+            seleccionarLetra(respuesta);
+        }
+
+
+
         if (hayPuertaCerca && zonaPuerta.contains(jugador->pos())) {
             SalirMinijuego();
         }
@@ -351,6 +440,11 @@ void MinijuegoCiencia::mousePressEvent(QMouseEvent* event)
     Q_UNUSED(event);
     qDebug() << "Jugador en:" << jugador->pos();
     ResetearMovimiento();
+
+    if (cercaA) qDebug() << "Cerca A";
+    else if (cercaB) qDebug() << "Cerca B";
+    else if (cercaC) qDebug() << "Cerca C";
+    else if (cercaD)  qDebug() << "Cerca D";
 }
 
 void MinijuegoCiencia::SalirMinijuego()
@@ -359,10 +453,4 @@ void MinijuegoCiencia::SalirMinijuego()
     this->close();
 }
 
-void MinijuegoCiencia::actualizarEstado(int indice)
-{
-    EstadoActual = indice;
-    configurarEscena();
-    configurarObstaculos();
-    this->update();
-}
+

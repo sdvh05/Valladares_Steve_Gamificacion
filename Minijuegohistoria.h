@@ -40,7 +40,7 @@ private:
 
 
     void cargarPreguntaActual();
-    void calcularEstadoDesdePuentes();
+    void cambiarEscena();
     void actualizarRespuestas();
 
 

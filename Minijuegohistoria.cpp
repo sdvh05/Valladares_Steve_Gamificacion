@@ -72,12 +72,12 @@ MinijuegoHistoria::MinijuegoHistoria(Personaje* jugadorExistente, QWidget* paren
 }
 
 void MinijuegoHistoria::configurarEscena(){
-    calcularEstadoDesdePuentes();
+    cambiarEscena();
     fondoLabel->lower();
     fondoLabel->show();
 }
 
-void MinijuegoHistoria::calcularEstadoDesdePuentes() {
+void MinijuegoHistoria::cambiarEscena() {
     QString nombreArchivoBase = "Sprites/Castle/Minijuegos/Bridges/";
 
     QString errorCombo = "";
@@ -171,7 +171,7 @@ void MinijuegoHistoria::onMovimientoUpdate() {
     }
 
     if (huboCambio) {
-        calcularEstadoDesdePuentes();
+        cambiarEscena();
         configurarObstaculos();
         ResetearMovimiento();
         jugador->move(400,818);
@@ -188,7 +188,7 @@ void MinijuegoHistoria::onMovimientoUpdate() {
         respuestasActivas = false;
         labelRespuestas->hide();
         puentes = {true, true, true, true}; // restaurar todos
-        calcularEstadoDesdePuentes();
+        cambiarEscena();
         actualizarRespuestas();
 
         if (preguntas.isEmpty()) {
@@ -323,8 +323,7 @@ void MinijuegoHistoria::SalirMinijuego(){
 
 
 void MinijuegoHistoria::actualizarEstado(int indice) {
-    //this->EstadoActual = 5 + indice;
-    this->EstadoActual=8;
+
     configurarEscena();
     configurarObstaculos();
     this->update();

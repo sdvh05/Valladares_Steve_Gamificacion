@@ -8,6 +8,7 @@
 #include <QRect>
 #include <QList>
 #include <QQueue>
+#include <QTimer>
 
 class MinijuegoCiencia : public ControlPersonaje {
     Q_OBJECT
@@ -53,15 +54,17 @@ private:
     ColaPreguntas preguntas;
     Pregunta preguntaActual;
 
-    QQueue <char> patronCorrecto;
-    QQueue <char> patronJugador;
+    QQueue<char> patronCorrecto;
+    QQueue<char> patronJugador;
 
     void cargarPreguntaActual();
     void calcularEstadoDesdeFrascos();
     void actualizarRespuestas(int nuevaRespuesta);
-    void actualizarVisualPatron(int valor);
+
+    void cambiarEscena(int valor);
 
     void reproducirPatron();
+    void ConfirmarRespuestas();
 
     QTimer* timerPatron;
     int patronIndex;
@@ -71,12 +74,11 @@ private:
 private slots:
     void reproducirSiguientePasoPatron();
 
-
 protected:
     void onMovimientoUpdate() override;
 
 public:
-    explicit MinijuegoCiencia (Personaje* jugadorExistente, QWidget* parent = nullptr, int Actual=1);
+    explicit MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent = nullptr, int Actual=1);
 
     int EstadoActual;
     int NumPregunta;
@@ -85,4 +87,4 @@ public:
     void mousePressEvent(QMouseEvent* event) override;
 };
 
-#endif // MinijuegoCiencia_H
+#endif // MINIJUEGOCIENCIA_H
