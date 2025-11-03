@@ -19,6 +19,8 @@ SOURCES += \
     Ruleta.cpp \
     controlpersonaje.cpp \
     interior.cpp \
+    inventario.cpp \
+    inventariowidget.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -34,6 +36,8 @@ HEADERS += \
     Ruleta.h \
     controlpersonaje.h \
     interior.h \
+    inventario.h \
+    inventariowidget.h \
     mainwindow.h
 
 FORMS += \

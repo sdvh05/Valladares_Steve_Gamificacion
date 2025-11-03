@@ -2,9 +2,13 @@
 #include "Personaje.h"
 #include "Mainmenu.h"
 #include "Ruleta.h"
+#include "InventarioWidget.h"
+#include"inventario.h"
 
 
 #include <QApplication>
+
+Inventario* inventarioGlobal = nullptr;
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +25,11 @@ int main(int argc, char *argv[])
     RuletaWidget r(puertas, resultado);
     r.show();*/
 
+    inventarioGlobal = new Inventario();
+    inventarioGlobal ->agregarMedallaCiencia();
+    inventarioGlobal->agregarMedallaArte();
+    InventarioWidget* inventarioUI = new InventarioWidget(inventarioGlobal);
+    inventarioUI->show();
 
 
 
