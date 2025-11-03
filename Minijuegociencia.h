@@ -71,6 +71,9 @@ private:
     bool reproduciendoPatron;
     QVector<int> playbackList;
 
+    bool termino=false;
+    int erroress=0;
+
 private slots:
     void reproducirSiguientePasoPatron();
 

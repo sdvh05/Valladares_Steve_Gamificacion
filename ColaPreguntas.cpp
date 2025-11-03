@@ -112,25 +112,25 @@ void ColaPreguntas::cargarPreguntasPolitica() {
     clear();
 
     enqueue(Pregunta(
-        "Durante el renacimiento, el modelo de gobierno es uno de los siguientes:",
+        "Durante el renacimiento, el modelo de  \n gobierno es uno de los siguientes:",
         "Monarquía absoluta", "Tiranía republicana", "Democracia participativa", "Liberalismo político",
         'A', "politica"
         ));
 
     enqueue(Pregunta(
-        "De los siguientes acontecimientos, seleccione el que inicia el período moderno:",
+        "De los siguientes acontecimientos, seleccione  \n el que inicia el período moderno:",
         "Toma de Constantinopla", "Tratado de paz de westfalia", "Toma de la Bastilla", "La ruta de la seda",
         'A', "politica"
         ));
 
     enqueue(Pregunta(
-        "Durante el siglo XV, la sociedad se estratifica en tres estamentos definidos:",
+        "Durante el siglo XV, la sociedad se estratifica \n en tres estamentos definidos:",
         "Clase media, baja y alta", "Nobleza, clero y estado llano", "Artesanos, guardianes y gobernantes", "Reyes, nobles y plebeyos",
         'B', "politica"
         ));
 
     enqueue(Pregunta(
-        "Aparece el realismo político, que se basaba en un orden establecido, explicación de un sistema y recomendaciones de como gobernar:",
+        "Aparece el realismo político, que se basaba en un orden establecido,\n explicación de un sistema y recomendaciones de como gobernar:",
         "Tomás Moro", "Jean Bodín", "Nicolás Maquiavelo", "Erasmo de Rotterdam",
         'C', "politica"
         ));
@@ -147,13 +147,13 @@ void ColaPreguntas::cargarPreguntasCiencia() {
     clear();
 
     enqueue(Pregunta(
-        "Entre los siguientes renacentistas seleccione uno de los precursores filósofo-científico del heliocentrismo:",
+        "Entre los siguientes renacentistas seleccione uno de \n los precursores filósofo-científico del heliocentrismo:",
         "Tomas Moro", "Galileo", "Platón", "Arquimedes",
         'B', "ciencia"
         ));
 
     enqueue(Pregunta(
-        "El método científico se introduce por el interés de tres filósofos. Entre los siguientes uno de los mencionados no es precursor del método científico:",
+        "El método científico se introduce por el interés de tres filósofos. \n Entre los siguientes uno de los mencionados no es precursor del método científico:",
         "Francis Bacon", "Galileo Galilei", "Nicolas Maquiavelo", "René Descartes",
         'C', "ciencia"
         ));
@@ -165,13 +165,13 @@ void ColaPreguntas::cargarPreguntasCiencia() {
         ));
 
     enqueue(Pregunta(
-        "De los siguientes filósofos niega el geocentrismo (teoría que afirma que el centro de nuestro sistema solar es la tierra):",
+        "De los siguientes filósofos niega el geocentrismo \n(teoría que afirma que el centro de nuestro sistema solar es la tierra):",
         "Aristóteles", "Nicolás Copérnico", "Tomás de Aquino", "Isaac Newton",
         'B', "ciencia"
         ));
 
     enqueue(Pregunta(
-        "Uno de los inventos que suscitó un conocimiento ilimitado, fue el de Gutenberg:",
+        "Uno de los inventos que suscitó un conocimiento \n ilimitado, fue el de Gutenberg:",
         "El astrolabio", "La imprenta", "La Nao y la Carabela", "El Telescopio",
         'B', "ciencia"
         ));

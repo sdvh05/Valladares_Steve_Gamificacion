@@ -15,6 +15,9 @@ class MinijuegoHistoria : public ControlPersonaje {
 private:
     QLabel* labelPuerta;
     bool hayPuertaCerca = false;
+    bool termino=false;
+    bool zonaTermino=false;
+    bool ultimaPregunta = false;
     QLabel* fondoLabel;
     QRect zonaPuerta;
 

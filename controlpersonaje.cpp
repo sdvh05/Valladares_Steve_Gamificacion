@@ -142,16 +142,6 @@ void ControlPersonaje::ActualizarCorazones(bool gano) {
     }
 }
 
-void ControlPersonaje::PuertaSeleccionada(int indice){
-
-        if (indice >= 0 && indice < puertas.size()) {
-            puertas[indice] = true;
-            qDebug() << "Minijuego de puerta #" << indice << " terminado";
-
-            // Debug: mostrar estado actual
-            qDebug() << "Estado puertas:" << puertas;
-        }
-}
 
 
 

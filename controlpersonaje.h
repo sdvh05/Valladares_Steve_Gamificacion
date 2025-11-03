@@ -16,7 +16,6 @@ protected:
     Personaje* jugador;
     QTimer* movimientoTimer;
     QList<QRect> obstaculos;
-    QList<bool> puertas = {false, false, false, false};
 
     QList<QLabel*> hitboxLabels;
 
@@ -51,7 +50,7 @@ public:
 
     void ActualizarCorazones(bool gano = false);
 
-    void PuertaSeleccionada(int indice);
+
 };
 
 #endif // CONTROLPERSONAJE_H

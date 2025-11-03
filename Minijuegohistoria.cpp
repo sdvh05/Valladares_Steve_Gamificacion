@@ -1,5 +1,6 @@
 #include "Minijuegohistoria.h"
 #include "ColaPreguntas.h"
+#include "interior.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -103,31 +104,19 @@ void MinijuegoHistoria::cambiarEscena() {
     }
 
     fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    //EstadoActual = 2;
 }
 
 
 void MinijuegoHistoria::configurarObstaculos(){
     obstaculos.clear();
-    int pasillo=EstadoActual;
 
-    switch (pasillo) {
-    case 1:
+    /*obstaculos.append(QRect(50,734, 2, 320));
+    obstaculos.append(QRect(206,734, 2, 320));
+    obstaculos.append(QRect(532,734, 2, 320));
+    obstaculos.append(QRect(696,734, 2, 320));
+    obstaculos.append(QRect(50,734, 2, 320)); */
 
-        break;
-
-    case 2:
-
-        break;
-
-    case 3:
-
-        break;
-
-    case 4:
-
-        break;
-    }
+\
 }
 
 
@@ -149,22 +138,22 @@ void MinijuegoHistoria::onMovimientoUpdate() {
     // --- PUENTES ---
     bool huboCambio = false;
 
-    if (rectJugador.intersects(QRect(116,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'A' && puentes[0]) {
+    if (rectJugador.intersects(QRect(116,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'A' && puentes[0] && !termino) {
         puentes[0] = false;
         huboCambio = true;
         qDebug() << "A cayó";
     }
-    else if (rectJugador.intersects(QRect(278,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'B' && puentes[1]) {
+    else if (rectJugador.intersects(QRect(278,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'B' && puentes[1] && !termino) {
         puentes[1] = false;
         huboCambio = true;
         qDebug() << "B cayó";
     }
-    else if (rectJugador.intersects(QRect(438,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'C' && puentes[2]) {
+    else if (rectJugador.intersects(QRect(438,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'C' && puentes[2] && !termino) {
         puentes[2] = false;
         huboCambio = true;
         qDebug() << "C cayó";
     }
-    else if (rectJugador.intersects(QRect(608,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'D' && puentes[3]) {
+    else if (rectJugador.intersects(QRect(608,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'D' && puentes[3] && !termino) {
         puentes[3] = false;
         huboCambio = true;
         qDebug() << "D cayó";
@@ -181,21 +170,36 @@ void MinijuegoHistoria::onMovimientoUpdate() {
     }
 
     // --- Final ---
-    if (rectJugador.intersects(QRect(222,200, 200, 100))) {
+    QRect zonaFinal(222,200,200,100);
+
+    if (rectJugador.intersects(zonaFinal) && termino) {
+        zonaTermino = true;
+    }
+
+    if (rectJugador.intersects(zonaFinal) && !termino) {
         jugador->move(400,818);
         ResetearMovimiento();
-        cargarPreguntaActual();
-        respuestasActivas = false;
-        labelRespuestas->hide();
-        puentes = {true, true, true, true}; // restaurar todos
+        puentes = {true, true, true, true};
         cambiarEscena();
+        configurarObstaculos();
         actualizarRespuestas();
 
+
+
+        respuestasActivas = false;
+        labelRespuestas->hide();
+
+        // Si no quedan preguntas, terminar el minijuego
         if (preguntas.isEmpty()) {
             qDebug() << "Se terminó el minijuego";
             ActualizarCorazones(ganaste);
+            termino = true;
         }
+
+        cargarPreguntaActual();
+        this->update();
     }
+
 }
 
 
@@ -206,39 +210,12 @@ void MinijuegoHistoria::detectarZonaPuerta() {
 
 
     // --- Detectar la puerta según el pasillo actual ---
-    switch (EstadoActual) {
-    case 1:
+    if (!termino)
         zonaPuerta = QRect(400, 888, 180, 100);
-        break;
-    case 2:
-        zonaPuerta = QRect(820, 600, 150, 100);
-        break;
-    case 3:
-        zonaPuerta = QRect(408,680, 150, 100);
-        break;
+    else
+        zonaPuerta = QRect(222,200, 200, 100);
 
 
-    case 4:
-        zonaPuerta = QRect(400, 888, 180, 100); //ruleta
-        break;
-    case 5:
-        zonaPuerta = QRect(-48,574, 50, 50); //Arte
-        break;
-    case 6:
-        zonaPuerta = QRect(86,506, 50, 50); //Politica
-        break;
-    case 7:
-        zonaPuerta = QRect(374,446, 50, 50); //Ciencia
-        break;
-    case 8:
-        zonaPuerta = QRect(718,590, 50, 50); //Historia
-        break;
-
-
-    default:
-        zonaPuerta = QRect();
-        break;
-    }
 
 
     if (zonaPuerta.contains(pos)) {
@@ -254,8 +231,13 @@ void MinijuegoHistoria::detectarZonaPuerta() {
 void MinijuegoHistoria::mostrarHintPuerta(const QRect& zonaPuerta) {
     if (!labelPuerta->isVisible()) {
 
-        QString textoHint="Presiona Z para ver las Respuestas";
 
+        QString textoHint;
+        if(termino){
+            textoHint="Presiona Z para ver las Respuestas";
+        }else{
+            textoHint="Presiona Q para SALIR";
+        }
 
 
         labelPuerta->setText(textoHint);
@@ -287,6 +269,10 @@ void MinijuegoHistoria::keyPressEvent(QKeyEvent* event) {
             labelRespuestas->hide();
         }
     }
+
+    if(event->key() == Qt::Key_Q && termino){
+        SalirMinijuego();
+    }
 }
 
 
@@ -314,6 +300,10 @@ void MinijuegoHistoria::SalirMinijuego(){
     if (!jugador) return;
 
     ResetearMovimiento();
+
+    Interior* interior = new Interior(jugador,nullptr,4);
+    jugador->move(734,568);
+    interior->show();
 
 
     this->close();
@@ -349,9 +339,13 @@ void MinijuegoHistoria::cargarPreguntaActual() {
         preguntaActual = preguntas.dequeue();
         labelPregunta->setText(preguntaActual.texto);
         labelRespuestas->hide();
+
+        ultimaPregunta = preguntas.isEmpty();
     } else {
         qDebug() << "No hay más preguntas en la cola.";
         labelPregunta->setText("¡Has Completado el Minijuegos!");
         labelRespuestas->hide();
+
+        ultimaPregunta =true;
     }
 }

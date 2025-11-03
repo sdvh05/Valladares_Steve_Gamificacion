@@ -14,6 +14,7 @@ SOURCES += \
     Mainmenu.cpp \
     Minijuegociencia.cpp \
     Minijuegohistoria.cpp \
+    Minijuegopolitica.cpp \
     Personaje.cpp \
     Ruleta.cpp \
     controlpersonaje.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     Mainmenu.h \
     Minijuegociencia.h \
     Minijuegohistoria.h \
+    Minijuegopolitica.h \
     Personaje.h \
     Pregunta.h \
     Ruleta.h \

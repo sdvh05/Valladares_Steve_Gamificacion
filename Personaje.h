@@ -30,6 +30,8 @@ public:
     void MoverAbajo();
     void DetenerAnimacion();
 
+    QList<bool> puertas = {false, false, false, false};
+
     void MoverSiNoColisiona(int dx, int dy, const QVector<QRect>& obstaculos);
     void SetAnimacionMovimiento(int velocidad);
     int getVelocidadMovimiento() const { return velocidadMovimiento; }
@@ -62,6 +64,7 @@ private:
     int corazones = 0;
     int velocidadMovimiento;
 
+    void PuertaSeleccionada(int indice);
 };
 
 

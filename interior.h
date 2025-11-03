@@ -2,6 +2,8 @@
 #define INTERIOR_H
 
 #include "ControlPersonaje.h"
+#include "Ruleta.h"
+
 #include <QLabel>
 #include <QList>
 #include <QPushButton>
@@ -24,6 +26,8 @@ private:
 
     void configurarEscena() override;
     void configurarObstaculos() override;
+
+    RuletaWidget* ruleta = nullptr;
 
 protected:
     void onMovimientoUpdate() override;

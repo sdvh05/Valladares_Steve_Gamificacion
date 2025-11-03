@@ -4,6 +4,7 @@
 
 #include "Minijuegohistoria.h"
 #include "Minijuegociencia.h"
+#include "Minijuegopolitica.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -336,22 +337,35 @@ void Interior::keyPressEvent(QKeyEvent* event) {
 
     if (event->key() == Qt::Key_R && hayPuertaCerca) {
         if(pasilloActual==4){
-            if (!puertas.contains(false)) {
+            if (!jugador->puertas.contains(false)) {
                 qDebug() << "Ya jugaste todos los minijuegos";
             }
 
             int indice; //guardamos el indice
             do {
                 indice = QRandomGenerator::global()->bounded(0, 4); // genera 0,1,2 o 3
-            } while (puertas[indice]);
+            } while (jugador->puertas[indice]);
 
             qDebug() << indice;
 
             this->ResetearMovimiento();
-            RuletaWidget* r = new RuletaWidget(puertas, indice, this);
-            r->setAttribute(Qt::WA_DeleteOnClose);
-            puertas[indice]=true;
-            r->show();
+
+            if(jugador->puertas.contains(false)){
+            ruleta = new RuletaWidget(jugador->puertas, indice, this);
+            connect(ruleta, &RuletaWidget::ruletaFinalizada, this, &Interior::actualizarPasilloRuleta);
+            ruleta->setGeometry(340, 80, 520, 520);
+            //ruleta->setGeometry(340, 520, 520, 520);
+            ruleta->setAttribute(Qt::WA_DeleteOnClose);
+            ruleta->show();
+            }else{
+                //mostrar un label de que ya no se puede girar
+            }
+
+
+
+            jugador->puertas[indice] = true;
+
+
         }
 
     }
@@ -378,7 +392,8 @@ void Interior::EntrarMinijuego(){
         qDebug()<<"minijuego Arte";
 
     } else if(pasilloActual==6){ //Politica
-        qDebug()<<"minijuego Politica";
+        MinijuegoPolitica* MP = new MinijuegoPolitica(jugador);
+        MP->show();
 
     }else if(pasilloActual==7){ //Ciencia
         MinijuegoCiencia *MC = new MinijuegoCiencia(jugador);
@@ -409,12 +424,11 @@ void Interior::mousePressEvent(QMouseEvent* event)
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
 
-    this->ActualizarCorazones(true);
+    //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
 
     if(pasilloActual>4){
-       // pasilloActual=4;
-        pasilloActual=7;
+        pasilloActual=4;
         configurarEscena();
         configurarObstaculos();
     }

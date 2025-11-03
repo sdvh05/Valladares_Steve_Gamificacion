@@ -1,30 +1,26 @@
 #include "Ruleta.h"
-#include "interior.h"
-
 #include <QPainter>
 #include <QLinearGradient>
-#include <QLinearGradient>
-#include <QRect>
 #include <QRadialGradient>
 #include <QApplication>
 #include <QFont>
 #include <QDebug>
+#include <QtMath>
 
-RuletaWidget::RuletaWidget(const QList<bool>& puertas, int resultado, Interior* padre)
-    : QWidget(nullptr),
+RuletaWidget::RuletaWidget(const QList<bool>& puertas, int resultado, QWidget* parent)
+    : QWidget(parent),
     opcionesDisponibles(puertas),
-    escenaPadre(padre),
     resultadoFinal(resultado),
     anguloActual(0.0),
     velocidad(40),
     girando(true)
 {
-    setFixedSize(520, 520);
-    setWindowTitle("Ruleta");
+    setFixedSize(300, 300);
+    setWindowTitle("Ruleta Medieval");
 
     lblResultado = new QLabel(this);
     lblResultado->setAlignment(Qt::AlignCenter);
-    lblResultado->setStyleSheet("color: #f5f0e6;"); // beige clarito
+    lblResultado->setStyleSheet("color: #f5f0e6;");
     lblResultado->setFont(QFont("Times", 14, QFont::Bold));
     lblResultado->hide();
 
@@ -39,7 +35,7 @@ RuletaWidget::RuletaWidget(const QList<bool>& puertas, int resultado, Interior* 
 
     timerGiro = new QTimer(this);
     connect(timerGiro, &QTimer::timeout, this, &RuletaWidget::girarRuleta);
-    timerGiro->start(30); // tick cada 30 ms
+    timerGiro->start(30);
 }
 
 QString RuletaWidget::obtenerTextoCategoria(int indice) const
@@ -54,6 +50,18 @@ QString RuletaWidget::obtenerTextoCategoria(int indice) const
     }
 }
 
+QColor RuletaWidget::obtenerColorCategoria(int indice) const
+{
+    switch (indice)
+    {
+    case 0: return QColor(130, 70, 150);   // Arte
+    case 1: return QColor(120, 30, 30);    // Política
+    case 2: return QColor(40, 100, 60);    // Ciencia
+    case 3: return QColor(150, 120, 40);   // Historia
+    default: return QColor(100, 100, 100);
+    }
+}
+
 void RuletaWidget::paintEvent(QPaintEvent*)
 {
     QPainter p(this);
@@ -62,7 +70,7 @@ void RuletaWidget::paintEvent(QPaintEvent*)
     // Centro y radio
     int cx = width() / 2;
     int cy = height() / 2;
-    int radio = 180;
+    int radio = 120;
 
     // Fondo tipo madera/medieval
     QLinearGradient fondoGrad(0, 0, 0, height());
@@ -174,7 +182,7 @@ void RuletaWidget::paintEvent(QPaintEvent*)
     if (!girando)
     {
         p.setPen(QPen(QColor(245, 240, 220)));
-        QFont big("Times", 16, QFont::Bold);
+        QFont big("Times", 10, QFont::Bold);
         p.setFont(big);
         QString txt = obtenerTextoCategoria(resultadoFinal);
         p.drawText(centroRect, Qt::AlignCenter, txt);
@@ -184,7 +192,6 @@ void RuletaWidget::paintEvent(QPaintEvent*)
 void RuletaWidget::girarRuleta()
 {
     if (!girando) return;
-
 
     if (!objetivoCalculado)
     {
@@ -200,16 +207,13 @@ void RuletaWidget::girarRuleta()
             detenerRuleta();
             return;
         }
-        double angSector = 360.0 / nDisp;
 
+        double angSector = 360.0 / nDisp;
         int posResultado = disponiblesIdx.indexOf(resultadoFinal);
-        if (posResultado == -1)
-        {
-            posResultado = 0;
-        }
+        if (posResultado == -1) posResultado = 0;
+
         double angSectorInicio = posResultado * angSector;
         anguloObjetivo = 360.0 - (angSectorInicio + angSector / 2.0);
-
         anguloObjetivo += 720.0; // dos vueltas extra
         objetivoCalculado = true;
     }
@@ -231,7 +235,6 @@ void RuletaWidget::girarRuleta()
     }
 }
 
-
 void RuletaWidget::detenerRuleta()
 {
     girando = false;
@@ -246,12 +249,8 @@ void RuletaWidget::detenerRuleta()
     update();
 }
 
-
 void RuletaWidget::cerrarRuleta()
 {
-    if (escenaPadre) {
-        escenaPadre->actualizarPasilloRuleta(resultadoFinal);
-    }
+    emit ruletaFinalizada(resultadoFinal);
     this->close();
 }
-

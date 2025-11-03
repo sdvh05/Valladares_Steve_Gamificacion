@@ -1,4 +1,5 @@
 #include "Minijuegociencia.h"
+#include "interior.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -25,48 +26,48 @@ MinijuegoCiencia::MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent,
     fondoLabel->lower();
 
     labelPregunta = new QLabel(this);
-    labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: white;");
+    labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: white; padding: 6px; border-radius: 6px; font: bold 14px 'Courier New';");
     labelPregunta->setAlignment(Qt::AlignCenter);
     labelPregunta->setFixedSize(800, 80);
     labelPregunta->move(24, 30);
 
     labelRespuestas = new QLabel(this);
-    labelRespuestas->setStyleSheet("background: rgba(0,0,0,180); color: white;");
+    labelRespuestas->setStyleSheet("background: rgba(0,0,0,180); color: white; padding: 6px; border-radius: 6px; font: bold 14px 'Courier New';");
     labelRespuestas->setAlignment(Qt::AlignLeft);
     labelRespuestas->setFixedSize(800, 100);
     labelRespuestas->move(24, 130);
     labelRespuestas->hide();
 
-    qDebug() << "✅ Labels creados";
+    qDebug() << "Labels creados";
 
-    // ✅ PUERTA
+    // PUERTA
     labelPuerta = new QLabel(this);
     labelPuerta->setStyleSheet("background: rgba(0,0,0,180); color: yellow;");
     labelPuerta->setAlignment(Qt::AlignCenter);
     labelPuerta->setFixedSize(260, 40);
     labelPuerta->hide();
 
-    // ✅ Configuración escena antes de cargar preguntas
+    // Configuración escena antes de cargar preguntas
     configurarEscena();
     configurarObstaculos();
     ActualizarCorazones();
 
-    // ✅ Reubicar jugador SIN cambiar parent
+    // Reubicar jugador SIN cambiar parent
     jugador = jugadorExistente;
     if(jugador){
         jugador->setParent(this);
         jugador->move(400,818);
         jugador->show();
         jugador->raise();
-        qDebug() << "✅ Jugador colocado" << jugador->pos();
+        qDebug() << "Jugador colocado" << jugador->pos();
     }
 
-    // ✅ Timer del patrón
+    // Timer del patrón
     timerPatron = new QTimer(this);
     timerPatron->setInterval(1000);
     connect(timerPatron, &QTimer::timeout, this, &MinijuegoCiencia::reproducirSiguientePasoPatron);
 
-    // ✅ Preparar colas
+    // Colas
     preguntas.cargarPreguntasPorTipo("Ciencia");
     patronCorrecto.clear();
     patronJugador.clear();
@@ -74,11 +75,9 @@ MinijuegoCiencia::MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent,
 
 
     cargarPreguntaActual();
-
-    // ✅ Activar movimiento
     Movimientos();
 
-    qDebug() << "✅ Constructor MinijuegoCiencia terminado sin crashes ✅";
+    qDebug() << "Constructor MinijuegoCiencia terminado sin crashes";
 }
 
 
@@ -157,6 +156,7 @@ void MinijuegoCiencia::cargarPreguntaActual()
         labelPregunta->setText("¡Has completado el minijuego Ciencia!");
         labelRespuestas->hide();
         bool correcto = true;
+        termino=true;
         if (patronJugador.size() != patronCorrecto.size()) correcto = false;
         else {
             QQueue<char> copiaC = patronCorrecto;
@@ -207,7 +207,7 @@ void MinijuegoCiencia::actualizarRespuestas(int nuevaRespuesta){
         patronJugador.clear();
 
         labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: lightgreen; font-weight: bold;");
-        labelPregunta->setText("✅ Correcto, avanzando...");
+        labelPregunta->setText("Correcto, avanzando...");
 
         QTimer::singleShot(1000, this, [this]() {
             labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: white;");
@@ -259,7 +259,7 @@ void MinijuegoCiencia::reproducirSiguientePasoPatron()
     } else {
         timerPatron->stop();
         reproduciendoPatron = false;
-        qDebug() << "✅ Fin de reproducción del patrón.";
+        qDebug() << "Fin de reproducción del patrón.";
 
         configurarEscena();
         respuestasActivas = true;
@@ -390,6 +390,13 @@ void MinijuegoCiencia::onMovimientoUpdate()
     detectarZonaPuerta();
     detectarZonaSeleccion();
 
+        QRect rectJugador = jugador->geometry();
+    if (rectJugador.intersects(QRect(732,512, 15, 100)) && termino) {
+            SalirMinijuego();
+            qDebug() << "Salir";
+    }
+
+
 }
 
 void MinijuegoCiencia::keyPressEvent(QKeyEvent* event)
@@ -447,9 +454,20 @@ void MinijuegoCiencia::mousePressEvent(QMouseEvent* event)
     else if (cercaD)  qDebug() << "Cerca D";
 }
 
-void MinijuegoCiencia::SalirMinijuego()
-{
+void MinijuegoCiencia::SalirMinijuego(){
+    if (!jugador) return;
+
     ResetearMovimiento();
+
+    if (erroress >= 3)
+        ActualizarCorazones(true);
+
+
+    Interior* interior = new Interior(jugador,nullptr,4);
+    jugador->move(434,472);
+    interior->show();
+
+
     this->close();
 }
 
