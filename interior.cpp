@@ -6,6 +6,8 @@
 #include "Minijuegociencia.h"
 #include "Minijuegopolitica.h"
 
+#include "Combate.h"
+
 #include <QPixmap>
 #include <QDebug>
 #include <QLabel>
@@ -389,7 +391,8 @@ void Interior::EntrarMinijuego(){
 
 
     if(pasilloActual==5){ //Arte
-        qDebug()<<"minijuego Arte";
+        Combate* BF = new Combate(jugador);
+        BF->show();
 
     } else if(pasilloActual==6){ //Politica
         MinijuegoPolitica* MP = new MinijuegoPolitica(jugador);

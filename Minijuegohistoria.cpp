@@ -1,6 +1,7 @@
 #include "Minijuegohistoria.h"
 #include "ColaPreguntas.h"
 #include "interior.h"
+#include "inventario.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -12,6 +13,8 @@
 #include <QApplication>
 #include <QRandomGenerator>
 #include <QList>
+
+extern Inventario* inventarioGlobal;
 
 MinijuegoHistoria::MinijuegoHistoria(Personaje* jugadorExistente, QWidget* parent, int EstadoActual)
     : ControlPersonaje(jugadorExistente, parent), EstadoActual(EstadoActual)
@@ -193,6 +196,9 @@ void MinijuegoHistoria::onMovimientoUpdate() {
         if (preguntas.isEmpty()) {
             qDebug() << "Se terminó el minijuego";
             ActualizarCorazones(ganaste);
+            if(ganaste){
+                inventarioGlobal->agregarMedallaHistoria();
+                }
             termino = true;
         }
 

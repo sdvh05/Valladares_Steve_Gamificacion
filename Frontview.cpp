@@ -222,6 +222,7 @@ void FrontView::mousePressEvent(QMouseEvent* event)
 {
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
+    this->ActualizarCorazones(true);
     jugador->move(400,818);
 
 }

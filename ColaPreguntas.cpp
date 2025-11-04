@@ -24,9 +24,9 @@ Pregunta ColaPreguntas::dequeueCircular() {
     Pregunta pregunta = cola.front();
     cola.pop();
 
-    if (esCircular) {
+    //if (esCircular) {
         cola.push(pregunta); // Reencolar batalla
-    }
+    //}
 
     return pregunta;
 }

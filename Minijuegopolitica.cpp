@@ -1,6 +1,7 @@
 #include "MinijuegoPolitica.h"
 #include "ColaPreguntas.h"
 #include "interior.h"
+#include "inventario.h"
 
 #include <QPixmap>
 #include <QDebug>
@@ -12,6 +13,8 @@
 #include <QApplication>
 #include <QRandomGenerator>
 #include <QList>
+
+extern Inventario* inventarioGlobal;
 
 MinijuegoPolitica::MinijuegoPolitica(Personaje* jugadorExistente, QWidget* parent)
     : ControlPersonaje(jugadorExistente, parent)
@@ -387,6 +390,10 @@ void MinijuegoPolitica::mostrarResultadoTemporal(bool reiniciar) {
             } else {
                 // C acabo
                 labelPregunta->setText("¡Has completado el minijuego!");
+                ActualizarCorazones(ganaste);
+                if(ganaste){
+                    inventarioGlobal->agregarMedallaPolitica();
+                }
                 timerMole->stop();
                 termino = true;
             }

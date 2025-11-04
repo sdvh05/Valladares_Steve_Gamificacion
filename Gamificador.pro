@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     ColaPreguntas.cpp \
+    Combate.cpp \
     Frontview.cpp \
     Mainmenu.cpp \
     Minijuegociencia.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
 
 HEADERS += \
     ColaPreguntas.h \
+    Combate.h \
     Frontview.h \
     Mainmenu.h \
     Minijuegociencia.h \

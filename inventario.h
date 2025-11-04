@@ -64,8 +64,13 @@ public: //Agregar items especificos
     void agregarMedallaPolitica(int valor=1);
     void agregarMedallaArte(int valor=1);
     void agregarMedallaHistoria(int valor=1);
+    void agregarMedallaCombate(int valor=1);
+
     void agregarMedallaKant(int valor=1);
     void agregarMedallaDescartes(int valor=1);
+
+    void agregarVida(int valor=1);
+
 
 
 

@@ -41,6 +41,7 @@ public:
 
     int getCorazones();
     void AumentarCorazones();
+    void PerderCorazones();
 
     void setVidas(int vidas) {
         vida = vidas;

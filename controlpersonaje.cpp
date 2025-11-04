@@ -1,6 +1,10 @@
 #include "ControlPersonaje.h"
 #include <QPixmap>
 #include <QPainter>
+#include "inventario.h"
+#include "inventariowidget.h"
+
+extern Inventario* inventarioGlobal;
 
 ControlPersonaje::ControlPersonaje(Personaje *jugadorExistente, QWidget *parent)
     : QWidget(parent),
@@ -89,6 +93,18 @@ void ControlPersonaje::keyPressEvent(QKeyEvent* event) {
             movimientoTimer->start();
         break;
     case Qt::Key_Down: abajoPresionado = true; if (!movimientoTimer->isActive()) movimientoTimer->start(); break;
+
+    case Qt::Key_I:
+        if (event->key() == Qt::Key_I) {
+            if (inventarioGlobal) {
+                ResetearMovimiento();
+                InventarioWidget* invWidget = new InventarioWidget(inventarioGlobal);
+                invWidget->setAttribute(Qt::WA_DeleteOnClose);
+                invWidget->show();
+            } else {
+                qDebug() << "Error con inventarioGlobal";
+            }
+        }
     default: break;
     }
 }
@@ -130,6 +146,7 @@ void ControlPersonaje::ActualizarCorazones(bool gano) {
 
     if(gano){
         jugador->AumentarCorazones();
+        inventarioGlobal->agregarVida();
     }
     cantidadCorazones=jugador->getCorazones();
 

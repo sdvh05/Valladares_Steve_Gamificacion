@@ -126,30 +126,42 @@ void Inventario::agregarLlave(int cantidad){
     agregarObjeto(Objeto("LLave", "Epico", "Badge", "LLave de una Peculiar Forma, \n puede ser usada para abrir algo",
                          "Sprites/Recursos/Golden Key.png", cantidad, 1));
 }
+
+void Inventario::agregarVida(int cantidad){
+    agregarObjeto(Objeto("Vidas", "Comun", "Vidas", "Vidas Ganadas atravez de Minijuegos: seran utiles para la batalla",
+                         "Sprites/Recursos/FullHeart.png", cantidad, 1));
+}
+
+
 void Inventario::agregarMedallaCiencia(int cantidad){
-    agregarObjeto(Objeto("Medalla Ciencia", "Legendario", "Badge", "Medalla Otorgada por ganar el Minijuego Ciencia",
+    agregarObjeto(Objeto("Medalla Ciencia", "Raro", "Badge", "Medalla Otorgada por ganar el Minijuego Ciencia",
                          "Sprites/Recursos/Bagde Ciencia.png", cantidad, 1));
 }
 void Inventario::agregarMedallaPolitica(int cantidad){
-    agregarObjeto(Objeto("Medalla Politica", "Comun", "Badge", "Medalla Otorgada por ganar el Minijuego Politica",
-                         "Sprites/Recursos/Badge Politica.png", cantidad, 20));
+    agregarObjeto(Objeto("Medalla Politica", "Raro", "Badge", "Medalla Otorgada por ganar el Minijuego Politica",
+                         "Sprites/Recursos/Bagde Politica.png", cantidad, 1));
 }
 void Inventario::agregarMedallaArte(int cantidad){
-    agregarObjeto(Objeto("Medalla Arte", "Comun", "Badge","Medalla Otorgada por ganar el Minijuego Arte",
-                         "Sprites/Recursos/Bagde Arte.png", cantidad, 20));
+    agregarObjeto(Objeto("Medalla Arte", "Raro", "Badge","Medalla Otorgada por ganar el Minijuego Arte",
+                         "Sprites/Recursos/Bagde Arte.png", cantidad, 1));
 }
 void Inventario::agregarMedallaHistoria(int cantidad){
     agregarObjeto(Objeto("Medalla Historia", "Raro", "Badge", "Medalla Otorgada por ganar el Minijuego Historia",
-                         "Sprites/Recursos/Badge Historia.png", cantidad, 60));
+                         "Sprites/Recursos/Bagde Historia.png", cantidad, 1));
 }
+void Inventario::agregarMedallaCombate(int cantidad){
+    agregarObjeto(Objeto("Medalla Combate", "Epico", "Badge", "Medalla Otorgada por ganar la Batalla de Conocimientos",
+                         "Sprites/Recursos/BadgeCombate.png", cantidad, 1));
+}
+
 void Inventario::agregarMedallaKant(int cantidad){
-    agregarObjeto(Objeto("Medalla Kant", "Raro", "Badge", "Medalla Otorgada por resolver el Misterio de Kant",
-                         "Sprites/Recursos/Badge Kant.png", cantidad, 60));
+    agregarObjeto(Objeto("Medalla Kant", "Epico", "Badge", "Medalla Otorgada por resolver el Misterio de Kant",
+                         "Sprites/Recursos/Bagde Kant.png", cantidad, 1));
 }
 
 void Inventario::agregarMedallaDescartes(int cantidad){
     agregarObjeto(Objeto("Medalla Descartes", "Epico", "Badge", "Medalla Otorgada por resolver el Misterio de Kant",
-                         "Sprites/Recursos/Badge Descartes.png", cantidad, 1));
+                         "Sprites/Recursos/Bagde Descartes.png", cantidad, 1));
 }
 
 

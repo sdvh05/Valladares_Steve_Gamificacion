@@ -28,8 +28,13 @@ int main(int argc, char *argv[])
     inventarioGlobal = new Inventario();
     inventarioGlobal ->agregarMedallaCiencia();
     inventarioGlobal->agregarMedallaArte();
-    InventarioWidget* inventarioUI = new InventarioWidget(inventarioGlobal);
-    inventarioUI->show();
+    inventarioGlobal->agregarMedallaHistoria();
+    inventarioGlobal->agregarMedallaPolitica();
+
+    inventarioGlobal->agregarMedallaDescartes();
+    inventarioGlobal->agregarMedallaKant();
+    /*InventarioWidget* inventarioUI = new InventarioWidget(inventarioGlobal);
+    inventarioUI->show();*/
 
 
 

@@ -1,11 +1,14 @@
 #include "Minijuegociencia.h"
 #include "interior.h"
+#include "inventario.h"
 
 #include <QPixmap>
 #include <QDebug>
 #include <QTimer>
 #include <QMouseEvent>
 #include <QApplication>
+
+extern Inventario* inventarioGlobal;
 
 MinijuegoCiencia::MinijuegoCiencia(Personaje* jugadorExistente, QWidget* parent, int Actual)
     : ControlPersonaje(jugadorExistente, parent),
@@ -165,7 +168,10 @@ void MinijuegoCiencia::cargarPreguntaActual()
                 if (copiaC.dequeue() != copiaJ.dequeue()) { correcto = false; break; }
             }
         }
-        if (correcto) ActualizarCorazones(true);
+        if (ganaste){
+            ActualizarCorazones(true);
+            inventarioGlobal->agregarMedallaCiencia();
+        }
         else ActualizarCorazones(false);
     }
 }
@@ -186,6 +192,10 @@ void MinijuegoCiencia::actualizarRespuestas(int nuevaRespuesta){
         //mensaje de error en rojo
         labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: red; font-weight: bold;");
         labelPregunta->setText("Error, reiniciando turno...");
+
+        QString ruta = "Sprites/Castle/Minijuegos/Ciencia/CienciaError.png";
+        QPixmap fondo(ruta);
+        fondoLabel->setPixmap(fondo.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
         patronJugador.clear();
         respuestasActivas = false;

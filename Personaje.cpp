@@ -161,6 +161,14 @@ void Personaje::AumentarCorazones(){
     corazones = nuevaCantidad;
 }
 
+void Personaje::PerderCorazones(){
+    int nuevaCantidad=this->getCorazones()-1;
+
+    if (nuevaCantidad < 0) nuevaCantidad = 0;
+    if (nuevaCantidad > 4) nuevaCantidad = 4;
+
+    corazones= nuevaCantidad;
+}
 
 
 Personaje::DatosAnimacion Personaje::obtenerAnimacion(const QString &tipo){
