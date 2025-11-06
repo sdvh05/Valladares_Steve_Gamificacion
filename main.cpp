@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     inventarioGlobal->agregarMedallaHistoria();
     inventarioGlobal->agregarMedallaPolitica();
 
+
     inventarioGlobal->agregarMedallaDescartes();
     inventarioGlobal->agregarMedallaKant();
     /*InventarioWidget* inventarioUI = new InventarioWidget(inventarioGlobal);

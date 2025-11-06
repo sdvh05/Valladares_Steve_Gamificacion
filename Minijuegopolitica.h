@@ -9,6 +9,8 @@
 #include <QRect>
 #include <QTimer>
 
+//Whack a Mole
+
 class MinijuegoPolitica : public ControlPersonaje {
     Q_OBJECT
 

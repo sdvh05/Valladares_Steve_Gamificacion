@@ -10,6 +10,8 @@
 #include <QQueue>
 #include <QTimer>
 
+//Simon
+
 class MinijuegoCiencia : public ControlPersonaje {
     Q_OBJECT
 

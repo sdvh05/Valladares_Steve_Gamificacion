@@ -103,17 +103,39 @@ Combate::Combate(Personaje* jugadorExistente, QWidget* parent, int Bando)
     int btnY = 900;
     int btnW = 180;
     int btnH = 50;
-    QString styleBtn = "background: rgba(0,0,0,200); color: white; border: 2px solid gray; font: bold 16px 'Courier New'; border-radius: 8px;";
+
+    // 🎨 Colores según el bando del jugador
+    QString baseColor;
+    QString borderColor;
+
+    if (jugador->Bando == 1) { //Racionalista
+        baseColor = "background: rgba(180,30,30,220); color: white;";
+        borderColor = "border: 2px solid #ffaaaa;";
+    }
+    else if (jugador->Bando == 2) { //Empirista
+        // Empiristas → tonos azulados
+        baseColor = "background: rgba(40,80,180,220); color: white;";
+        borderColor = "border: 2px solid #aaccff;";
+    }
+    else { //Caso Base
+        baseColor = "background: rgba(50,50,50,200); color: white;";
+        borderColor = "border: 2px solid gray;";
+    }
+
+    QString styleBtn = QString("%1 %2 font: bold 16px 'Courier New'; border-radius: 8px; padding: 4px;").arg(baseColor, borderColor);
     A = new QPushButton("A", this);
     B = new QPushButton("B", this);
     C = new QPushButton("C", this);
     D = new QPushButton("D", this);
+
     QList<QPushButton*> botones = {A, B, C, D};
     for (int i = 0; i < botones.size(); ++i) {
         botones[i]->setGeometry(20 + i * (btnW + 30), btnY, btnW, btnH);
         botones[i]->setStyleSheet(styleBtn);
+
         connect(botones[i], &QPushButton::clicked, [=]() { responder('A' + i); });
     }
+
 
     // --- Corazones enemigos ---
     for (int i = 0; i < 4; ++i) {
@@ -346,12 +368,15 @@ void Combate::verificarVictoria() {
         timerRespuesta->stop();
         ReproducirCancion(true);
         MostrarVictoria(true);
+        inventarioGlobal->agregarCorona();
+        inventarioGlobal->agregarMedallaCombate();
     } else if (jugador->getCorazones() <= 0) {
         termino = true;
         labelPregunta->setText("Has sido derrotado...");
         timerRespuesta->stop();
         ReproducirCancion(false);
         MostrarVictoria(false);
+        inventarioGlobal->agregarMedallaCombate();
     }
 }
 
@@ -363,20 +388,29 @@ void Combate::ActualizarCorazonesEnemigos() {
     }
 }
 
-void Combate::SalirMinijuego() {
-    qDebug() <<"salir";
+void Combate::SalirMinijuego()
+{
+    qDebug() << "Salir del combate";
+
+
+    FadeOutMusica(1200); // 1.2 segundos de fade
+
     if (!jugador) return;
 
     ResetearMovimiento();
 
+    Interior* interior = new Interior(jugador, nullptr, 9);
+    if(Bando==1)
+        jugador->move(276,734);
+    else
+        jugador->move(686,734);
 
-    Interior* interior = new Interior(jugador,nullptr,4);
-    jugador->move(434,472);
     interior->show();
-
 
     this->close();
 }
+
+
 
 // --- Vacíos obligatorios ---
 void Combate::onMovimientoUpdate() {}
@@ -392,36 +426,62 @@ void Combate::ReproducirCancion(bool gano)
 {
     QString rutaCancion;
 
-    // Si ganó el jugador
     if (gano) {
-        if (jugador->Bando == 1) {
-            // Racionalista gana
-            rutaCancion = "Canciones/O Fortuna.mp3";
-        } else if (jugador->Bando == 2) {
-            // Empirista gana
-            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3";
-        }
+        if (jugador->Bando == 1)
+            rutaCancion = "Canciones/O Fortuna.mp3"; // Racionalista gana
+        else if (jugador->Bando == 2)
+            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3"; // Empirista gana
     } else {
-        // Si perdió el jugador, gana el bando contrario
-        if (jugador->Bando == 1) {
-            // Racionalista pierde → Empiristas celebran
-            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3";
-        } else if (jugador->Bando == 2) {
-            // Empirista pierde → Racionalistas celebran
-            rutaCancion = "Canciones/O Fortuna.mp3";
-        }
+        if (jugador->Bando == 1)
+            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3"; // Empiristas ganan
+        else if (jugador->Bando == 2)
+            rutaCancion = "Canciones/O Fortuna.mp3"; // Racionalistas ganan
     }
 
-    // --- Reproducir ---
-    QMediaPlayer* player = new QMediaPlayer(this);
-    QAudioOutput* audioOut = new QAudioOutput(this);
-    player->setAudioOutput(audioOut);
-    player->setSource(QUrl::fromLocalFile(rutaCancion));
-    audioOut->setVolume(50);
-    player->play();
+    // --- Si ya hay una música sonando, detenla primero ---
+    if (playerMusica) {
+        playerMusica->stop();
+        playerMusica->deleteLater();
+        audioOutput->deleteLater();
+    }
+
+    // --- Crear nueva instancia ---
+    playerMusica = new QMediaPlayer(this);
+    audioOutput = new QAudioOutput(this);
+
+    playerMusica->setAudioOutput(audioOutput);
+    playerMusica->setSource(QUrl::fromLocalFile(rutaCancion));
+    audioOutput->setVolume(50);
+    playerMusica->play();
 
     qDebug() << "Reproduciendo canción:" << rutaCancion;
+
 }
+
+void Combate::FadeOutMusica(int duracionMs)
+{
+    if (!audioOutput || !playerMusica) return;
+
+    QPropertyAnimation* fade = new QPropertyAnimation(audioOutput, "volume", this);
+    fade->setDuration(duracionMs);
+    fade->setStartValue(audioOutput->volume());
+    fade->setEndValue(0.0);
+
+    connect(fade, &QPropertyAnimation::finished, this, [this]() {
+        if (playerMusica) {
+            playerMusica->stop();
+            playerMusica->deleteLater();
+            playerMusica = nullptr;
+        }
+        if (audioOutput) {
+            audioOutput->deleteLater();
+            audioOutput = nullptr;
+        }
+    });
+
+    fade->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
 
 void Combate::MostrarVictoria(bool gano)
 {
@@ -458,7 +518,7 @@ void Combate::MostrarVictoria(bool gano)
         // Mostrar corona sobre el jugador
         QLabel* corona = new QLabel(this);
         corona->setPixmap(QPixmap("Sprites/Recursos/corona.png").scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        corona->move(jugador->x() + 34, jugador->y() - 40);
+        corona->move(jugador->x() + 34, jugador->y() - 30);
         corona->show();
         corona->raise();
 

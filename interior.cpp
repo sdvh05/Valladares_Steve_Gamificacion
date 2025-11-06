@@ -5,6 +5,7 @@
 #include "Minijuegohistoria.h"
 #include "Minijuegociencia.h"
 #include "Minijuegopolitica.h"
+#include "Minijuegoarte.h"
 
 #include "Combate.h"
 
@@ -65,11 +66,8 @@ void Interior::configurarEscena(){
     case 1: //entrada
         rutaFondo = "Sprites/Castle/Interior.jpg";
         break;
-    case 2: //izquierda
+    case 2: //der
         rutaFondo = "Sprites/Castle/Pasillo.jpg";
-        break;
-    case 3: //derecha
-        rutaFondo = "Sprites/Castle/.jpg";
         break;
 
     case 4: //Ruleta
@@ -87,7 +85,14 @@ void Interior::configurarEscena(){
     case 8: //Ruleta Historia
          rutaFondo = "Sprites/Castle/Ruleta/HistoriaOpen.png";
         break;
-    case 9:
+
+
+    case 3: //izq
+        rutaFondo = "Sprites/Castle/pasillo.png";
+        break;
+
+    case 9: //zona seleccion
+        rutaFondo = "Sprites/Castle/Seleccion.png";
 
         break;
 
@@ -164,14 +169,18 @@ void Interior::onMovimientoUpdate()
         qDebug()<<"transision izquierda";
     }
     else if (pasilloActual == 1 && rectJugador.intersects(QRect(-54, 784, 10, 100))) { //ir a derecha
-
+        this->pasilloActual =3;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(820,826);
+        this->update();
         qDebug()<<"transision derecha";
     }
 
     //PASILLOS
     //-------------------------------------------------------------------------------------------------------------------------
         //Pasillo izquierda
-    if(pasilloActual==2 && rectJugador.intersects(QRect(-54, 784, 10, 100))){ // volver a main de izq
+    if(pasilloActual==2 && rectJugador.intersects(QRect(-54, 784, 10, 100))){ // volver a main de der
 
         this->pasilloActual=1;
         configurarEscena();
@@ -181,7 +190,7 @@ void Interior::onMovimientoUpdate()
         qDebug()<<"Vuelta a Main ";
     }
 
-    else if(pasilloActual==2 && rectJugador.intersects(QRect(200, 450, 10, 100))){ //entrar ruleta izq
+    else if(pasilloActual==2 && rectJugador.intersects(QRect(200, 450, 10, 100))){ //entrar ruleta der
         this->pasilloActual=4;
         configurarEscena();
         configurarObstaculos();
@@ -192,19 +201,44 @@ void Interior::onMovimientoUpdate()
 
 
         //Pasillo derecha
-     else if(pasilloActual==3 && rectJugador.intersects(QRect(998, 784, 10, 100))){ // volver a main de der
+     else if(pasilloActual==3 && rectJugador.intersects(QRect(998, 784, 50, 100))){ // volver a main de izq
+        this->pasilloActual=1;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(40,844);
+        this->update();
+        qDebug()<<"Vuelta a Main ";
+    }
+
+    else if(pasilloActual==3 && rectJugador.intersects(QRect(158,538, 250, 100))){ // volver a main de izq
+        this->pasilloActual=9;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(426,850);
+        this->update();
+        qDebug()<<"Entrar Seleccion";
 
     }
 
      //Ruleta
     //-------------------------------------------------------------------------------------------------------------------------
-    if (pasilloActual>=4 && rectJugador.intersects(QRect(910,852, 10, 100))){ //salir a izq
+    if (pasilloActual>=4 && rectJugador.intersects(QRect(910,852, 10, 100))){ //salir a der
         this->pasilloActual=2;
         configurarEscena();
         configurarObstaculos();
         jugador->move(250,500);
         this->update();
         qDebug()<<"Salirs Ruleta I";
+    }
+
+    //SELECCION
+    if(pasilloActual==9 && rectJugador.intersects(QRect(426,1000, 1000, 4))){ //volver a pasiilo izq
+        this->pasilloActual=3;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(240,642);
+        this->update();
+
     }
 
 
@@ -224,8 +258,9 @@ void Interior::detectarZonaPuerta() {
     case 2:
         zonaPuerta = QRect(820, 600, 150, 100);
         break;
+
     case 3:
-        zonaPuerta = QRect(408,680, 150, 100);
+        zonaPuerta = QRect();
         break;
 
 
@@ -310,6 +345,7 @@ void Interior::ocultarHintPuerta() {
 
 void Interior::keyPressEvent(QKeyEvent* event) {
     ControlPersonaje::keyPressEvent(event);
+    QRect rectJugador = jugador->geometry();
 
     if (event->key() == Qt::Key_Q && hayPuertaCerca) {
 
@@ -331,9 +367,28 @@ void Interior::keyPressEvent(QKeyEvent* event) {
             EntrarMinijuego();
             break;
 
+        case 9:
+
         default:
 
             break;
+        }
+    }
+
+    if(event->key() == Qt::Key_Q){
+        if(pasilloActual==9 && rectJugador.intersects(QRect(286,666, 250, 100)) && jugador->puertas.contains(!false)){
+            jugador->Bando=1;
+            ResetearMovimiento();
+            Combate* BF = new Combate(jugador,nullptr, jugador->Bando);
+            BF->show();
+            this->close();
+
+        } else if(pasilloActual==9 && rectJugador.intersects(QRect(702,666, 250, 100))){
+            jugador->Bando=2;
+            ResetearMovimiento();
+            Combate* BF = new Combate(jugador,nullptr, jugador->Bando);
+            BF->show();
+            this->close();
         }
     }
 
@@ -369,8 +424,9 @@ void Interior::keyPressEvent(QKeyEvent* event) {
 
 
         }
-
     }
+
+
 }
 
 void Interior::SalirCastillo(){
@@ -391,8 +447,12 @@ void Interior::EntrarMinijuego(){
 
 
     if(pasilloActual==5){ //Arte
-        Combate* BF = new Combate(jugador,nullptr, jugador->Bando);
-        BF->show();
+        try {
+            MinijuegoArte* MA = new MinijuegoArte(jugador);
+            MA->show();
+        } catch (...) {
+            qDebug() << "Ocurrió una excepción al crear MinijuegoArte";
+        }
 
     } else if(pasilloActual==6){ //Politica
         MinijuegoPolitica* MP = new MinijuegoPolitica(jugador);
@@ -409,6 +469,7 @@ void Interior::EntrarMinijuego(){
 
     this->close();
 }
+
 
 
 
@@ -431,10 +492,12 @@ void Interior::mousePressEvent(QMouseEvent* event)
     qDebug() << "Vidas:" << jugador->getCorazones();
 
 
-    if(pasilloActual>4){
+    if(pasilloActual>4 && pasilloActual<9){
         pasilloActual=4;
         configurarEscena();
         configurarObstaculos();
     }
+
+    ResetearMovimiento();
 
 }

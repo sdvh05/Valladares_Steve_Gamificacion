@@ -70,6 +70,7 @@ public: //Agregar items especificos
     void agregarMedallaDescartes(int valor=1);
 
     void agregarVida(int valor=1);
+    void agregarCorona(int valor=1);
 
 
 

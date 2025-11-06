@@ -83,6 +83,7 @@ private:
     //Post Battalla
     void ReproducirCancion(bool gano);
     void MostrarVictoria(bool gano);
+    void FadeOutMusica(int duracion);
 
     QMediaPlayer* playerMusica = nullptr;
     QAudioOutput* audioOutput = nullptr;
@@ -93,7 +94,7 @@ protected:
 
 public:
     explicit Combate(Personaje* jugadorExistente, QWidget* parent = nullptr, int Bando = 1);
-    ~Combate();
+    //~Combate();
     void keyPressEvent(QKeyEvent* event) override;
 };
 

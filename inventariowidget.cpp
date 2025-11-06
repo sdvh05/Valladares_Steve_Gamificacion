@@ -13,6 +13,7 @@ InventarioWidget::InventarioWidget(Inventario* inv, QWidget* parent)
     : QWidget(parent), inventario(inv)
 {
     setFixedSize(600, 500);
+    this->setWindowTitle("Inventario del Jugador");
 
     // Fondo
     setStyleSheet("QWidget {"

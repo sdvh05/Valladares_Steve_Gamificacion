@@ -150,7 +150,7 @@ void Inventario::agregarMedallaHistoria(int cantidad){
                          "Sprites/Recursos/Bagde Historia.png", cantidad, 1));
 }
 void Inventario::agregarMedallaCombate(int cantidad){
-    agregarObjeto(Objeto("Medalla Combate", "Epico", "Badge", "Medalla Otorgada por ganar la Batalla de Conocimientos",
+    agregarObjeto(Objeto("Medalla Combate", "Raro", "Badge", "Medalla por participar en la Batalla del Conocimiento",
                          "Sprites/Recursos/BadgeCombate.png", cantidad, 1));
 }
 
@@ -162,6 +162,11 @@ void Inventario::agregarMedallaKant(int cantidad){
 void Inventario::agregarMedallaDescartes(int cantidad){
     agregarObjeto(Objeto("Medalla Descartes", "Epico", "Badge", "Medalla Otorgada por resolver el Misterio de Kant",
                          "Sprites/Recursos/Bagde Descartes.png", cantidad, 1));
+}
+
+void Inventario::agregarCorona(int cantidad){
+    agregarObjeto(Objeto("Rey del Conocimiento", "Legendario", "Trofeo", "Corona dada por ganar la batalla del Conocimiento",
+                         "Sprites/Recursos/corona.png", cantidad, 1));
 }
 
 

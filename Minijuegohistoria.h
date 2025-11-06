@@ -8,6 +8,8 @@
 #include <QRect>
 #include <QList>
 
+//Puentes
+
 
 class MinijuegoHistoria : public ControlPersonaje {
     Q_OBJECT
