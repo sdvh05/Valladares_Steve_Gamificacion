@@ -2,6 +2,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include "inventario.h"
+#include "npc.h"
 #include "inventariowidget.h"
 
 extern Inventario* inventarioGlobal;

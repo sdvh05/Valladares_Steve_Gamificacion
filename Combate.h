@@ -3,17 +3,26 @@
 
 #include "ControlPersonaje.h"
 #include "ColaPreguntas.h"
+#include "Npc.h"
+
+
 #include <QLabel>
 #include <QRect>
 #include <QList>
 #include <QTimer>
 #include <QPushButton>
 #include <QRandomGenerator>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+
 
 class Combate : public ControlPersonaje {
     Q_OBJECT
 
 private:
+    Npc* npc;
+    void npcMostrarRespuesta(char letra);
+
     QLabel* fondoLabel;
     QLabel* labelPregunta;
     QLabel* labelRespuestas;
@@ -71,11 +80,20 @@ private:
 
     void ActualizarCorazonesEnemigos();
 
+    //Post Battalla
+    void ReproducirCancion(bool gano);
+    void MostrarVictoria(bool gano);
+
+    QMediaPlayer* playerMusica = nullptr;
+    QAudioOutput* audioOutput = nullptr;
+
+
 protected:
     void onMovimientoUpdate() override;
 
 public:
     explicit Combate(Personaje* jugadorExistente, QWidget* parent = nullptr, int Bando = 1);
+    ~Combate();
     void keyPressEvent(QKeyEvent* event) override;
 };
 

@@ -391,7 +391,7 @@ void Interior::EntrarMinijuego(){
 
 
     if(pasilloActual==5){ //Arte
-        Combate* BF = new Combate(jugador);
+        Combate* BF = new Combate(jugador,nullptr, jugador->Bando);
         BF->show();
 
     } else if(pasilloActual==6){ //Politica
@@ -429,6 +429,7 @@ void Interior::mousePressEvent(QMouseEvent* event)
 
     //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
+
 
     if(pasilloActual>4){
         pasilloActual=4;

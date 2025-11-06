@@ -176,6 +176,18 @@ Personaje::DatosAnimacion Personaje::obtenerAnimacion(const QString &tipo){
     QString base="Sprites/Personajes/Prota/";
     DatosAnimacion datos;
 
+    switch (Bando) {
+    case 1:
+        base += "Emp/";  // Carpeta para empiristas
+        break;
+    case 2:
+        base += "Rac/";  // Carpeta para racionalistas
+        break;
+    default:
+        // base normal (Prota/)
+        break;
+    }
+
 
 
         if(tipo=="idle")     datos={base+"Idle.png",         6};

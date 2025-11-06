@@ -8,6 +8,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
+#include "npc.h"
+
 class FrontView : public ControlPersonaje {
     Q_OBJECT
 
@@ -25,6 +27,9 @@ private:
     void crearVistaDebug();
     void dibujarHitboxesEnScene();
     void mostrarHitboxes();
+
+    Npc* npcPrueba;
+
 
 
 protected:

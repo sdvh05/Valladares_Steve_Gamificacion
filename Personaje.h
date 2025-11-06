@@ -48,6 +48,8 @@ public:
     }
     int getVidas() { return vida; }
 
+    int Bando=0;
+
 
 private:
 

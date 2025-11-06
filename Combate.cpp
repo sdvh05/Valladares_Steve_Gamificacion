@@ -9,6 +9,10 @@
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 
+#include <QMediaPlayer>
+#include <QAudioOutput>
+
+
 extern Inventario* inventarioGlobal;
 
 Combate::Combate(Personaje* jugadorExistente, QWidget* parent, int Bando)
@@ -26,9 +30,30 @@ Combate::Combate(Personaje* jugadorExistente, QWidget* parent, int Bando)
 
     jugador = jugadorExistente;
     jugador->setParent(this);
-    jugador->move(Bando == 1 ? 116 : 666, 702);
+    jugador->move(116, 702);
+    jugador->MoverDerecha();
+
     jugador->show();
     jugador->raise();
+
+
+    //NPC
+    npc = new Npc(this);
+    if (Bando==1)
+        npc->setNombre("Racionalista");
+    else
+         npc->setNombre("Empirista");
+
+    npc->move(620, 702);
+    npc->miradoDerecha=false;
+
+
+    npc->show();
+    npc->raise();
+
+    auto datos = npc->obtenerAnimacion("idle");
+    npc->SetAnimacion(datos.ruta, datos.frames);
+
 
     ActualizarCorazones();
 
@@ -46,12 +71,33 @@ Combate::Combate(Personaje* jugadorExistente, QWidget* parent, int Bando)
 
     // --- Banners ---
     bannerEmpirista = new QLabel("EMPIRISTAS", this);
-    bannerEmpirista->setStyleSheet("background: rgba(0,50,200,150); color: white; font: bold 18px 'Courier New'; padding: 6px; border-radius: 6px;");
-    bannerEmpirista->setGeometry(20, 250+25, 180, 30);
+    bannerEmpirista->setStyleSheet(
+        "background: rgba(255, 255, 255, 200);"      // blanco semitransparente
+        "color: black;"
+        "font: bold 18px 'Courier New';"
+        "padding: 6px;"
+        "border-radius: 6px;"
+        "border: 2px solid #333;"                    // pequeño borde oscuro
+        );
 
     bannerRacionalista = new QLabel("RACIONALISTAS", this);
-    bannerRacionalista->setStyleSheet("background: rgba(200,50,0,150); color: white; font: bold 18px 'Courier New'; padding: 6px; border-radius: 6px;");
-    bannerRacionalista->setGeometry(width() - 200, 250+25, 180, 30);
+    bannerRacionalista->setStyleSheet(
+        "background: rgba(180, 0, 0, 180);"          // rojo oscuro semitransparente
+        "color: white;"
+        "font: bold 18px 'Courier New';"
+        "padding: 6px;"
+        "border-radius: 6px;"
+        "border: 2px solid gold;"                    // toque dorado elegante
+        );
+
+
+    if(Bando==2){
+        bannerEmpirista->setGeometry(20, 250+25, 180, 30);
+        bannerRacionalista->setGeometry(width() - 200, 250+25, 180, 30);
+    }else{
+        bannerEmpirista->setGeometry(width() - 200, 250+25, 180, 30);
+        bannerRacionalista->setGeometry(20, 250+25, 180, 30);
+    }
 
     // --- Botones de respuesta ---
     int btnY = 900;
@@ -87,6 +133,14 @@ Combate::Combate(Personaje* jugadorExistente, QWidget* parent, int Bando)
 
     iniciarTurno();
 }
+
+void Combate::npcMostrarRespuesta(char letra) {
+    if (!npc) return;
+    // convertir char -> QString
+    QString texto = QChar(letra);
+    npc->MostrarBubbleText(texto);
+}
+
 
 void Combate::configurarEscena() { cambiarEscena(); }
 void Combate::cambiarEscena() {
@@ -195,6 +249,8 @@ void Combate::EnemigoResponder() {
     }
 
     qDebug() << "IA responde:" << respuesta << (acierta ? "(Correcto)" : "(Incorrecto)");
+    npcMostrarRespuesta(respuesta);
+
 
     if (acierta) {
         jugador->PerderCorazones();
@@ -288,10 +344,14 @@ void Combate::verificarVictoria() {
         labelPregunta->setText("¡Has ganado el combate!");
         ActualizarCorazones(true);
         timerRespuesta->stop();
+        ReproducirCancion(true);
+        MostrarVictoria(true);
     } else if (jugador->getCorazones() <= 0) {
         termino = true;
         labelPregunta->setText("Has sido derrotado...");
         timerRespuesta->stop();
+        ReproducirCancion(false);
+        MostrarVictoria(false);
     }
 }
 
@@ -304,7 +364,18 @@ void Combate::ActualizarCorazonesEnemigos() {
 }
 
 void Combate::SalirMinijuego() {
+    qDebug() <<"salir";
+    if (!jugador) return;
 
+    ResetearMovimiento();
+
+
+    Interior* interior = new Interior(jugador,nullptr,4);
+    jugador->move(434,472);
+    interior->show();
+
+
+    this->close();
 }
 
 // --- Vacíos obligatorios ---
@@ -314,3 +385,107 @@ void Combate::mostrarHintPuerta(const QRect&) {}
 void Combate::ocultarHintPuerta() {}
 
 void Combate::keyPressEvent(QKeyEvent* event) { ControlPersonaje::keyPressEvent(event); }
+
+
+
+void Combate::ReproducirCancion(bool gano)
+{
+    QString rutaCancion;
+
+    // Si ganó el jugador
+    if (gano) {
+        if (jugador->Bando == 1) {
+            // Racionalista gana
+            rutaCancion = "Canciones/O Fortuna.mp3";
+        } else if (jugador->Bando == 2) {
+            // Empirista gana
+            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3";
+        }
+    } else {
+        // Si perdió el jugador, gana el bando contrario
+        if (jugador->Bando == 1) {
+            // Racionalista pierde → Empiristas celebran
+            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3";
+        } else if (jugador->Bando == 2) {
+            // Empirista pierde → Racionalistas celebran
+            rutaCancion = "Canciones/O Fortuna.mp3";
+        }
+    }
+
+    // --- Reproducir ---
+    QMediaPlayer* player = new QMediaPlayer(this);
+    QAudioOutput* audioOut = new QAudioOutput(this);
+    player->setAudioOutput(audioOut);
+    player->setSource(QUrl::fromLocalFile(rutaCancion));
+    audioOut->setVolume(50);
+    player->play();
+
+    qDebug() << "Reproduciendo canción:" << rutaCancion;
+}
+
+void Combate::MostrarVictoria(bool gano)
+{
+    // --- Ocultar botones de respuesta ---
+    QList<QPushButton*> botones = {A, B, C, D};
+    for (auto btn : botones)
+        btn->hide();
+
+    // --- Crear botón de salir ---
+    QPushButton* salirBtn = new QPushButton("Salir del Combate", this);
+    salirBtn->setGeometry(width()/2 - 100, 950, 200, 50);
+    salirBtn->setStyleSheet(
+        "background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, "
+        "stop:0 rgba(50,40,30,230), stop:1 rgba(100,80,50,230));"
+        "color: white; border: 2px solid gold; font: bold 18px 'Papyrus'; border-radius: 10px;"
+        );
+    salirBtn->show();
+    connect(salirBtn, &QPushButton::clicked, this, &Combate::SalirMinijuego);
+
+    // --- Determinar ganador y mensaje ---
+    QString mensaje;
+    QString colorFondo;
+    QString bandoTexto = (jugador->Bando == 1) ? "Racionalistas" : "Empiristas";
+
+    if (gano) {
+        mensaje = QString("🏆 ¡Victoria de los %1! 🏆").arg(bandoTexto);
+        colorFondo = (jugador->Bando == 1)
+                         ? "background: rgba(180, 0, 0, 180);"   // Racionalistas (rojo)
+                         : "background: rgba(240, 240, 255, 200);"; // Empiristas (blanco azulado)
+
+        // Mover al jugador ganador al centro
+        jugador->move(365, 372);
+
+        // Mostrar corona sobre el jugador
+        QLabel* corona = new QLabel(this);
+        corona->setPixmap(QPixmap("Sprites/Recursos/corona.png").scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        corona->move(jugador->x() + 34, jugador->y() - 40);
+        corona->show();
+        corona->raise();
+
+    } else {
+        // Perdió el jugador: gana el oponente
+        QString bandoOponente = (jugador->Bando == 1) ? "Empiristas" : "Racionalistas";
+        mensaje = QString("💀 Los %1 han ganado... 💀").arg(bandoOponente);
+        colorFondo = (jugador->Bando == 1)
+                         ? "background: rgba(240, 240, 255, 200);"  // empiristas
+                         : "background: rgba(180, 0, 0, 180);";      // racionalistas
+
+
+        // Mover NPC al centro
+        npc->move(376, 372);
+
+        QLabel* corona = new QLabel(this);
+        corona->setPixmap(QPixmap("Sprites/Recursos/corona.png").scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        corona->move(npc->x() + 20, npc->y() - 40);
+        corona->show();
+        corona->raise();
+    }
+
+    // --- Reutilizar labelPregunta para mostrar mensaje ---
+    labelPregunta->setStyleSheet(QString(
+                                     "%1 color: #fdf5e6; border: 3px solid gold; border-radius: 12px; "
+                                     "padding: 10px; font: bold 22px 'Papyrus'; text-align: center;"
+                                     ).arg(colorFondo));
+    labelPregunta->setText(mensaje);
+}
+

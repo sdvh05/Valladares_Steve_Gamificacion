@@ -63,8 +63,27 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
         QObject::connect(anim, &QPropertyAnimation::finished, hint, &QWidget::deleteLater);
     });
 
+
+    //prueba
+    // --- NPC ---
+    npcPrueba = new Npc(this);
+    npcPrueba->setNombre("Guardia del Castillo");
+    npcPrueba->move(428,810);
+    npcPrueba->show();
+
+    // Diálogo del NPC
+    QStringList dialogo;
+    dialogo << "¡Hola Guapo!"
+            << "Subi y pasa al Castillo"
+            << "Saludame al Inge Erick";
+
+    npcPrueba->setDialogos(dialogo);
+
+
     Movimientos();
 }
+
+
 
 void FrontView::configurarEscena()
 {
@@ -214,6 +233,10 @@ void FrontView::keyPressEvent(QKeyEvent* event){
     if (event->key() == Qt::Key_Q && hayPuertaCerca) {
         EntrarCastillo();
     }
+    if (event->key() == Qt::Key_E && npcPrueba) {
+        npcPrueba->Interactuar(jugador);
+    }
+
 
 }
 
@@ -223,6 +246,12 @@ void FrontView::mousePressEvent(QMouseEvent* event)
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
     this->ActualizarCorazones(true);
+
+    jugador->Bando++;
+    if(jugador->Bando==3) jugador->Bando=0;
+    ResetearMovimiento();
     jugador->move(400,818);
+    qDebug() << jugador->Bando;
+
 
 }
