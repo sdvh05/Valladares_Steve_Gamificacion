@@ -176,8 +176,8 @@ Personaje::DatosAnimacion Npc::obtenerAnimacion(const QString& tipo)
     QString base = "Sprites/Personajes/Prota/";
 
     // Detectar sprite base según el nombre del NPC
-    if (nombre.contains("Guardia", Qt::CaseInsensitive))
-        base = "Sprites/NPCs/Guardia/";
+    if (nombre.contains("Guardia", Qt::CaseInsensitive)) //gangster blanco
+        base = "Sprites/Personajes/NPCs/Gangster/G2/";
 
     else if (nombre.contains("Mercader", Qt::CaseInsensitive))
         base = "Sprites/Personajes/NPCs/Mercader/";

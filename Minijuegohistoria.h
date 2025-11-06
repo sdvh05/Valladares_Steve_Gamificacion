@@ -48,6 +48,8 @@ private:
     void cambiarEscena();
     void actualizarRespuestas();
 
+    int errores=0;
+
 
 
 

@@ -389,6 +389,7 @@ void MinijuegoPolitica::mostrarResultadoTemporal(bool reiniciar) {
                 labelPregunta->setText(preguntaActual.texto);
             } else {
                 // C acabo
+                ganaste = errores < 3;
                 labelPregunta->setText("¡Has completado el minijuego!");
                 ActualizarCorazones(ganaste);
                 if(ganaste){

@@ -26,14 +26,14 @@ int main(int argc, char *argv[])
     r.show();*/
 
     inventarioGlobal = new Inventario();
-    inventarioGlobal ->agregarMedallaCiencia();
+    /*inventarioGlobal ->agregarMedallaCiencia();
     inventarioGlobal->agregarMedallaArte();
     inventarioGlobal->agregarMedallaHistoria();
     inventarioGlobal->agregarMedallaPolitica();
 
 
     inventarioGlobal->agregarMedallaDescartes();
-    inventarioGlobal->agregarMedallaKant();
+    inventarioGlobal->agregarMedallaKant();*/
     /*InventarioWidget* inventarioUI = new InventarioWidget(inventarioGlobal);
     inventarioUI->show();*/
 

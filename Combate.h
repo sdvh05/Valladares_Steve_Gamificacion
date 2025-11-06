@@ -57,6 +57,7 @@ private:
     bool ganaste = true;
     int Bando;
     int NumPregunta = 0;
+    int corazonesPrevios;
 
     // "IA"
     QTimer* timerRespuesta;

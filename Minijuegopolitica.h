@@ -33,6 +33,7 @@ private:
 
     int MoleActual = 0;       // 0 = ninguno, 1–4 = posiciones A–D
     int MoleAnterior = 0;
+    int errores=0;
 
     QTimer* timerMole;        // Timer para cambiar topo
     ColaPreguntas Preguntas;

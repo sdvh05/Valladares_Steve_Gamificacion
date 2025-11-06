@@ -105,6 +105,7 @@ private:
 
     // resultado/verificacion
     void verificarRespuesta(char letra);
+    int errores=0;
 
     // estado
 public:

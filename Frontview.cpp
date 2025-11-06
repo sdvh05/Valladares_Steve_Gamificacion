@@ -67,15 +67,19 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     //prueba
     // --- NPC ---
     npcPrueba = new Npc(this);
-    npcPrueba->setNombre("Guardia del Castillo");
+    npcPrueba->setNombre("Guardia FV");
     npcPrueba->move(428,810);
     npcPrueba->show();
+    npcPrueba->raise();
+
+    auto datos = npcPrueba->obtenerAnimacion("idle");
+    npcPrueba->SetAnimacion(datos.ruta, 7);
 
     // Diálogo del NPC
     QStringList dialogo;
-    dialogo << "¡Hola Guapo!"
-            << "Subi y pasa al Castillo"
-            << "Saludame al Inge Erick";
+    dialogo << "¡Hola estimados Programadores!"
+            << "Esta es Mi presentacion de Proyecto #4"
+            << "Espero que les Guste";
 
     npcPrueba->setDialogos(dialogo);
 

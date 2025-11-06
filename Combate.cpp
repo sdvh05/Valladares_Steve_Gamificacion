@@ -36,6 +36,8 @@ Combate::Combate(Personaje* jugadorExistente, QWidget* parent, int Bando)
     jugador->show();
     jugador->raise();
 
+    corazonesPrevios=jugador->getCorazones();
+
 
     //NPC
     npc = new Npc(this);
@@ -364,7 +366,7 @@ void Combate::verificarVictoria() {
     if (CorazonesEnemigo <= 0) {
         termino = true;
         labelPregunta->setText("¡Has ganado el combate!");
-        ActualizarCorazones(true);
+        ActualizarCorazones();
         timerRespuesta->stop();
         ReproducirCancion(true);
         MostrarVictoria(true);
@@ -394,7 +396,8 @@ void Combate::SalirMinijuego()
 
 
     FadeOutMusica(1200); // 1.2 segundos de fade
-
+    jugador->setCorazones(corazonesPrevios); //recuperar los corazones que perdimos
+    ActualizarCorazones();
     if (!jugador) return;
 
     ResetearMovimiento();

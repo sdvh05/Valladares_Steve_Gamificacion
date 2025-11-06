@@ -145,21 +145,25 @@ void MinijuegoHistoria::onMovimientoUpdate() {
         puentes[0] = false;
         huboCambio = true;
         qDebug() << "A cayó";
+        errores++;
     }
     else if (rectJugador.intersects(QRect(278,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'B' && puentes[1] && !termino) {
         puentes[1] = false;
         huboCambio = true;
         qDebug() << "B cayó";
+        errores++;
     }
     else if (rectJugador.intersects(QRect(438,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'C' && puentes[2] && !termino) {
         puentes[2] = false;
         huboCambio = true;
         qDebug() << "C cayó";
+        errores++;
     }
     else if (rectJugador.intersects(QRect(608,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'D' && puentes[3] && !termino) {
         puentes[3] = false;
         huboCambio = true;
         qDebug() << "D cayó";
+        errores++;
     }
 
     if (huboCambio) {
@@ -195,6 +199,7 @@ void MinijuegoHistoria::onMovimientoUpdate() {
         // Si no quedan preguntas, terminar el minijuego
         if (preguntas.isEmpty()) {
             qDebug() << "Se terminó el minijuego";
+            ganaste = errores < 3;
             ActualizarCorazones(ganaste);
             if(ganaste){
                 inventarioGlobal->agregarMedallaHistoria();

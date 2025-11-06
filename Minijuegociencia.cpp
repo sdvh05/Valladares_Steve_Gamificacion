@@ -159,6 +159,7 @@ void MinijuegoCiencia::cargarPreguntaActual()
         labelPregunta->setText("¡Has completado el minijuego Ciencia!");
         labelRespuestas->hide();
         bool correcto = true;
+        ganaste = erroress <= 3;
         termino=true;
         if (patronJugador.size() != patronCorrecto.size()) correcto = false;
         else {
@@ -172,7 +173,8 @@ void MinijuegoCiencia::cargarPreguntaActual()
             ActualizarCorazones(true);
             inventarioGlobal->agregarMedallaCiencia();
         }
-        else ActualizarCorazones(false);
+        else
+            ActualizarCorazones(false);
     }
 }
 
@@ -188,6 +190,7 @@ void MinijuegoCiencia::actualizarRespuestas(int nuevaRespuesta){
 
     if (patronJugador.back() != patronCorrecto.at(patronJugador.size() - 1)) {
         qDebug() << "Error, reiniciando turno.";
+        erroress++;
 
         //mensaje de error en rojo
         labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: red; font-weight: bold;");
@@ -307,7 +310,7 @@ void MinijuegoCiencia::ConfirmarRespuestas()
         if (patronJugador.size() == patronCorrecto.size()) {
             qDebug() << "Patrón completo y correcto!";
             labelPregunta->setText("¡Has completado correctamente el patrón!");
-            ActualizarCorazones(true);
+            ActualizarCorazones();
             QTimer::singleShot(2000, this, [this]() { SalirMinijuego(); });
         } else {
             qDebug() << "Correcto hasta ahora (" << patronJugador.size() << "/" << patronCorrecto.size() << ")";

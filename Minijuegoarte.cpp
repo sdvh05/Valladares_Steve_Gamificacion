@@ -245,6 +245,12 @@ void MinijuegoArte::SalirMinijuego(){
 
     ResetearMovimiento();
 
+    bool ganaste = errores <= 3;
+    ActualizarCorazones(ganaste);
+    if (ganaste){
+        inventarioGlobal->agregarMedallaArte();
+    }
+
     Interior* interior = new Interior(jugador,nullptr,4);
     jugador->move(734,568);
     interior->show();
@@ -257,7 +263,6 @@ void MinijuegoArte::SalirMinijuego(){
 
 
 void MinijuegoArte::actualizarEstado(int indice) {
-
     configurarEscena();
     configurarObstaculos();
     this->update();
@@ -271,7 +276,7 @@ void MinijuegoArte::mousePressEvent(QMouseEvent* event)
     qDebug() << "Respuesta: " <<preguntaActual.respuestaCorrecta;
     ResetearMovimiento();
 
-    this->ActualizarCorazones(true);
+    //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
 
 
@@ -322,6 +327,7 @@ void MinijuegoArte::verificarRespuesta(char letra) {
             cargarPreguntaActual();
         } else {
             labelPregunta->setText(preguntaActual.texto);
+            errores++;
         }
 
         actualizarRespuestas();

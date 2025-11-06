@@ -43,8 +43,8 @@ public:
     void AumentarCorazones();
     void PerderCorazones();
 
-    void setVidas(int vidas) {
-        vida = vidas;
+    void setCorazones(int corazon) {
+        corazones = corazon;
     }
     int getVidas() { return vida; }
 
