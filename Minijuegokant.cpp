@@ -1,4 +1,4 @@
-#include "Minijuegodescartes.h"
+#include "MinijuegoKant.h"
 #include "ColaPreguntas.h"
 #include "interior.h"
 #include "inventario.h"
@@ -16,7 +16,7 @@
 
 extern Inventario* inventarioGlobal;
 
-MinijuegoDescartes::MinijuegoDescartes(Personaje* jugadorExistente, QWidget* parent, int EstadoActual)
+MinijuegoKant::MinijuegoKant(Personaje* jugadorExistente, QWidget* parent, int EstadoActual)
     : ControlPersonaje(jugadorExistente, parent), EstadoActual(EstadoActual)
 {
     this->resize(848, 1200);
@@ -72,14 +72,14 @@ MinijuegoDescartes::MinijuegoDescartes(Personaje* jugadorExistente, QWidget* par
 
     Movimientos();
 
-    npcDescartes = new Npc(this);
-    npcDescartes->setNombre("Descartes");
-    npcDescartes->move(640,670);
-    npcDescartes->show();
-    npcDescartes->raise();
+    npcKant = new Npc(this);
+    npcKant->setNombre("Kant");
+    npcKant->move(640,670);
+    npcKant->show();
+    npcKant->raise();
 
-    auto datos = npcDescartes->obtenerAnimacion("idle");
-    npcDescartes->SetAnimacion(datos.ruta, 6);
+    auto datos = npcKant->obtenerAnimacion("idle");
+    npcKant->SetAnimacion(datos.ruta, 6);
 
     // Diálogo del NPC
     actualizarDialogoDescartes();
@@ -87,12 +87,12 @@ MinijuegoDescartes::MinijuegoDescartes(Personaje* jugadorExistente, QWidget* par
 
 }
 
-void MinijuegoDescartes::actualizarDialogoDescartes(){
+void MinijuegoKant::actualizarDialogoDescartes(){
     QStringList dialogo;
 
     switch (EstadoActual) {
     case 0:
-        dialogo << "Bienvenido al Laboratorio"
+        dialogo << "Bienvenido al Aula"
                 << "Aqui Seras \n presentado con:"
                 << "Preguntas tal como en \n los Minijuegos"
                 << "Y un dilema a resolver"
@@ -100,43 +100,56 @@ void MinijuegoDescartes::actualizarDialogoDescartes(){
                 << "Mucha Suerte";
         break;
     case 1:
-        dialogo << "Respondiste Correctamente!"
-                << "Con cada respuesta correcta"
-                << "Aparecera una pista Nueva";
+        dialogo << "Aqui va Tu Primera Pista:"
+                << "No todo lo que se percibe es conocimiento. "
+                << "La experiencia necesita estructura.";
         break;
     case 2:
-        dialogo << "Ahora tienes una \n Segunda Pista"
-                <<"Te doy mas Informacion sobre.."
-                <<"Las Ventajas y Desventajas \n de cada Metodo";
+        dialogo << "Ahora una Segunda Pista"
+                <<"El deber no depende de las consecuencias,"
+                <<" sino de la intención.";
         break;
     case 3:
-        dialogo << "Muy bien!"
-                <<"Te has Ganado mas Informacion";
+        dialogo << "La Tercera Pista es:"
+                <<"La verdad sin ética puede ser violencia"
+                <<"La ética sin verdad puede ser ceguera";
 
-         break;
+        break;
     case 4:
-        dialogo <<"Te Prestare Mi cuarderno"
-                <<"Con conclusiones ordenadas \n sobre el dilema"
-                <<"A ver si te es de Uso para responder el Dilema";
+        dialogo <<"Pasamos con la 4ta pista:"
+                <<"El conocimiento te dice qué es."
+                <<"La moral te dice qué debe ser.";
 
-         break;
+        break;
     case 5:
-        dialogo <<"Ya tienes todas las \n Pistas Disponibles"
-                 <<"Es tu turno de contestarme..."
-                <<"Cual es el mejor metodo de Estudio?";
+        dialogo <<"Como ultima pista \n te digo:..."
+                <<"La libertad no es hacer lo que quieras..."
+                <<"sino obedecer la ley que tú mismo te das.”";
 
-         break;
+    case 6:
+        dialogo <<"Quieres un Resumen de las Pistas?"
+                <<"1) No todo lo que se percibe es conocimiento. \nLa experiencia necesita estructura"
+                <<"2) El deber no depende de las consecuencias, \n sino de la intención.”"
+                <<"3) La verdad sin ética puede ser violencia. \n La ética sin verdad puede ser ceguera"
+                <<"4) El conocimiento te dice qué es. \n La moral te dice qué debe ser”"
+                <<"5) La libertad no es hacer lo que quieras, \n sino obedecer la ley que tú mismo te das";
+        break;
+
+    case 7: //cuando respondan bien el acertijo (DILEMA)
+        dialogo <<"EXCELENTE!!"
+                <<"Han comprendido. El deber moral no es ciego ni frío"
+                <<"es racional, universal y humano.”";
 
     default:
         dialogo << "Hola";
-         break;
+        break;
     }
 
-    npcDescartes->setDialogos(dialogo);
+    npcKant->setDialogos(dialogo);
 }
 
-void MinijuegoDescartes::responderAlDilema() {
-    labelPregunta->setText("🧩 DILEMA FINAL:\n¿Cuál método realmente mejora el aprendizaje a largo plazo?");
+void MinijuegoKant::responderAlDilema() {
+    labelPregunta->setText("🧩 DILEMA FINAL:\n Ahora que han recorrido el camino de la razón, deben decidir \n ¿Qué deben hacer con el secreto que conocen?");
     labelPregunta->setStyleSheet(
         "background: rgba(40,40,40,220); color: white; font: bold 16px 'Courier New'; "
         "border: 2px solid white; border-radius: 8px; padding: 10px;");
@@ -148,9 +161,9 @@ void MinijuegoDescartes::responderAlDilema() {
         "border: 2px solid gray; border-radius: 8px; padding: 10px;");
     labelRespuestas->setTextFormat(Qt::RichText);
     labelRespuestas->setText(
-        "<font color='white'>A: Leer y subrayar</font><br>"
-        "<font color='white'>B: Hacer mapas mentales</font><br>"
-        "<font color='white'>C: Explicar en voz alta</font><br>"
+        "<font color='white'>A: Revelarlo, porque la verdad siempre debe decirse.</font><br>"
+        "<font color='white'>B: Ocultarlo, porque el daño sería mayor que el beneficio.</font><br>"
+        "<font color='white'>C: Revelarlo solo si la acción respeta la dignidad de todos los involucrados. </font><br>"
         "<font color='white'>D: Técnica de recuperación activa</font>"
         );
 
@@ -162,7 +175,7 @@ void MinijuegoDescartes::responderAlDilema() {
 
 
 
-void MinijuegoDescartes::MostrarPistas(int Etapa) {
+void MinijuegoKant::MostrarPistas(int Etapa) {
     QLabel* pagina = new QLabel(this);
     pagina->setStyleSheet(
         "background: rgba(250,250,250,230); color: black; border: 3px solid gray;"
@@ -192,37 +205,19 @@ void MinijuegoDescartes::MostrarPistas(int Etapa) {
     QString texto;
     switch (Etapa) {
     case 1:
-        texto = "📚 <b>Mesa 1: EVIDENCIA</b><br><br>"
-                "Dilema: El descubrir cuál método realmente mejora el aprendizaje a largo plazo.<br><br>"
-                "&nbsp;&nbsp;- Leer y subrayar<br>"
-                "&nbsp;&nbsp;- Hacer mapas mentales<br>"
-                "&nbsp;&nbsp;- Explicar en voz alta<br>"
-                "&nbsp;&nbsp;- Técnica de recuperación activa (hacerte preguntas sin ver el material)<br><br>";
+        texto = "📗 <b> Crítica de la razón pura (Conocimiento)</b><br><br>"
+                "&nbsp;&nbsp;- El conocimiento comienza con la experiencia, pero no todo proviene de ella. La razón impone formas a lo que los sentidos captan.<br>"
+                "&nbsp;&nbsp;- Antes de juzgar, pregúntate: ¿lo que sabes es realmente conocimiento, o solo percepción sin fundamento?<br>"
+                "&nbsp;&nbsp;- La verdad no se encuentra en lo que se ve, sino en lo que puede ser pensado con claridad.<br>";
 
         break;
     case 2:
-        texto = "🔍 <b>Mesa 2: ANÁLISIS</b><br><br>"
-                "Ejercicios de inferencia:<br>"
-                "&nbsp;&nbsp;- Leer y subrayar = fácil, pero pasivo.<br>"
-                "&nbsp;&nbsp;- Mapas mentales = organizan ideas, pero no garantizan retención.<br>"
-                "&nbsp;&nbsp;- Explicar en voz alta = mejora comprensión, pero depende del nivel previo.<br>"
-                "&nbsp;&nbsp;- Recuperación activa = obliga al cerebro a recordar, fortalece la memoria y detecta lagunas.";
+        texto = "📘 <b>Mesa 2: ANÁLISISCrítica de la razón práctica (Ética)</b><br><br>"
+                "&nbsp;&nbsp;- Obra de tal modo que tu acción pueda convertirse en ley universal. El deber no depende del resultado, sino de la intención.<br>"
+                "&nbsp;&nbsp;- La moral no es una emoción ni una conveniencia: es respeto por la dignidad del otro.<br>"
+                "&nbsp;&nbsp;- Pregúntate: ¿actuarías igual si todos lo hicieran? ¿Tu decisión respeta la humanidad en cada persona involucrada?<br>";
         break;
-    case 3:
-        texto = "🧠 <b>Mesa 3: SÍNTESIS</b><br><br>"
-                "Relaciones:<br>"
-                "&nbsp;&nbsp;- Pasivo vs. activo.<br>"
-                "&nbsp;&nbsp;- Organización vs. retención.<br>"
-                "&nbsp;&nbsp;- Comprensión vs. memoria duradera.";
-        break;
-    case 4:
-        texto = "📋 <b>Mesa 4: ENUMERACIÓN</b><br><br>"
-                "Conclusión ordenada:<br>"
-                "&nbsp;&nbsp;- Leer y subrayar ayuda a identificar ideas, pero no garantiza que se recuerden.<br>"
-                "&nbsp;&nbsp;- Mapas mentales son útiles para visualizar, pero no prueban el conocimiento.<br>"
-                "&nbsp;&nbsp;- Explicar en voz alta mejora la comprensión, pero no siempre detecta errores.<br>"
-                "&nbsp;&nbsp;- Recuperación activa exige recordar sin ayuda, lo que fortalece el aprendizaje.";
-        break;
+
     default:
         texto = "No hay pistas disponibles en esta etapa.";
         break;
@@ -234,13 +229,13 @@ void MinijuegoDescartes::MostrarPistas(int Etapa) {
 
 
 
-void MinijuegoDescartes::configurarEscena(){
+void MinijuegoKant::configurarEscena(){
     cambiarEscena();
     fondoLabel->lower();
     fondoLabel->show();
 }
 
-void MinijuegoDescartes::cambiarEscena() {
+void MinijuegoKant::cambiarEscena() {
     QString nombreArchivoBase = "Sprites/Castle/Minijuegos/Descartes/Descartes ";
 
     QString Estado = "";
@@ -281,7 +276,7 @@ void MinijuegoDescartes::cambiarEscena() {
 }
 
 
-void MinijuegoDescartes::configurarObstaculos(){
+void MinijuegoKant::configurarObstaculos(){
     obstaculos.clear();
 
     /*obstaculos.append(QRect(50,734, 2, 320));
@@ -297,7 +292,7 @@ void MinijuegoDescartes::configurarObstaculos(){
 
 
 
-void MinijuegoDescartes::onMovimientoUpdate() {
+void MinijuegoKant::onMovimientoUpdate() {
     QRect rectJugador = jugador->geometry();
     detectarZonaPuerta();
 
@@ -325,7 +320,7 @@ void MinijuegoDescartes::onMovimientoUpdate() {
 }
 
 
-void MinijuegoDescartes::detectarZonaPuerta() {
+void MinijuegoKant::detectarZonaPuerta() {
     if (!jugador) return;
 
     QPoint pos = jugador->pos();
@@ -350,15 +345,15 @@ void MinijuegoDescartes::detectarZonaPuerta() {
 }
 
 
-void MinijuegoDescartes::mostrarHintPuerta(const QRect& zonaPuerta) {
+void MinijuegoKant::mostrarHintPuerta(const QRect& zonaPuerta) {
 }
 
 
-void MinijuegoDescartes::ocultarHintPuerta() {
+void MinijuegoKant::ocultarHintPuerta() {
     labelPuerta->hide();
 }
 
-void MinijuegoDescartes::VerificarRespuesta(char letra)
+void MinijuegoKant::VerificarRespuesta(char letra)
 {
     if (preguntaActual.texto.isEmpty()) return;
 
@@ -386,7 +381,7 @@ void MinijuegoDescartes::VerificarRespuesta(char letra)
 
 
 
-void MinijuegoDescartes::keyPressEvent(QKeyEvent* event) {
+void MinijuegoKant::keyPressEvent(QKeyEvent* event) {
     ControlPersonaje::keyPressEvent(event);
     QRect rectJugador = jugador->geometry();
 
@@ -418,10 +413,10 @@ void MinijuegoDescartes::keyPressEvent(QKeyEvent* event) {
 
     }
 
-    if (event->key() == Qt::Key_E && npcDescartes) {
-        npcDescartes->Interactuar(jugador);
+    if (event->key() == Qt::Key_E && npcKant) {
+        npcKant->Interactuar(jugador);
     }
-    if(event->key() == Qt::Key_E && npcDescartes && EstadoActual>=5 && rectJugador.intersects(QRect(670,670, 150, 150))){
+    if(event->key() == Qt::Key_E && npcKant && EstadoActual>=5 && rectJugador.intersects(QRect(670,670, 150, 150))){
         //
     }
 
@@ -438,9 +433,9 @@ void MinijuegoDescartes::keyPressEvent(QKeyEvent* event) {
             event->key() == Qt::Key_2 || event->key() == Qt::Key_4) {
 
             // Correcta = D
-            if (event->key() == Qt::Key_4) {
+            if (event->key() == Qt::Key_3) {
                 labelPregunta->setText("¡Correcto! Has resuelto el dilema de Descartes.");
-                 termino=true;
+                termino=true;
                 //QTimer::singleShot(2500, this, [=]() { SalirMinijuego(); });
 
             } else {
@@ -453,7 +448,7 @@ void MinijuegoDescartes::keyPressEvent(QKeyEvent* event) {
 }
 
 
-void MinijuegoDescartes::actualizarRespuestas() {
+void MinijuegoKant::actualizarRespuestas() {
     if (!respuestasActivas || preguntaActual.texto.isEmpty()) return;
 
     QString textoRespuestas;
@@ -472,7 +467,7 @@ void MinijuegoDescartes::actualizarRespuestas() {
     labelRespuestas->setText(textoRespuestas);
 }
 
-void MinijuegoDescartes::ActualizarPregunta(){
+void MinijuegoKant::ActualizarPregunta(){
     if (preguntas.isEmpty()) {
         responderAlDilema();
         return;
@@ -486,7 +481,7 @@ void MinijuegoDescartes::ActualizarPregunta(){
 }
 
 
-void MinijuegoDescartes::SalirMinijuego(){
+void MinijuegoKant::SalirMinijuego(){
     if (!jugador) return;
 
     ResetearMovimiento();
@@ -503,7 +498,7 @@ void MinijuegoDescartes::SalirMinijuego(){
 
 
 
-void MinijuegoDescartes::actualizarEstado(int indice) {
+void MinijuegoKant::actualizarEstado(int indice) {
 
     configurarEscena();
     configurarObstaculos();
@@ -511,7 +506,7 @@ void MinijuegoDescartes::actualizarEstado(int indice) {
 }
 
 
-void MinijuegoDescartes::mousePressEvent(QMouseEvent* event)
+void MinijuegoKant::mousePressEvent(QMouseEvent* event)
 {
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
@@ -520,14 +515,14 @@ void MinijuegoDescartes::mousePressEvent(QMouseEvent* event)
 
     this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
-    qDebug() <<npcDescartes;
+    qDebug() <<npcKant;
     EstadoActual++; //esto es solo para probar pq aun no implemento que cambie dentro del juego
 
 
 
 }
 
-void MinijuegoDescartes::cargarPreguntaActual() {
+void MinijuegoKant::cargarPreguntaActual() {
     if (!preguntas.isEmpty()) {
         preguntaActual = preguntas.dequeue();
         labelPregunta->setText(preguntaActual.texto);
@@ -542,4 +537,3 @@ void MinijuegoDescartes::cargarPreguntaActual() {
         ultimaPregunta =true;
     }
 }
-

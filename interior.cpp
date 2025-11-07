@@ -8,6 +8,7 @@
 #include "Minijuegoarte.h"
 
 #include "Minijuegodescartes.h"
+#include "Minijuegokant.h"
 
 #include "Combate.h"
 
@@ -95,7 +96,10 @@ void Interior::configurarEscena(){
 
     case 9: //zona seleccion
         rutaFondo = "Sprites/Castle/Seleccion.png";
+        break;
 
+    case 10: //D&K
+        rutaFondo = "Sprites/Castle/Pasillo10.png";
         break;
 
     default:
@@ -169,14 +173,16 @@ void Interior::onMovimientoUpdate()
         jugador->move(190,770);
         this->update();
         qDebug()<<"transision izquierda";
+        return;
     }
     else if (pasilloActual == 1 && rectJugador.intersects(QRect(-54, 784, 10, 100))) { //ir a derecha
+        jugador->move(820,826);
         this->pasilloActual =3;
         configurarEscena();
         configurarObstaculos();
-        jugador->move(820,826);
         this->update();
         qDebug()<<"transision derecha";
+        return;
     }
 
     //PASILLOS
@@ -190,6 +196,7 @@ void Interior::onMovimientoUpdate()
         jugador->move(820,826);
         this->update();
         qDebug()<<"Vuelta a Main ";
+        return;
     }
 
     else if(pasilloActual==2 && rectJugador.intersects(QRect(200, 450, 10, 100))){ //entrar ruleta der
@@ -199,6 +206,7 @@ void Interior::onMovimientoUpdate()
         jugador->move(746,794);
         this->update();
         qDebug()<<"Entrar Ruleta I";
+        return;
     }
 
 
@@ -210,6 +218,7 @@ void Interior::onMovimientoUpdate()
         jugador->move(40,844);
         this->update();
         qDebug()<<"Vuelta a Main ";
+        return;
     }
 
     else if(pasilloActual==3 && rectJugador.intersects(QRect(158,538, 250, 100))){ // volver a main de izq
@@ -219,30 +228,52 @@ void Interior::onMovimientoUpdate()
         jugador->move(426,850);
         this->update();
         qDebug()<<"Entrar Seleccion";
+        return;
 
     }
 
      //Ruleta
     //-------------------------------------------------------------------------------------------------------------------------
-    if (pasilloActual>=4 && rectJugador.intersects(QRect(910,852, 10, 100))){ //salir a der
+    if (pasilloActual>=4 && pasilloActual<=8 && rectJugador.intersects(QRect(910,852, 10, 100))){ //salir a der
         this->pasilloActual=2;
         configurarEscena();
         configurarObstaculos();
         jugador->move(250,500);
         this->update();
         qDebug()<<"Salirs Ruleta I";
+        return;
     }
 
     //SELECCION
-    if(pasilloActual==9 && rectJugador.intersects(QRect(426,1000, 1000, 4))){ //volver a pasiilo izq
+    if(pasilloActual==9 && rectJugador.intersects(QRect(426,1000, 100, 4))){ //volver a pasiilo izq
         this->pasilloActual=3;
         configurarEscena();
         configurarObstaculos();
         jugador->move(240,642);
         this->update();
-
+        return;
     }
 
+   if(pasilloActual==3 && rectJugador.intersects(QRect(-15,784, 50, 200))){ //ir a pasiilo de kant / descartes
+
+        this->pasilloActual=10;
+        jugador->move(708,828);
+        configurarEscena();
+        configurarObstaculos();
+        this->update();
+        qDebug() << "KD";
+        return;
+    }
+
+   if(pasilloActual==10 && rectJugador.intersects(QRect(920,828, 50, 400))){ //voler
+        this->pasilloActual=3;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(84,780);
+        this->update();
+        qDebug() << "KD->3";
+        return;
+    }
 
 }
 
@@ -386,12 +417,25 @@ void Interior::keyPressEvent(QKeyEvent* event) {
             this->close();
 
         } else if(pasilloActual==9 && rectJugador.intersects(QRect(702,666, 250, 100))){
-            /*jugador->Bando=2;
+            jugador->Bando=2;
             ResetearMovimiento();
             Combate* BF = new Combate(jugador,nullptr, jugador->Bando);
             BF->show();
-            this->close(); */
+            this->close();
         }
+
+        if(pasilloActual==10 && rectJugador.intersects(QRect(518,744, 200, 80))){
+            MinijuegoDescartes *MD = new MinijuegoDescartes(jugador);
+            MD->show();
+            this->close();
+
+        }else if(pasilloActual==10 && rectJugador.intersects(QRect(198,744, 200, 80))){
+            MinijuegoKant *MK = new MinijuegoKant(jugador);
+            MK->show();
+            this->close();
+            qDebug()<<"KANT";
+        }
+
     }
 
     if (event->key() == Qt::Key_R && hayPuertaCerca) {
@@ -489,6 +533,8 @@ void Interior::mousePressEvent(QMouseEvent* event)
 {
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
+
+    qDebug()<<"Pasillo Act: " <<pasilloActual;
 
     //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();

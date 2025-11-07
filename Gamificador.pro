@@ -19,6 +19,7 @@ SOURCES += \
     Minijuegociencia.cpp \
     Minijuegodescartes.cpp \
     Minijuegohistoria.cpp \
+    Minijuegokant.cpp \
     Minijuegopolitica.cpp \
     Personaje.cpp \
     Ruleta.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     Minijuegociencia.h \
     Minijuegodescartes.h \
     Minijuegohistoria.h \
+    Minijuegokant.h \
     Minijuegopolitica.h \
     Personaje.h \
     Pregunta.h \
