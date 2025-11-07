@@ -17,6 +17,7 @@ SOURCES += \
     Mainmenu.cpp \
     Minijuegoarte.cpp \
     Minijuegociencia.cpp \
+    Minijuegodescartes.cpp \
     Minijuegohistoria.cpp \
     Minijuegopolitica.cpp \
     Personaje.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     Mainmenu.h \
     Minijuegoarte.h \
     Minijuegociencia.h \
+    Minijuegodescartes.h \
     Minijuegohistoria.h \
     Minijuegopolitica.h \
     Personaje.h \

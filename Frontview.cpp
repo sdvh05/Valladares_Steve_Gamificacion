@@ -10,6 +10,8 @@
 #include <QMessageBox>
 #include <QApplication>
 
+#include "Minijuegodescartes.h"
+
 
 FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     : ControlPersonaje(jugadorExistente, parent)
@@ -67,13 +69,13 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     //prueba
     // --- NPC ---
     npcPrueba = new Npc(this);
-    npcPrueba->setNombre("Guardia FV");
+    npcPrueba->setNombre("Guardia");
     npcPrueba->move(428,810);
     npcPrueba->show();
     npcPrueba->raise();
 
     auto datos = npcPrueba->obtenerAnimacion("idle");
-    npcPrueba->SetAnimacion(datos.ruta, 7);
+    npcPrueba->SetAnimacion(datos.ruta, datos.frames);
 
     // Diálogo del NPC
     QStringList dialogo;
@@ -239,6 +241,11 @@ void FrontView::keyPressEvent(QKeyEvent* event){
     }
     if (event->key() == Qt::Key_E && npcPrueba) {
         npcPrueba->Interactuar(jugador);
+    }
+    if (event->key() == Qt::Key_P) {
+        MinijuegoDescartes* MA = new MinijuegoDescartes(jugador);
+        MA->show();
+        this->close();
     }
 
 

@@ -80,6 +80,8 @@ private:
     void SalirMinijuego();
 
     void ActualizarCorazonesEnemigos();
+    void AnimarAtaque(bool jugadorAtaca, std::function<void()> onFinalizado);
+
 
     //Post Battalla
     void ReproducirCancion(bool gano);

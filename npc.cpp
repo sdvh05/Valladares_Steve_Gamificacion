@@ -197,12 +197,19 @@ Personaje::DatosAnimacion Npc::obtenerAnimacion(const QString& tipo)
     else if(nombre.contains("Racionalista", Qt::CaseInsensitive))
         base = "Sprites/Personajes/NPCs/Rival/Rac/";
 
+    else if(nombre.contains("Kant", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Kant/";
+
+    else if(nombre.contains("Descartes", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Descartes/";
+
 
     // Tipos de animaciones comunes
     if (tipo == "idle")      datos = { base + "Idle.png", 6 };
     else if (tipo == "walk") datos = { base + "Walk.png", 8 };
     else if (tipo == "run")  datos = { base + "Run.png", 10 };
     else if (tipo == "talk") datos = { base + "Talk.png", 5 };
+    else if (tipo == "hurt") datos = { base + "Hurt.png", 3};
     else if (tipo == "dead") datos = { base + "Dead.png", 4 };
     else                     datos = { base + "Idle.png", 6 };
 

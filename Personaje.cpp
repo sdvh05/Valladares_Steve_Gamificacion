@@ -194,6 +194,7 @@ Personaje::DatosAnimacion Personaje::obtenerAnimacion(const QString &tipo){
         else if(tipo=="run") datos={base+"Run.png",          10};
         else if(tipo=="walk")datos={base+"Walk.png",         10};
         else if(tipo=="dead") datos={base+"Dead.png",        4};
+         else if(tipo=="hurt") datos={base+"Hurt.png",        3};
         else if(tipo=="melee") datos={base+"Attack.png", 5};
 
 

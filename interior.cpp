@@ -7,6 +7,8 @@
 #include "Minijuegopolitica.h"
 #include "Minijuegoarte.h"
 
+#include "Minijuegodescartes.h"
+
 #include "Combate.h"
 
 #include <QPixmap>
@@ -384,11 +386,11 @@ void Interior::keyPressEvent(QKeyEvent* event) {
             this->close();
 
         } else if(pasilloActual==9 && rectJugador.intersects(QRect(702,666, 250, 100))){
-            jugador->Bando=2;
+            /*jugador->Bando=2;
             ResetearMovimiento();
             Combate* BF = new Combate(jugador,nullptr, jugador->Bando);
             BF->show();
-            this->close();
+            this->close(); */
         }
     }
 

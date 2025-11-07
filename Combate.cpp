@@ -11,6 +11,9 @@
 
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QUrl>
+#include <QFile>
+
 
 
 extern Inventario* inventarioGlobal;
@@ -247,7 +250,9 @@ void Combate::responder(char letra) {
         mostrarResultadoTemporal(false, true, 0); // Jugador acierta
         CorazonesEnemigo--;
         ActualizarCorazonesEnemigos();
-        verificarVictoria();
+        AnimarAtaque(true, [=]() {
+            verificarVictoria();
+        });
     } else {
         AnsError[letra - 'A'] = false;
         actualizarRespuestas();
@@ -280,11 +285,14 @@ void Combate::EnemigoResponder() {
         jugador->PerderCorazones();
         ActualizarCorazones();
         mostrarResultadoTemporal(false, true, 1); // IA acierta
+
+        AnimarAtaque(false, [=]() {
+            verificarVictoria();
+        });
     } else {
         mostrarResultadoTemporal(true, false, 1); // IA falla
     }
 
-    verificarVictoria();
 }
 
 
@@ -390,6 +398,86 @@ void Combate::ActualizarCorazonesEnemigos() {
     }
 }
 
+
+void Combate::AnimarAtaque(bool jugadorAtaca, std::function<void()> onFinalizado)
+{
+    QWidget* atacante = jugadorAtaca ? static_cast<QWidget*>(jugador) : static_cast<QWidget*>(npc);
+    QWidget* objetivo = jugadorAtaca ? static_cast<QWidget*>(npc) : static_cast<QWidget*>(jugador);
+
+    int origenX = jugadorAtaca ? 116 : 620;
+    int destinoX = jugadorAtaca ? 520 : 220;
+    int y = 702;
+
+    // Cambiar animaciones
+    if (jugadorAtaca) {
+        auto datos = jugador->obtenerAnimacion("walk");
+        jugador->SetAnimacion(datos.ruta, datos.frames);
+    } else {
+        auto datos = npc->obtenerAnimacion("walk");
+        npc->SetAnimacion(datos.ruta, datos.frames);
+    }
+
+    // Animación de movimiento (ir hacia el objetivo)
+    QPropertyAnimation* mover = new QPropertyAnimation(atacante, "pos");
+    mover->setDuration(600);
+    mover->setStartValue(QPoint(origenX, y));
+    mover->setEndValue(QPoint(destinoX, y));
+    mover->setEasingCurve(QEasingCurve::InOutQuad);
+
+    connect(mover, &QPropertyAnimation::finished, this, [=]() {
+        // Cambiar animación a ataque
+        if (jugadorAtaca) {
+            auto datosAtk = jugador->obtenerAnimacion("attack");
+            jugador->SetAnimacion(datosAtk.ruta, datosAtk.frames);
+
+            auto datosHurt = npc->obtenerAnimacion("hurt");
+            npc->SetAnimacion(datosHurt.ruta, datosHurt.frames);
+        } else {
+            auto datosAtk = npc->obtenerAnimacion("attack");
+            npc->SetAnimacion(datosAtk.ruta, datosAtk.frames);
+
+            auto datosHurt = jugador->obtenerAnimacion("hurt");
+            jugador->SetAnimacion(datosHurt.ruta, datosHurt.frames);
+        }
+
+        // Esperar breve momento y volver
+        QTimer::singleShot(700, this, [=]() {
+            // Volver al punto original
+            QPropertyAnimation* volver = new QPropertyAnimation(atacante, "pos");
+            volver->setDuration(600);
+            volver->setStartValue(QPoint(destinoX, y));
+            volver->setEndValue(QPoint(origenX, y));
+            volver->setEasingCurve(QEasingCurve::InOutQuad);
+
+            connect(volver, &QPropertyAnimation::finished, this, [=]() {
+                // Volver a animación "idle"
+                if (jugadorAtaca) {
+                    auto datosIdle = jugador->obtenerAnimacion("idle");
+                    jugador->SetAnimacion(datosIdle.ruta, datosIdle.frames);
+                    auto datosIdle2 = npc->obtenerAnimacion("idle");
+                    npc->SetAnimacion(datosIdle2.ruta, datosIdle2.frames);
+                } else {
+                    auto datosIdle = npc->obtenerAnimacion("idle");
+                    npc->SetAnimacion(datosIdle.ruta, datosIdle.frames);
+                    auto datosIdle2 = jugador->obtenerAnimacion("idle");
+                    jugador->SetAnimacion(datosIdle2.ruta, datosIdle2.frames);
+                }
+
+                if (onFinalizado)
+                    onFinalizado();
+            });
+
+            volver->start(QAbstractAnimation::DeleteWhenStopped);
+        });
+    });
+
+    mover->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+
+
+
+
 void Combate::SalirMinijuego()
 {
     qDebug() << "Salir del combate";
@@ -431,35 +519,39 @@ void Combate::ReproducirCancion(bool gano)
 
     if (gano) {
         if (jugador->Bando == 1)
-            rutaCancion = "Canciones/O Fortuna.mp3"; // Racionalista gana
-        else if (jugador->Bando == 2)
-            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3"; // Empirista gana
+            rutaCancion = "Canciones/O Fortuna.mp3";
+        else
+            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3";
     } else {
         if (jugador->Bando == 1)
-            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3"; // Empiristas ganan
-        else if (jugador->Bando == 2)
-            rutaCancion = "Canciones/O Fortuna.mp3"; // Racionalistas ganan
+            rutaCancion = "Canciones/Hallowed Be Thy Name.mp3";
+        else
+            rutaCancion = "Canciones/O Fortuna.mp3";
     }
 
-    // --- Si ya hay una música sonando, detenla primero ---
+    qDebug() << "Existe archivo:" << QFile::exists(rutaCancion) << rutaCancion;
+
     if (playerMusica) {
         playerMusica->stop();
         playerMusica->deleteLater();
+        playerMusica = nullptr;
+    }
+    if (audioOutput) {
         audioOutput->deleteLater();
+        audioOutput = nullptr;
     }
 
-    // --- Crear nueva instancia ---
-    playerMusica = new QMediaPlayer(this);
     audioOutput = new QAudioOutput(this);
-
+    playerMusica = new QMediaPlayer(this);
     playerMusica->setAudioOutput(audioOutput);
+
+    audioOutput->setVolume(0.5);
     playerMusica->setSource(QUrl::fromLocalFile(rutaCancion));
-    audioOutput->setVolume(50);
     playerMusica->play();
 
     qDebug() << "Reproduciendo canción:" << rutaCancion;
-
 }
+
 
 void Combate::FadeOutMusica(int duracionMs)
 {
