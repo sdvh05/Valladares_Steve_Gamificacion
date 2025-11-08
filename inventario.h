@@ -72,6 +72,7 @@ public: //Agregar items especificos
     void agregarVida(int valor=1);
     void agregarCorona(int valor=1);
 
+    void agregarMapa(int valor=1);
 
 
 

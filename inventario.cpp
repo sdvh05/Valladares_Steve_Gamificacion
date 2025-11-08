@@ -169,4 +169,9 @@ void Inventario::agregarCorona(int cantidad){
                          "Sprites/Recursos/corona.png", cantidad, 1));
 }
 
+void Inventario::agregarMapa(int cantidad){
+    agregarObjeto(Objeto("Mapa del Castillo", "Epico", "Guia", "Mapa de todo el Interior del Castillo",
+                         "Sprites/Recursos/Mapa.png", cantidad, 1));
+}
+
 

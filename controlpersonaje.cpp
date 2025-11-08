@@ -4,6 +4,7 @@
 #include "inventario.h"
 #include "npc.h"
 #include "inventariowidget.h"
+#include "grafomapavisual.h"
 
 extern Inventario* inventarioGlobal;
 
@@ -106,6 +107,23 @@ void ControlPersonaje::keyPressEvent(QKeyEvent* event) {
                 qDebug() << "Error con inventarioGlobal";
             }
         }
+        break;
+    case Qt::Key_M:
+        ResetearMovimiento();
+        if(jugador->tieneMapa){
+            if (!mapa) {
+                mapa = new MapaWidget();
+                mapa->setAttribute(Qt::WA_DeleteOnClose);
+                connect(mapa, &QWidget::destroyed, this, [this]() { mapa = nullptr; });
+            }
+
+            mapa->show();
+            mapa->raise();
+        }else{
+            qDebug()<<"aun no tienes un mapa";
+        }
+        break;
+
     default: break;
     }
 }

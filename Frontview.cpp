@@ -1,6 +1,8 @@
 #include "FrontView.h"
 #include "interior.h"
 
+#include "Videoplayer.h"
+#include "inventario.h"
 #include <QPixmap>
 #include <QDebug>
 #include <QLabel>
@@ -12,6 +14,7 @@
 
 #include "Minijuegodescartes.h"
 
+extern Inventario* inventarioGlobal;
 
 FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     : ControlPersonaje(jugadorExistente, parent)
@@ -75,13 +78,14 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     npcPrueba->raise();
 
     auto datos = npcPrueba->obtenerAnimacion("idle");
-    npcPrueba->SetAnimacion(datos.ruta, datos.frames);
+    npcPrueba->SetAnimacion(datos.ruta, 7);
 
     // Diálogo del NPC
     QStringList dialogo;
-    dialogo << "¡Hola estimados Programadores!"
-            << "Esta es Mi presentacion de Proyecto #4"
-            << "Espero que les Guste";
+    dialogo << "¡Buenos Dias!"
+            << "Me alegra ver a alguien Nuevo por aqui"
+            << "El interior del Castillo puede ser algo Confuso"
+            << "Ten este Mapa para Guiarte";
 
     npcPrueba->setDialogos(dialogo);
 
@@ -241,6 +245,10 @@ void FrontView::keyPressEvent(QKeyEvent* event){
     }
     if (event->key() == Qt::Key_E && npcPrueba) {
         npcPrueba->Interactuar(jugador);
+        if(!jugador->tieneMapa){
+            inventarioGlobal->agregarMapa();
+            jugador->tieneMapa=true;
+        }
     }
     if (event->key() == Qt::Key_P) {
         MinijuegoDescartes* MA = new MinijuegoDescartes(jugador);

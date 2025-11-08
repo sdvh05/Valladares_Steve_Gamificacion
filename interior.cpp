@@ -425,11 +425,13 @@ void Interior::keyPressEvent(QKeyEvent* event) {
         }
 
         if(pasilloActual==10 && rectJugador.intersects(QRect(518,744, 200, 80))){
+            ResetearMovimiento();
             MinijuegoDescartes *MD = new MinijuegoDescartes(jugador);
             MD->show();
             this->close();
 
         }else if(pasilloActual==10 && rectJugador.intersects(QRect(198,744, 200, 80))){
+            ResetearMovimiento();
             MinijuegoKant *MK = new MinijuegoKant(jugador);
             MK->show();
             this->close();

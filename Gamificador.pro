@@ -5,6 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++17
 QT += core gui widgets multimedia
 
+QT += core gui multimedia multimediawidgets
+CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -23,7 +25,10 @@ SOURCES += \
     Minijuegopolitica.cpp \
     Personaje.cpp \
     Ruleta.cpp \
+    Videoplayer.cpp \
     controlpersonaje.cpp \
+    grafo.cpp \
+    grafomapavisual.cpp \
     interior.cpp \
     inventario.cpp \
     inventariowidget.cpp \
@@ -45,7 +50,10 @@ HEADERS += \
     Personaje.h \
     Pregunta.h \
     Ruleta.h \
+    Videoplayer.h \
     controlpersonaje.h \
+    grafo.h \
+    grafomapavisual.h \
     interior.h \
     inventario.h \
     inventariowidget.h \

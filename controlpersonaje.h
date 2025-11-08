@@ -8,6 +8,7 @@
 #include <QRect>
 #include <QList>
 #include "Personaje.h"
+#include "grafomapavisual.h"
 
 class ControlPersonaje : public QWidget {
     Q_OBJECT
@@ -25,6 +26,9 @@ protected:
     bool derechaPresionada;
     bool arribaPresionado;
     bool abajoPresionado;
+
+
+    MapaWidget* mapa = nullptr;
 
 
     // Corazones

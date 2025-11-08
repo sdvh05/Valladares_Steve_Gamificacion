@@ -4,6 +4,8 @@
 #include "Ruleta.h"
 #include "InventarioWidget.h"
 #include"inventario.h"
+#include "Videoplayer.h"
+#include "grafomapavisual.h"
 
 
 #include <QApplication>
@@ -36,6 +38,11 @@ int main(int argc, char *argv[])
     inventarioGlobal->agregarMedallaKant();*/
     /*InventarioWidget* inventarioUI = new InventarioWidget(inventarioGlobal);
     inventarioUI->show();*/
+
+    /*QString rutaVideo = "Video/b-tree-example.mp4";
+
+    VideoPlayer* ventana = new VideoPlayer(rutaVideo);
+    ventana->show();*/
 
 
 
