@@ -66,7 +66,7 @@ MinijuegoKant::MinijuegoKant(Personaje* jugadorExistente, QWidget* parent, int E
     labelRespuestas->hide();
 
     // --- Inicializar preguntas ---
-    preguntas.cargarPreguntasPorTipo("Descartes");
+    preguntas.cargarPreguntasPorTipo("Kant");
     cargarPreguntaActual();
 
 
@@ -74,7 +74,8 @@ MinijuegoKant::MinijuegoKant(Personaje* jugadorExistente, QWidget* parent, int E
 
     npcKant = new Npc(this);
     npcKant->setNombre("Kant");
-    npcKant->move(640,670);
+    npcKant->move(678,416);
+    npcKant->miradoDerecha=false;
     npcKant->show();
     npcKant->raise();
 
@@ -82,12 +83,12 @@ MinijuegoKant::MinijuegoKant(Personaje* jugadorExistente, QWidget* parent, int E
     npcKant->SetAnimacion(datos.ruta, 6);
 
     // Diálogo del NPC
-    actualizarDialogoDescartes();
+    actualizarDialogoKant();
 
 
 }
 
-void MinijuegoKant::actualizarDialogoDescartes(){
+void MinijuegoKant::actualizarDialogoKant(){
     QStringList dialogo;
 
     switch (EstadoActual) {
@@ -148,6 +149,7 @@ void MinijuegoKant::actualizarDialogoDescartes(){
     npcKant->setDialogos(dialogo);
 }
 
+/*
 void MinijuegoKant::responderAlDilema() {
     labelPregunta->setText("🧩 DILEMA FINAL:\n Ahora que han recorrido el camino de la razón, deben decidir \n ¿Qué deben hacer con el secreto que conocen?");
     labelPregunta->setStyleSheet(
@@ -170,8 +172,8 @@ void MinijuegoKant::responderAlDilema() {
     respuestasActivas = true;
 
     EstadoActual = 5;
-    actualizarDialogoDescartes();
-}
+    actualizarDialogoKant();
+}*/
 
 
 
@@ -204,18 +206,54 @@ void MinijuegoKant::MostrarPistas(int Etapa) {
 
     QString texto;
     switch (Etapa) {
-    case 1:
+    case 7:
         texto = "📗 <b> Crítica de la razón pura (Conocimiento)</b><br><br>"
                 "&nbsp;&nbsp;- El conocimiento comienza con la experiencia, pero no todo proviene de ella. La razón impone formas a lo que los sentidos captan.<br>"
                 "&nbsp;&nbsp;- Antes de juzgar, pregúntate: ¿lo que sabes es realmente conocimiento, o solo percepción sin fundamento?<br>"
                 "&nbsp;&nbsp;- La verdad no se encuentra en lo que se ve, sino en lo que puede ser pensado con claridad.<br>";
 
         break;
-    case 2:
-        texto = "📘 <b>Mesa 2: ANÁLISISCrítica de la razón práctica (Ética)</b><br><br>"
+    case 8:
+        texto = "📘 <b>Crítica de la razón práctica (Ética)</b><br><br>"
                 "&nbsp;&nbsp;- Obra de tal modo que tu acción pueda convertirse en ley universal. El deber no depende del resultado, sino de la intención.<br>"
                 "&nbsp;&nbsp;- La moral no es una emoción ni una conveniencia: es respeto por la dignidad del otro.<br>"
                 "&nbsp;&nbsp;- Pregúntate: ¿actuarías igual si todos lo hicieran? ¿Tu decisión respeta la humanidad en cada persona involucrada?<br>";
+        break;
+
+    case 1:
+        texto = "📘 <b>Pista 1:</b><br><br>"
+                "La respuesta debe ser un solo mandato; busca el que depende de un fin. "
+                "Piensa en la forma práctica: “Si quieres X, entonces haz Y”.";
+        break;
+
+    case 2:
+        texto = "📘 <b>Pista 2:</b><br><br>"
+                "Nouménico — realidad inaccesible.<br>"
+                "Fenoménico — apariencia sensible (acceso por sentidos).<br>"
+                "Empírico — datos observables.<br>"
+                "Racional — principios razonados.";
+        break;
+
+    case 3:
+        texto = "📘 <b>Pista 3:</b><br><br>"
+                "“No esperes que otros piensen por ti; usa tu propia razón y atrévete a cuestionar.”";
+        break;
+
+    case 4:
+        texto = "📘 <b>Pista 4:</b><br><br>"
+                "“Como Copérnico movió el centro en el cielo, Kant mueve el centro del saber: "
+                "ahora el que conoce (el sujeto) importa primero.”";
+        break;
+
+    case 5:
+        texto = "📘 <b>Pista 5:</b><br><br>"
+                "Criticar aquí es ‘examinar con cuidado’. Kant no elige solo experiencia ni solo razón, "
+                "sino que los examina juntos.";
+        break;
+
+    case 6:
+        texto = "📘 <b>Pista 6:</b><br><br>"
+                "Busca la obra que es teórica, que investiga cómo funciona la razón en sí misma.";
         break;
 
     default:
@@ -236,35 +274,10 @@ void MinijuegoKant::configurarEscena(){
 }
 
 void MinijuegoKant::cambiarEscena() {
-    QString nombreArchivoBase = "Sprites/Castle/Minijuegos/Descartes/Descartes ";
-
-    QString Estado = "";
-
-    switch (this->EstadoActual) {
-    case 0:
-        Estado ="0";
-        break;
-    case 1:
-        Estado ="1";
-        break;
-    case 2:
-        Estado ="2";
-        break;
-    case 3:
-        Estado ="3";
-        break;
-    case 4:
-        Estado= "4";
-        break;
-    case 5:
-        Estado= "5";
-        break;
-    default: Estado ="0";
-    }
 
 
-    // Crear nombre del archivo tipo "AB Wrong.png"
-    QString ruta = nombreArchivoBase + Estado + ".png";
+
+    QString ruta = "Sprites/Castle/Minijuegos/Kant/Kant.png";
 
     QPixmap fondo(ruta);
     if (fondo.isNull()) {
@@ -279,11 +292,8 @@ void MinijuegoKant::cambiarEscena() {
 void MinijuegoKant::configurarObstaculos(){
     obstaculos.clear();
 
-    /*obstaculos.append(QRect(50,734, 2, 320));
-    obstaculos.append(QRect(206,734, 2, 320));
-    obstaculos.append(QRect(532,734, 2, 320));
-    obstaculos.append(QRect(696,734, 2, 320));
-    obstaculos.append(QRect(50,734, 2, 320)); */
+    obstaculos.append(QRect(264,250, 100, 5));
+
 
     \
 }
@@ -357,7 +367,6 @@ void MinijuegoKant::VerificarRespuesta(char letra)
 {
     if (preguntaActual.texto.isEmpty()) return;
 
-
     bool correcta = (letra == preguntaActual.respuestaCorrecta);
 
     if (correcta) {
@@ -366,18 +375,19 @@ void MinijuegoKant::VerificarRespuesta(char letra)
         ActualizarCorazones();
 
         QTimer::singleShot(1000, this, [=]() {
-            if (ultimaPregunta) {
-                responderAlDilema();
-            } else {
-                ActualizarPregunta();
-            }
+            ActualizarPregunta();
         });
     } else {
         qDebug() << "Respuesta incorrecta:" << letra;
         labelPregunta->setText("❌ Incorrecto...");
         ActualizarCorazones(false);
+
+        QTimer::singleShot(1000, this, [=]() {
+            labelPregunta->setText(preguntaActual.texto);
+        });
     }
 }
+
 
 
 
@@ -397,18 +407,32 @@ void MinijuegoKant::keyPressEvent(QKeyEvent* event) {
     }
 
     if(event->key() == Qt::Key_Q){
-        if (rectJugador.intersects(QRect(104,704, 15, 100)) && EstadoActual >=1) {
+        if (rectJugador.intersects(QRect(26,328, 15, 50)) ) {
             qDebug() << "pista 1";
             this->MostrarPistas(1);
-        } else if (rectJugador.intersects(QRect(438,656, 15, 100)) && EstadoActual >=2) {
+        } else if (rectJugador.intersects(QRect(26,570, 15, 50)) ) {
             qDebug() << "pista 2";
             this->MostrarPistas(2);
-        } else if (rectJugador.intersects(QRect(126,852, 15, 100)) && EstadoActual >=3) {
+        } else if (rectJugador.intersects(QRect(598,314, 15, 50)) ) {
             qDebug() << "pista 3";
             this->MostrarPistas(3);
-        } else if (rectJugador.intersects(QRect(480,802, 15, 100)) && EstadoActual >=4) {
+        } else if (rectJugador.intersects(QRect(666,600, 15, 50)) ) {
             qDebug() << "pista 4";
             this->MostrarPistas(4);
+        }
+        else if (rectJugador.intersects(QRect(294,280, 15, 50)) ) {
+            qDebug() << "pista 5";
+            this->MostrarPistas(5);
+        } else if (rectJugador.intersects(QRect(344,466, 15, 50)) ) {
+            qDebug() << "pista 6";
+            this->MostrarPistas(6);
+
+        } else if (rectJugador.intersects(QRect(486,772, 15, 50)) ) { //libro critica razon pura
+            qDebug() << "pista 7";
+            this->MostrarPistas(7);
+        } else if (rectJugador.intersects(QRect(158,808, 15, 50)) ) { //Critica Razon Practca
+            qDebug() << "pista 8";
+            this->MostrarPistas(8);
         }
 
     }
@@ -416,35 +440,16 @@ void MinijuegoKant::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_E && npcKant) {
         npcKant->Interactuar(jugador);
     }
-    if(event->key() == Qt::Key_E && npcKant && EstadoActual>=5 && rectJugador.intersects(QRect(670,670, 150, 150))){
-        //
-    }
+
 
 
     //event eltras A,B,C,D para responder -> mandar las respuestas.
-    if (respuestasActivas && EstadoActual < 5) {
+    if (respuestasActivas) {
         if (event->key() == Qt::Key_1) { VerificarRespuesta('A'); }
         if (event->key() == Qt::Key_2) { VerificarRespuesta('B'); }
         if (event->key() == Qt::Key_3) { VerificarRespuesta('C'); }
         if (event->key() == Qt::Key_4) { VerificarRespuesta('D'); }
     }
-    else if (EstadoActual == 5) {
-        if (event->key() == Qt::Key_1 || event->key() == Qt::Key_3 ||
-            event->key() == Qt::Key_2 || event->key() == Qt::Key_4) {
-
-            // Correcta = D
-            if (event->key() == Qt::Key_3) {
-                labelPregunta->setText("¡Correcto! Has resuelto el dilema de Descartes.");
-                termino=true;
-                //QTimer::singleShot(2500, this, [=]() { SalirMinijuego(); });
-
-            } else {
-                labelPregunta->setText("Descartes dice: 'Piénsalo bien... el conocimiento no se memoriza, se construye.'");
-            }
-        }
-    }
-
-
 }
 
 
@@ -476,8 +481,8 @@ void MinijuegoKant::ActualizarPregunta(){
     cargarPreguntaActual();
     EstadoActual++;
     qDebug() <<EstadoActual;
-    cambiarEscena();
-    actualizarDialogoDescartes();
+    //cambiarEscena();
+    actualizarDialogoKant();
 }
 
 
@@ -489,7 +494,7 @@ void MinijuegoKant::SalirMinijuego(){
     Interior* interior = new Interior(jugador,nullptr,10);
     jugador->move(524,786);
     interior->show();
-    inventarioGlobal->agregarMedallaDescartes();
+    inventarioGlobal->agregarMedallaKant();
 
 
     this->close();
@@ -531,7 +536,7 @@ void MinijuegoKant::cargarPreguntaActual() {
         ultimaPregunta = preguntas.isEmpty();
     } else {
         qDebug() << "No hay más preguntas en la cola.";
-        labelPregunta->setText("¡Has Completado el Minijuegos!");
+        labelPregunta->setText("¡Has Completado Misterio de Kant!");
         labelRespuestas->hide();
 
         ultimaPregunta =true;

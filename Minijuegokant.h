@@ -10,7 +10,7 @@
 #include <QRect>
 #include <QList>
 
-//Descartes -> Lab
+//Kant -> Lab
 
 
 class MinijuegoKant : public ControlPersonaje {
@@ -49,7 +49,7 @@ private:
     void cargarPreguntaActual();
     void cambiarEscena();
     void actualizarRespuestas();
-    void actualizarDialogoDescartes();
+    void actualizarDialogoKant();
     void MostrarPistas(int Estado);
 
     void responderAlDilema();

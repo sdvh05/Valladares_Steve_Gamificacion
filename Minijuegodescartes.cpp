@@ -102,33 +102,36 @@ void MinijuegoDescartes::actualizarDialogoDescartes(){
     case 1:
         dialogo << "Respondiste Correctamente!"
                 << "Con cada respuesta correcta"
-                << "Aparecera una pista Nueva";
+                << "Aparecera una pista Nueva"
+                << "Ve a leer el caso \n y la EVIDENCIA";
         break;
     case 2:
         dialogo << "Ahora tienes una \n Segunda Pista"
-                <<"Te doy mas Informacion sobre.."
-                <<"Las Ventajas y Desventajas \n de cada Metodo";
+                <<"Te doy brindo un ANÁLISIS"
+                <<"Sobre esta compleja \n situacion";
+
         break;
     case 3:
         dialogo << "Muy bien!"
-                <<"Te has Ganado mas Informacion";
+                <<"Te has Ganado mas Informacion"
+                <<"Una SÍNTESIS sobre el caso";
 
          break;
     case 4:
         dialogo <<"Te Prestare Mi cuarderno"
-                <<"Con conclusiones ordenadas \n sobre el dilema"
-                <<"A ver si te es de Uso para responder el Dilema";
+                <<"Enumerando diversas \n conclusiones"
+                <<"A ver si te es de Uso\n para responder el Dilema";
 
          break;
     case 5:
         dialogo <<"Ya tienes todas las \n Pistas Disponibles"
-                 <<"Es tu turno de contestarme..."
-                <<"Cual es el mejor metodo de Estudio?";
+                <<"Es tu turno de contestarme..."
+                <<"¿Cual es la decision \n que deben tomar?";
 
          break;
 
     default:
-        dialogo << "Hola";
+         dialogo <<"No hay pistas disponibles en esta etapa.";
          break;
     }
 
@@ -136,7 +139,7 @@ void MinijuegoDescartes::actualizarDialogoDescartes(){
 }
 
 void MinijuegoDescartes::responderAlDilema() {
-    labelPregunta->setText("🧩 DILEMA FINAL:\n¿Cuál método realmente mejora el aprendizaje a largo plazo?");
+    labelPregunta->setText("🧪 DILEMA FINAL:\n¿Debo revelar una falta grave que conozco, aunque eso perjudique a alguien cercano?");
     labelPregunta->setStyleSheet(
         "background: rgba(40,40,40,220); color: white; font: bold 16px 'Courier New'; "
         "border: 2px solid white; border-radius: 8px; padding: 10px;");
@@ -148,10 +151,10 @@ void MinijuegoDescartes::responderAlDilema() {
         "border: 2px solid gray; border-radius: 8px; padding: 10px;");
     labelRespuestas->setTextFormat(Qt::RichText);
     labelRespuestas->setText(
-        "<font color='white'>A: Leer y subrayar</font><br>"
-        "<font color='white'>B: Hacer mapas mentales</font><br>"
-        "<font color='white'>C: Explicar en voz alta</font><br>"
-        "<font color='white'>D: Técnica de recuperación activa</font>"
+        "<font color='white'>A: Ocultar la falta para proteger el vínculo personal</font><br>"
+        "<font color='white'>B: Revelar la falta solo si hay evidencia irrefutable</font><br>"
+        "<font color='white'>C: Consultar primero con la persona involucrada</font><br>"
+        "<font color='white'>D: Revelar la verdad, priorizando el deber moral</font>"
         );
 
     respuestasActivas = true;
@@ -159,7 +162,6 @@ void MinijuegoDescartes::responderAlDilema() {
     EstadoActual = 5;
     actualizarDialogoDescartes();
 }
-
 
 
 void MinijuegoDescartes::MostrarPistas(int Etapa) {
@@ -192,37 +194,55 @@ void MinijuegoDescartes::MostrarPistas(int Etapa) {
     QString texto;
     switch (Etapa) {
     case 1:
-        texto = "📚 <b>Mesa 1: EVIDENCIA</b><br><br>"
-                "Dilema: El descubrir cuál método realmente mejora el aprendizaje a largo plazo.<br><br>"
-                "&nbsp;&nbsp;- Leer y subrayar<br>"
-                "&nbsp;&nbsp;- Hacer mapas mentales<br>"
-                "&nbsp;&nbsp;- Explicar en voz alta<br>"
-                "&nbsp;&nbsp;- Técnica de recuperación activa (hacerte preguntas sin ver el material)<br><br>";
+        texto =
+            "🧠 <b>Mesa 1: EVIDENCIA</b><br><br>"
+            "Elementos disponibles:<br>"
+            "&nbsp;&nbsp;- Una nota anónima con la confesión de una falta<br>"
+            "&nbsp;&nbsp;- El vínculo afectivo con la persona involucrada<br>"
+            "&nbsp;&nbsp;- El impacto potencial en otros si se revela<br>"
+            "&nbsp;&nbsp;- El principio de sinceridad<br><br>"
+            "📍<i>Pista 1 (Regla de la evidencia):</i><br>"
+            "<i>“No aceptar nada como verdadero sin evidencia clara. "
+            "¿La falta es real y verificable, o solo una sospecha?”</i>";
+        break;
 
-        break;
     case 2:
-        texto = "🔍 <b>Mesa 2: ANÁLISIS</b><br><br>"
-                "Ejercicios de inferencia:<br>"
-                "&nbsp;&nbsp;- Leer y subrayar = fácil, pero pasivo.<br>"
-                "&nbsp;&nbsp;- Mapas mentales = organizan ideas, pero no garantizan retención.<br>"
-                "&nbsp;&nbsp;- Explicar en voz alta = mejora comprensión, pero depende del nivel previo.<br>"
-                "&nbsp;&nbsp;- Recuperación activa = obliga al cerebro a recordar, fortalece la memoria y detecta lagunas.";
+        texto =
+            "🔍 <b>Mesa 2: ANÁLISIS</b><br><br>"
+            "Ejercicios de inferencia:<br>"
+            "&nbsp;&nbsp;- ¿Qué consecuencias tendría revelar la falta?<br>"
+            "&nbsp;&nbsp;- ¿Qué consecuencias tendría ocultarla?<br>"
+            "&nbsp;&nbsp;- ¿La nota es confiable?<br>"
+            "&nbsp;&nbsp;- ¿El vínculo personal afecta tu juicio?<br><br>"
+            "📍<i>Pista 2 (Regla del análisis):</i><br>"
+            "<i>“Dividir cada dificultad en partes. "
+            "¿Qué está en juego: la verdad, el daño, el deber, la confianza?”</i>";
         break;
+
     case 3:
-        texto = "🧠 <b>Mesa 3: SÍNTESIS</b><br><br>"
-                "Relaciones:<br>"
-                "&nbsp;&nbsp;- Pasivo vs. activo.<br>"
-                "&nbsp;&nbsp;- Organización vs. retención.<br>"
-                "&nbsp;&nbsp;- Comprensión vs. memoria duradera.";
+        texto =
+            "🧩 <b>Mesa 3: SÍNTESIS</b><br><br>"
+            "Relaciones establecidas:<br>"
+            "&nbsp;&nbsp;- Veracidad vs. lealtad<br>"
+            "&nbsp;&nbsp;- Daño emocional vs. justicia<br>"
+            "&nbsp;&nbsp;- Intención vs. resultado<br>"
+            "&nbsp;&nbsp;- Universalidad de la acción<br><br>"
+            "📍<i>Pista 3 (Regla de la síntesis):</i><br>"
+            "<i>“Conducir los pensamientos por orden. "
+            "¿Qué principio puede aplicarse a todos sin contradicción?”</i>";
         break;
+
     case 4:
-        texto = "📋 <b>Mesa 4: ENUMERACIÓN</b><br><br>"
-                "Conclusión ordenada:<br>"
-                "&nbsp;&nbsp;- Leer y subrayar ayuda a identificar ideas, pero no garantiza que se recuerden.<br>"
-                "&nbsp;&nbsp;- Mapas mentales son útiles para visualizar, pero no prueban el conocimiento.<br>"
-                "&nbsp;&nbsp;- Explicar en voz alta mejora la comprensión, pero no siempre detecta errores.<br>"
-                "&nbsp;&nbsp;- Recuperación activa exige recordar sin ayuda, lo que fortalece el aprendizaje.";
+        texto =
+            "📋 <b>Mesa 4: ENUMERACIÓN</b><br><br>"
+            "Orden de conceptos para concluir:<br>"
+            "&nbsp;&nbsp;- La falta parece real y comprobable.<br>"
+            "&nbsp;&nbsp;- Ocultarla protegería a alguien, pero violaría el principio de sinceridad.<br>"
+            "&nbsp;&nbsp;- Revelarla podría causar daño, pero también restaurar justicia.<br>"
+            "&nbsp;&nbsp;- El deber moral exige actuar según principios universales, no intereses personales.<br><br>"
+            "📍<i>Pista 4 (Regla de la enumeración)</i>";
         break;
+
     default:
         texto = "No hay pistas disponibles en esta etapa.";
         break;
@@ -230,6 +250,8 @@ void MinijuegoDescartes::MostrarPistas(int Etapa) {
 
     pagina->setText(texto);
 }
+
+
 
 
 
@@ -362,7 +384,6 @@ void MinijuegoDescartes::VerificarRespuesta(char letra)
 {
     if (preguntaActual.texto.isEmpty()) return;
 
-
     bool correcta = (letra == preguntaActual.respuestaCorrecta);
 
     if (correcta) {
@@ -381,8 +402,13 @@ void MinijuegoDescartes::VerificarRespuesta(char letra)
         qDebug() << "Respuesta incorrecta:" << letra;
         labelPregunta->setText("❌ Incorrecto...");
         ActualizarCorazones(false);
+
+        QTimer::singleShot(1000, this, [=]() {
+            labelPregunta->setText(preguntaActual.texto);
+        });
     }
 }
+
 
 
 
