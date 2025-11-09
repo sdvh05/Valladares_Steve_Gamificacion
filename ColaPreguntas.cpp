@@ -76,32 +76,32 @@ void ColaPreguntas::cargarPreguntasArte() {
     clear();
 
     enqueue(Pregunta(
-        "Uno de los siguientes personajes fue el encargado de pintar la capilla Sixtina:",
+        "Uno de los siguientes personajes fue el encargado de \n pintar la capilla Sixtina:",
         "Miguel Ángel", "Donatello", "Leonardo Da Vinci", "Francis Bacon",
         'A', "arte"
         ));
 
     enqueue(Pregunta(
-        "Genio del renacimiento que esculpió el Moisés, el David y la Pietá:",
+        "Genio del renacimiento que esculpió \n el Moisés, el David y la Pietá:",
         "Miguel Ángel Buonarroti", "Leonardo Da Vinci", "Rafael Sanzio", "Galileo Galilei",
         'A', "arte"
         ));
 
     enqueue(Pregunta(
-        "Durante el renacimiento el estilo artístico que impregnó el arte, la filosofía, la pintura escritura fue el:",
+        "Durante el renacimiento el estilo artístico que impregnó \n el arte, la filosofía, la pintura escritura fue el:",
         "El Gótico", "El barroco", "El clasicismo", "Romanticismo",
         'B', "arte"
         ));
 
     enqueue(Pregunta(
-        "Durante el renacimiento surge una nueva visión del hombre, que se vio reflejada en el arte, en la política "
+        "Durante el renacimiento surge una nueva visión del hombre,\n que se vio reflejada en el arte, en la política "
         "y en las ciencias sociales y humanas, a lo que se denomina:",
         "Antropocentrismo", "Humanismo", "Paradigma antropológico", "Teocentrismo",
         'B', "arte"
         ));
 
     enqueue(Pregunta(
-        "Cuatro genios del renacimiento (Leonardo, Donatello, Rafael y Michelangelo) han sido llevados a la "
+        "Cuatro genios del renacimiento (Leonardo, Donatello, Rafael y Michelangelo) \n han sido llevados a la "
         "pantalla en los comics de:",
         "Las tortugas ninjas", "Los caballeros del Zodiaco", "Los cuatro fantásticos", "Los antagonistas de Attack Titan",
         'A', "arte"
@@ -223,13 +223,13 @@ void ColaPreguntas::cargarPreguntasCombate() {
         ));
 
     enqueue(Pregunta(
-        "De las siguientes, una de ellas es la corriente filosófica que en general tiende a negar la posibilidad de la metafísica y a sostener que hay conocimiento únicamente de los fenómenos.",
+        "De las siguientes, una de ellas es la corriente filosófica que en general tiende a negar \n la posibilidad de la metafísica y a sostener que hay conocimiento únicamente de los fenómenos.",
         "Racionalistas", "Empiristas", "Escolásticos", "Escépticos",
         'B', "combate"
         ));
 
     enqueue(Pregunta(
-        "Para unos de los siguientes filósofos, la experiencia como única fuente del conocimiento.",
+        "Para unos de los siguientes filósofos, \n la experiencia como única fuente del conocimiento.",
         "Epistemólogos", "Racionalistas", "Empiristas", "Escépticos",
         'C', "combate"
         ));
@@ -247,19 +247,19 @@ void ColaPreguntas::cargarPreguntasCombate() {
         ));
 
     enqueue(Pregunta(
-        "De los siguientes filósofos selecciones el que no se considera Racionalista:",
+        "De los siguientes filósofos selecciones el \n que no se considera Racionalista:",
         "David Hume", "John Locke", "Nicolas Malebranch", "Francis Bacon",
         'C', "combate"
         ));
 
     enqueue(Pregunta(
-        "Es la doctrina que establece que todos nuestros conocimientos provienen de la razón.",
+        "Es la doctrina que establece que todos \n nuestros conocimientos provienen de la razón.",
         "Empirismo", "Criticismo", "Racionalismo", "Epistemología",
         'C', "combate"
         ));
 
     enqueue(Pregunta(
-        "Uno de los siguientes filósofos, postula las ideas innatas en el sujeto:",
+        "Uno de los siguientes filósofos, \n postula las ideas innatas en el sujeto:",
         "George Berkeley", "David Hume", "Leibniz", "Hipatía",
         'C', "combate"
         ));
@@ -272,37 +272,37 @@ void ColaPreguntas::cargarPreguntasKant() {
     clear();
 
     enqueue(Pregunta(
-        "Seleccione el mandato cuya obligación viene del miedo al castigo o la búsqueda de un premio:",
+        "Seleccione el mandato cuya obligación viene \n del miedo al castigo o la búsqueda de un premio:",
         "Imperativo Hipotético", "Imperativo categórico", "Ambos", "Ninguno",
         'A', "kant"
         ));
 
     enqueue(Pregunta(
-        "Para Emanuel Kant, es posible conocer lo que las cosas nos permiten a través de nuestros sentidos:",
+        "Para Emanuel Kant, es posible conocer lo que las cosas \n nos permiten a través de nuestros sentidos:",
         "Conocimiento Noumenico", "Conocimiento fenoménico", "Conocimiento Empírico", "Conocimiento Racional",
         'B', "kant"
         ));
 
     enqueue(Pregunta(
-        "Kant decía que el lema de la ilustración era 'Sapere aude', que significa:",
+        "Kant decía que el lema de la ilustración era \n 'Sapere aude', que significa:",
         "Sopesa tus acciones", "Atrévete a saber por ti mismo", "Saber a la fuerza", "Someterse al conocimiento",
         'B', "kant"
         ));
 
     enqueue(Pregunta(
-        "Kant (igual que Copérnico cambió el centro del universo de la tierra al sol), cambia el centro del conocimiento del objeto al sujeto, a esto se le llama:",
+        "Kant (igual que Copérnico cambió el centro del universo de la tierra al sol),\n cambia el centro del conocimiento del objeto al sujeto, a esto se le llama:",
         "Subjetivismo", "Prejuicio", "Giro copernicano", "Suerte",
         'C', "kant"
         ));
 
     enqueue(Pregunta(
-        "La postura conciliadora de Kant respecto a los empiristas y racionalistas define que los datos experimentales son la fuente del conocimiento racional del sujeto:",
+        "La postura conciliadora de Kant respecto a los empiristas y racionalistas \n define que los datos experimentales son la fuente del conocimiento racional del sujeto:",
         "Racionalismo", "Empirismo", "Criticismo", "Escepticismo",
         'C', "kant"
         ));
 
     enqueue(Pregunta(
-        "De las siguientes obras de Emanuel Kant, seleccione aquella que define su epistemología:",
+        "De las siguientes obras de Emanuel Kant, seleccione \n aquella que define su epistemología:",
         "Critica de la razón práctica", "Critica de la razón pura", "Critica del juicio", "Critica fenomenológica",
         'B', "kant"
         ));
@@ -321,26 +321,26 @@ void ColaPreguntas::cargarPreguntasDescartes() {
         ));
 
     enqueue(Pregunta(
-        "Una de las siguientes es considerada de las cuatro reglas del método en Descartes:",
+        "Una de las siguientes es considerada \n de las cuatro reglas del método en Descartes:",
         "Hipótesis", "Deducción", "Evidencia", "Inducción",
         'C', "descartes"
         ));
 
     enqueue(Pregunta(
-        "En relación con los datos experimentales que otorgan los sentidos en el conocimiento, Descartes define como:",
+        "En relación con los datos experimentales que otorgan \n los sentidos en el conocimiento, Descartes define como:",
         "Los sentidos son una fuente confiable para conocer", "Desconfianza de lo que los sentidos nos proporcionan",
         "Los sentidos son complementarios", "Los sentidos son determinantes",
         'B', "descartes"
         ));
 
     enqueue(Pregunta(
-        "Solo debemos aceptar como verdadero aquel conocimiento que sea EVIDENTE, CLARO Y DISTINTO:",
+        "Solo debemos aceptar como verdadero aquel conocimiento \n que sea EVIDENTE, CLARO Y DISTINTO:",
         "René Descartes", "David Hume", "George Berkeley", "Aristóteles",
         'A', "descartes"
         ));
 
     enqueue(Pregunta(
-        "En cuanto a la certeza del conocimiento, René Descartes afirma lo siguiente:",
+        "En cuanto a la certeza del conocimiento, \n René Descartes afirma lo siguiente:",
         "Es preciso dudar", "Debemos confiar ciegamente", "Nada es importante", "Todo es posible",
         'A', "descartes"
         ));

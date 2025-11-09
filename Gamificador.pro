@@ -25,6 +25,7 @@ SOURCES += \
     Minijuegopolitica.cpp \
     Personaje.cpp \
     Ruleta.cpp \
+    Tableropuntos.cpp \
     Videoplayer.cpp \
     controlpersonaje.cpp \
     grafo.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     Personaje.h \
     Pregunta.h \
     Ruleta.h \
+    Tableropuntos.h \
     Videoplayer.h \
     controlpersonaje.h \
     grafo.h \

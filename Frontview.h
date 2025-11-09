@@ -39,6 +39,7 @@ public:
     explicit FrontView(Personaje* jugadorExistente, QWidget* parent = nullptr);
     void keyPressEvent(QKeyEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
+    void mostrarPreguntaVideo();
 };
 
 #endif // FRONTVIEW_H

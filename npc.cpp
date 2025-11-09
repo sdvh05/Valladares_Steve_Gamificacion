@@ -104,11 +104,15 @@ void Npc::MostrarDialogo(const QStringList& lineasDialogo)
             enDialogo = false;
             timerDialogo->stop();
             timerDialogo->deleteLater();
+
+            // 🟢 Señal cuando termina el diálogo
+            emit dialogoTerminado();
         }
     });
 
     timerDialogo->start(2500); // 2.5 segundos entre frases
 }
+
 
 // -----------------------------
 // Mostrar burbuja de texto (combate)

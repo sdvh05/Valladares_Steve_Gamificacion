@@ -57,6 +57,7 @@ private:
     void cambiarMoleAleatorio();
 
     void SalirMinijuego();
+    int puntos=150;
 
 protected:
     void onMovimientoUpdate() override;

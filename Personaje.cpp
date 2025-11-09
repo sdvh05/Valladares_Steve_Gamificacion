@@ -1,5 +1,7 @@
 #include "Personaje.h"
 #include<QDebug>
+#include <QFile>
+#include <QDir>
 
 Personaje::Personaje(QWidget*parent):QLabel(parent),frameActual(0),miradoDerecha(true),ultimaDireccionDerecha(true){
 
@@ -220,6 +222,45 @@ void Personaje::PuertaSeleccionada(int indice){
         qDebug() << "Estado puertas:" << puertas;
     }
 }
+
+void Personaje::guardarPuntos(const QString& nombre, int puntos)
+{
+    QString rutaArchivo = QDir::currentPath() + "/Puntos/registro.txt";
+    QFile archivo(rutaArchivo);
+
+    // Cargar contenido actual en memoria
+    QMap<QString, int> registros;
+
+    if (archivo.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&archivo);
+        while (!in.atEnd()) {
+            QString linea = in.readLine();
+            QStringList partes = linea.split(",");
+            if (partes.size() == 2) {
+                QString nombreExistente = partes[0].trimmed();
+                int puntosExistentes = partes[1].trimmed().toInt();
+                registros[nombreExistente] = puntosExistentes;
+            }
+        }
+        archivo.close();
+    }
+
+    // Reemplazar o agregar el registro nuevo
+    registros[nombre] = puntos;
+
+    // Escribir todos los registros actualizados al archivo
+    if (archivo.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        QTextStream out(&archivo);
+        for (auto it = registros.begin(); it != registros.end(); ++it) {
+            out << it.key() << "," << it.value() << "\n";
+        }
+        archivo.close();
+        qDebug() << "Puntaje guardado correctamente en:" << rutaArchivo;
+    } else {
+        qDebug() << "Error al abrir el archivo para escribir:" << rutaArchivo;
+    }
+}
+
 
 
 

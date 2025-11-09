@@ -45,6 +45,9 @@ private:
 
 protected:
 
+signals:
+    void dialogoTerminado();
+
 
 };
 

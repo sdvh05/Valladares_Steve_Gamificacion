@@ -146,24 +146,40 @@ void MinijuegoHistoria::onMovimientoUpdate() {
         huboCambio = true;
         qDebug() << "A cayó";
         errores++;
+
+        this->puntos -=10;
+        if(puntos <=0)
+            puntos=0;
     }
     else if (rectJugador.intersects(QRect(278,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'B' && puentes[1] && !termino) {
         puentes[1] = false;
         huboCambio = true;
         qDebug() << "B cayó";
         errores++;
+
+        this->puntos -=10;
+        if(puntos <=0)
+            puntos=0;
     }
     else if (rectJugador.intersects(QRect(438,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'C' && puentes[2] && !termino) {
         puentes[2] = false;
         huboCambio = true;
         qDebug() << "C cayó";
         errores++;
+
+        this->puntos -=10;
+        if(puntos <=0)
+            puntos=0;
     }
     else if (rectJugador.intersects(QRect(608,524, 15, 100)) && preguntaActual.respuestaCorrecta != 'D' && puentes[3] && !termino) {
         puentes[3] = false;
         huboCambio = true;
         qDebug() << "D cayó";
         errores++;
+
+        this->puntos -=10;
+        if(puntos <=0)
+            puntos=0;
     }
 
     if (huboCambio) {
@@ -203,6 +219,7 @@ void MinijuegoHistoria::onMovimientoUpdate() {
             ActualizarCorazones(ganaste);
             if(ganaste){
                 inventarioGlobal->agregarMedallaHistoria();
+                puntos+=30;
                 }
             termino = true;
         }
@@ -312,6 +329,10 @@ void MinijuegoHistoria::SalirMinijuego(){
 
     ResetearMovimiento();
 
+
+    jugador->puntos+=this->puntos;
+    jugador->guardarPuntos(jugador->nombre,jugador->puntos);
+
     Interior* interior = new Interior(jugador,nullptr,4);
     jugador->move(734,568);
     interior->show();
@@ -338,7 +359,7 @@ void MinijuegoHistoria::mousePressEvent(QMouseEvent* event)
     qDebug() << "Respuesta: " <<preguntaActual.respuestaCorrecta;
     ResetearMovimiento();
 
-    this->ActualizarCorazones(true);
+    //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
 
 

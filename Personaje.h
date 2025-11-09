@@ -5,9 +5,11 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QFile>
+#include <QTextStream>
 #include <QMap>
 #include <QStringList>
 #include <QRect>
+
 
 class Personaje : public QLabel
 {
@@ -50,7 +52,13 @@ public:
 
     int Bando=0;
     bool tieneMapa=false;
+    bool tieneLLave=false;
 
+    //nuevos
+    QString nombre;
+    int puntos=0;
+
+    void guardarPuntos(const QString& nombre, int puntos);
 
 private:
 

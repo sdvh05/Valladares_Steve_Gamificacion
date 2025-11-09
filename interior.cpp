@@ -12,6 +12,8 @@
 
 #include "Combate.h"
 
+#include "inventario.h"
+
 #include <QPixmap>
 #include <QDebug>
 #include <QLabel>
@@ -22,6 +24,8 @@
 #include <QApplication>
 #include <QRandomGenerator>
 #include <QList>
+
+extern Inventario* inventarioGlobal;
 
 Interior::Interior(Personaje* jugadorExistente, QWidget* parent, int PasilloActual)
     : ControlPersonaje(jugadorExistente, parent), pasilloActual(PasilloActual)
@@ -57,6 +61,9 @@ Interior::Interior(Personaje* jugadorExistente, QWidget* parent, int PasilloActu
     labelPuerta->setAlignment(Qt::AlignCenter);
     labelPuerta->setFixedSize(220, 30);
     labelPuerta->hide();
+
+    crearNpcs();
+    actualizarNpc();
 
     Movimientos();
 }
@@ -117,6 +124,7 @@ void Interior::configurarEscena(){
     fondoLabel->lower();
     fondoLabel->show();
 
+    actualizarNpc();
 }
 
 void Interior::configurarObstaculos(){
@@ -474,6 +482,23 @@ void Interior::keyPressEvent(QKeyEvent* event) {
         }
     }
 
+    if (event->key() == Qt::Key_E) {
+        if (npcs.contains(pasilloActual)) {
+            Npc* npc = npcs[pasilloActual];
+            if (npc && npc->isVisible()) {
+                npc->Interactuar(jugador);
+                //jugador->guardarPuntos(jugador->nombre, jugador->puntos);
+
+
+                if (!jugador->tieneMapa && pasilloActual == 1) {
+                    inventarioGlobal->agregarMapa();
+                    jugador->tieneMapa = true;
+                }
+            }
+        }
+    }
+
+
 
 }
 
@@ -550,4 +575,104 @@ void Interior::mousePressEvent(QMouseEvent* event)
 
     ResetearMovimiento();
 
+}
+
+
+
+void Interior::crearNpcs() {
+
+    // PASILLO 1 - Guardia
+    Npc* npc1 = new Npc(this);
+    npc1->setNombre("Empirista");
+    npc1->move(202,782);
+    npc1->hide();
+    QStringList d1;
+    d1 << "¡Bienvenido al Castillo!"
+       << "Me alegra ver a alguien Nuevo por aqui"
+       << "El interior del Castillo puede ser algo Confuso"
+       << "Ten este Mapa para Guiarte"
+       << "Presiona la M para Usarlo";
+    npc1->setDialogos(d1);
+    auto anim1 = npc1->obtenerAnimacion("idle");
+    npc1->SetAnimacion(anim1.ruta, anim1.frames);
+    npcs.insert(1, npc1);
+
+
+    // PASILLO 2 - Bibliotecaria
+    Npc* npc2 = new Npc(this);
+    npc2->setNombre("Empirista");
+    npc2->move(610,578);
+    npc2->hide();
+    npc2->miradoDerecha=false;
+    QStringList d2;
+    d2 << "Aquí se guardan los saberes de Descartes y Kant."
+       << "Usa la razón para avanzar, no solo el valor.";
+    npc2->setDialogos(d2);
+    auto anim2 = npc2->obtenerAnimacion("idle");
+    npc2->SetAnimacion(anim2.ruta, anim2.frames);
+    npcs.insert(2, npc2);
+
+
+    // PASILLOS 4-8 - NPC compartido (Ruleta)
+    QStringList dRuleta;
+    dRuleta << "Bienvenido a la sala del destino."
+            <<"Aqui Cargaras vida para \n el Combate del Conocimiento"
+            << "¿Estas listo para ver \n que minijuego te espera?";
+    for (int p : {4, 5, 6, 7, 8}) {
+        Npc* npcR = new Npc(this);
+        npcR->setNombre("Empirista");
+        npcR->move(158,734);
+        npcR->hide();
+        npcR->setDialogos(dRuleta);
+        auto animR = npcR->obtenerAnimacion("idle");
+        npcR->SetAnimacion(animR.ruta, animR.frames);
+        npcs.insert(p, npcR);
+    }
+
+
+    // PASILLO 9 - Sabio
+    Npc* npc9 = new Npc(this);
+    npc9->setNombre("Empirista");
+    npc9->move(108,740);
+    npc9->hide();
+    QStringList d9;
+    if(jugador->Bando==0){
+        d9 << "Has llegado lejos, viajero."
+           << "Elige con sabiduría \n tu destino en el combate final.";
+    } else if (jugador->Bando==1){
+        d9 << "Veo que eres Todo un Racionalista"
+           << "Te queda bien el Rojo";
+    } else if (jugador->Bando==2){
+        d9 << "Veo que eres Todo un Empirista"
+           << "Te queda bien el Blanco";
+    }
+
+    npc9->setDialogos(d9);
+    auto anim9 = npc9->obtenerAnimacion("idle");
+    npc9->SetAnimacion(anim9.ruta, anim9.frames);
+    npcs.insert(9, npc9);
+
+    //DESCARTES - Kant
+    Npc* npc10 = new Npc(this);
+    npc10->setNombre("Empirista");
+    npc10->move(18,786);
+    npc10->hide();
+    QStringList d10;
+    d10 << "Estas En los \n Salones Finales:"
+       << "Buena Suerte con \n los acertijos";
+    npc10->setDialogos(d10);
+    auto anim10 = npc10->obtenerAnimacion("idle");
+    npc10->SetAnimacion(anim9.ruta, anim9.frames);
+    npcs.insert(10, npc10);
+}
+
+void Interior::actualizarNpc() {
+    for (auto it = npcs.begin(); it != npcs.end(); ++it) {
+        if (it.key() == pasilloActual && pasilloActual != 3) {
+            it.value()->show();
+            it.value()->raise();
+        } else {
+            it.value()->hide();
+        }
+    }
 }

@@ -249,7 +249,11 @@ void MinijuegoArte::SalirMinijuego(){
     ActualizarCorazones(ganaste);
     if (ganaste){
         inventarioGlobal->agregarMedallaArte();
+        this->puntos+=30;
     }
+
+    jugador->puntos+=this->puntos;
+    jugador->guardarPuntos(jugador->nombre,jugador->puntos);
 
     Interior* interior = new Interior(jugador,nullptr,4);
     jugador->move(734,568);
@@ -328,6 +332,10 @@ void MinijuegoArte::verificarRespuesta(char letra) {
         } else {
             labelPregunta->setText(preguntaActual.texto);
             errores++;
+
+            this->puntos -=10;
+            if(puntos <=0)
+                puntos=0;
         }
 
         actualizarRespuestas();

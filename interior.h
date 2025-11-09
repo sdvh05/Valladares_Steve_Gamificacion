@@ -3,6 +3,7 @@
 
 #include "ControlPersonaje.h"
 #include "Ruleta.h"
+#include "npc.h"
 
 #include <QLabel>
 #include <QList>
@@ -28,6 +29,10 @@ private:
     void configurarObstaculos() override;
 
     RuletaWidget* ruleta = nullptr;
+
+    QMap<int, Npc*> npcs; // mapa pasillo -> npc
+    void crearNpcs();
+    void actualizarNpc();
 
 protected:
     void onMovimientoUpdate() override;

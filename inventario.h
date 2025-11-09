@@ -73,6 +73,7 @@ public: //Agregar items especificos
     void agregarCorona(int valor=1);
 
     void agregarMapa(int valor=1);
+    void agregarBanner(int tipo, int valor=1);
 
 
 

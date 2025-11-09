@@ -27,6 +27,10 @@ private:
 
     void AbrirJuego();
     void AbrirMenuCargarPartida();
+
+private slots:
+    void PreguntarNombre();
+
 };
 
 #endif // MAINMENU_H

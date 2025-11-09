@@ -83,11 +83,13 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
     // Diálogo del NPC
     QStringList dialogo;
     dialogo << "¡Buenos Dias!"
-            << "Me alegra ver a alguien Nuevo por aqui"
-            << "El interior del Castillo puede ser algo Confuso"
-            << "Ten este Mapa para Guiarte";
+            << "¿Notaste que el Castillo tiene llave?"
+            << " Si ves este video te \n recompensare con la llave";
+
 
     npcPrueba->setDialogos(dialogo);
+
+    connect(npcPrueba, &Npc::dialogoTerminado, this, &FrontView::mostrarPreguntaVideo);
 
 
     Movimientos();
@@ -210,6 +212,12 @@ void FrontView::detectarZonaPuerta() {
 
 
 void FrontView::mostrarHintPuerta(){
+    if(jugador->tieneLLave){
+        labelPuerta->setText("Presiona la Q para ingresar");
+    } else{
+        labelPuerta->setText("La puerta tiene LLave");
+    }
+
     if (!labelPuerta->isVisible()) {
         QRect zonaPuerta(340, 680, 180, 100);
         labelPuerta->move(zonaPuerta.center().x() - labelPuerta->width()/2,
@@ -241,14 +249,13 @@ void FrontView::keyPressEvent(QKeyEvent* event){
     ControlPersonaje::keyPressEvent(event);
 
     if (event->key() == Qt::Key_Q && hayPuertaCerca) {
-        EntrarCastillo();
+        if(jugador->tieneLLave){
+            EntrarCastillo();
+        }
+
     }
     if (event->key() == Qt::Key_E && npcPrueba) {
         npcPrueba->Interactuar(jugador);
-        if(!jugador->tieneMapa){
-            inventarioGlobal->agregarMapa();
-            jugador->tieneMapa=true;
-        }
     }
     if (event->key() == Qt::Key_P) {
         MinijuegoDescartes* MA = new MinijuegoDescartes(jugador);
@@ -272,5 +279,71 @@ void FrontView::mousePressEvent(QMouseEvent* event)
     jugador->move(400,818);
     qDebug() << jugador->Bando;
 
-
 }
+
+void FrontView::mostrarPreguntaVideo()
+{
+
+    ResetearMovimiento();
+
+    QLabel* pregunta = new QLabel("¿Deseas ver El Sketch sobre \n el problema del conocimiento en la modernidad.?", this);
+    pregunta->setStyleSheet(
+        "background: rgba(0,0,0,200); color: white; font: bold 16px 'Segoe UI';"
+        "border: 2px solid #c9a44c; border-radius: 10px; padding: 10px;"
+        );
+    pregunta->setAlignment(Qt::AlignCenter);
+    pregunta->setFixedSize(420, 60);
+    pregunta->move(width()/2 - pregunta->width()/2, height()/2 - 100);
+    pregunta->show();
+    pregunta->raise();
+
+    // --- Botones sí / no ---
+    QPushButton* btnSi = new QPushButton("Sí", this);
+    QPushButton* btnNo = new QPushButton("No", this);
+
+    btnSi->setGeometry(pregunta->x() + 80, pregunta->y() + 80, 100, 35);
+    btnNo->setGeometry(pregunta->x() + 240, pregunta->y() + 80, 100, 35);
+
+    btnSi->setStyleSheet("background:#3a9a3a; color:white; font:bold 14px; border-radius:8px;");
+    btnNo->setStyleSheet("background:#a33; color:white; font:bold 14px; border-radius:8px;");
+
+    btnSi->show();
+    btnNo->show();
+
+    connect(btnSi, &QPushButton::clicked, this, [=]() {
+        pregunta->hide();
+        btnSi->hide();
+        btnNo->hide();
+        pregunta->deleteLater();
+        btnSi->deleteLater();
+        btnNo->deleteLater();
+
+        // 🟢 Reproduce el video
+        VideoPlayer* video = new VideoPlayer("Video/Nivel1.mp4");
+        video->show();
+        if(!jugador->tieneLLave){
+            inventarioGlobal->agregarLlave();
+            jugador->tieneLLave=true;
+
+            QStringList dialogo;
+            dialogo << "¿Que te parecio?"
+                    << "Como recompensa ten \n la llave para ingresar"
+                    << "Usa la 'I' para \n revisar tu inventario";
+
+
+            npcPrueba->setDialogos(dialogo);
+
+            //npcPrueba->Interactuar(jugador);
+        }
+    });
+
+    connect(btnNo, &QPushButton::clicked, this, [=]() {
+        pregunta->hide();
+        btnSi->hide();
+        btnNo->hide();
+        pregunta->deleteLater();
+        btnSi->deleteLater();
+        btnNo->deleteLater();
+    });
+}
+

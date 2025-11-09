@@ -174,4 +174,19 @@ void Inventario::agregarMapa(int cantidad){
                          "Sprites/Recursos/Mapa.png", cantidad, 1));
 }
 
+void Inventario::agregarBanner(int bando, int cantidad){
+    QString ruta;
+    QString Nombre;
+
+    if(bando==1){
+        ruta="Sprites/Recursos/Emp.png";
+        Nombre="Banner Empirista";
+    } else{
+        ruta="Sprites/Recursos/Rac.png";
+        Nombre="Banner Racionalista";
+    }
+
+    agregarObjeto(Objeto(Nombre, "Epico", "Guia", "Mapa de todo el Interior del Castillo",
+                         ruta, cantidad, 1));
+}
 

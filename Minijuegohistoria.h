@@ -49,6 +49,7 @@ private:
     void actualizarRespuestas();
 
     int errores=0;
+    int puntos=150;
 
 
 

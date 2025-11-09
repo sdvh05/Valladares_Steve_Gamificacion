@@ -2,6 +2,9 @@
 #include <QApplication>
 #include <QScreen>
 #include <QDebug>
+#include "inventario.h"
+extern Inventario* inventarioGlobal;
+
 
 VideoPlayer::VideoPlayer(const QString& videoPath, QWidget* parent)
     : QWidget(parent)

@@ -191,6 +191,9 @@ void MinijuegoCiencia::actualizarRespuestas(int nuevaRespuesta){
     if (patronJugador.back() != patronCorrecto.at(patronJugador.size() - 1)) {
         qDebug() << "Error, reiniciando turno.";
         erroress++;
+        this->puntos -=10;
+        if(puntos <=0)
+            puntos=0;
 
         //mensaje de error en rojo
         labelPregunta->setStyleSheet("background: rgba(0,0,0,180); color: red; font-weight: bold;");
@@ -472,9 +475,13 @@ void MinijuegoCiencia::SalirMinijuego(){
 
     ResetearMovimiento();
 
-    if (erroress >= 3)
+    if (erroress >= 3){
         ActualizarCorazones(true);
+        puntos+=30;
+    }
 
+    jugador->puntos+=this->puntos;
+    jugador->guardarPuntos(jugador->nombre,jugador->puntos);
 
     Interior* interior = new Interior(jugador,nullptr,4);
     jugador->move(434,472);

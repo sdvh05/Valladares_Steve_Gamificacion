@@ -513,7 +513,7 @@ void MinijuegoKant::mousePressEvent(QMouseEvent* event)
     qDebug() << "Respuesta: " <<preguntaActual.respuestaCorrecta;
     ResetearMovimiento();
 
-    this->ActualizarCorazones(true);
+    //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
     qDebug() <<npcKant;
     EstadoActual++; //esto es solo para probar pq aun no implemento que cambie dentro del juego

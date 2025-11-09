@@ -75,6 +75,7 @@ private:
 
     bool termino=false;
     int erroress=0;
+    int puntos=150;
 
 private slots:
     void reproducirSiguientePasoPatron();

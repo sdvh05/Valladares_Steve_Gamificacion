@@ -331,6 +331,8 @@ void MinijuegoPolitica::SalirMinijuego(){
     if (!jugador) return;
 
     ResetearMovimiento();
+    jugador->puntos+=this->puntos;
+    jugador->guardarPuntos(jugador->nombre,jugador->puntos);
 
     Interior* interior = new Interior(jugador,nullptr,4);
 
@@ -354,7 +356,7 @@ void MinijuegoPolitica::mousePressEvent(QMouseEvent* event)
     qDebug() << "Respuesta: " <<preguntaActual.respuestaCorrecta;
     ResetearMovimiento();
 
-    this->ActualizarCorazones(true);
+    //this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
 
 
@@ -367,6 +369,13 @@ void MinijuegoPolitica::mostrarResultadoTemporal(bool reiniciar) {
     // Mostrar mensaje temporal según resultado
     QString texto = reiniciar ? "¡Respuesta Incorrecta!" : "¡Respuesta Correcta";
     QString color = reiniciar ? "red" : "lightgreen";
+
+    if(reiniciar){
+        errores++;
+        this->puntos -=10;
+        if(puntos <=0)
+            puntos=0;
+    }
 
     labelPregunta->setStyleSheet(QString(
                                      "background: rgba(0,0,0,200); color: %1; padding: 8px; border-radius: 8px;"
@@ -394,6 +403,7 @@ void MinijuegoPolitica::mostrarResultadoTemporal(bool reiniciar) {
                 ActualizarCorazones(ganaste);
                 if(ganaste){
                     inventarioGlobal->agregarMedallaPolitica();
+                    puntos+=30;
                 }
                 timerMole->stop();
                 termino = true;

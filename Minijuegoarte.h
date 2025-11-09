@@ -62,6 +62,8 @@ private:
     void cargarPreguntaActual();
     void actualizarRespuestas();
 
+    int puntos=150;
+
 
 
     // ---------------- Piedra (proyectil) ----------------

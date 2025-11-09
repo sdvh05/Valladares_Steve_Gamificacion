@@ -6,6 +6,7 @@
 #include"inventario.h"
 #include "Videoplayer.h"
 #include "grafomapavisual.h"
+#include "Tableropuntos.h"
 
 
 #include <QApplication>
@@ -43,6 +44,9 @@ int main(int argc, char *argv[])
 
     VideoPlayer* ventana = new VideoPlayer(rutaVideo);
     ventana->show();*/
+
+    /*TableroPuntos* tablero = new TableroPuntos();
+    tablero->show();*/
 
 
 
