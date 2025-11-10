@@ -66,6 +66,7 @@ private:
 
 
 
+
     // ---------------- Piedra (proyectil) ----------------
     class Piedra : public QObject {
     public:

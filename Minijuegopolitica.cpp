@@ -20,7 +20,7 @@ MinijuegoPolitica::MinijuegoPolitica(Personaje* jugadorExistente, QWidget* paren
     : ControlPersonaje(jugadorExistente, parent)
 {
     this->resize(848, 1200);
-    this->setWindowTitle("Minijuego Historia");
+    this->setWindowTitle("Minijuego Politica");
 
     fondoLabel = new QLabel(this);
     fondoLabel->setGeometry(0, 0, width(), height());

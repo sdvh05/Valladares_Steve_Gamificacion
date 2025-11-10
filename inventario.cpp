@@ -160,7 +160,7 @@ void Inventario::agregarMedallaKant(int cantidad){
 }
 
 void Inventario::agregarMedallaDescartes(int cantidad){
-    agregarObjeto(Objeto("Medalla Descartes", "Epico", "Badge", "Medalla Otorgada por resolver el Misterio de Kant",
+    agregarObjeto(Objeto("Medalla Descartes", "Epico", "Badge", "Medalla Otorgada por resolver el Dilema de Descartes",
                          "Sprites/Recursos/Bagde Descartes.png", cantidad, 1));
 }
 

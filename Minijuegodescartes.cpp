@@ -20,7 +20,7 @@ MinijuegoDescartes::MinijuegoDescartes(Personaje* jugadorExistente, QWidget* par
     : ControlPersonaje(jugadorExistente, parent), EstadoActual(EstadoActual)
 {
     this->resize(848, 1200);
-    this->setWindowTitle("Minijuego Historia");
+    this->setWindowTitle("Rene Descartes");
 
     fondoLabel = new QLabel(this);
     fondoLabel->setGeometry(0, 0, width(), height());
@@ -196,6 +196,7 @@ void MinijuegoDescartes::MostrarPistas(int Etapa) {
     case 1:
         texto =
             "🧠 <b>Mesa 1: EVIDENCIA</b><br><br>"
+                "🧪 DILEMA: ¿Debo revelar una falta grave que conozco, aunque eso perjudique a alguien cercano?</b><br><br>"
             "Elementos disponibles:<br>"
             "&nbsp;&nbsp;- Una nota anónima con la confesión de una falta<br>"
             "&nbsp;&nbsp;- El vínculo afectivo con la persona involucrada<br>"
@@ -548,7 +549,7 @@ void MinijuegoDescartes::mousePressEvent(QMouseEvent* event)
     this->ActualizarCorazones(true);
     qDebug() << "Vidas:" << jugador->getCorazones();
     qDebug() <<npcDescartes;
-    EstadoActual++; //esto es solo para probar pq aun no implemento que cambie dentro del juego
+    //EstadoActual++; //esto es solo para probar pq aun no implemento que cambie dentro del juego
 
 
 

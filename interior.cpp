@@ -130,6 +130,7 @@ void Interior::configurarEscena(){
 void Interior::configurarObstaculos(){
     obstaculos.clear();
     int pasillo=pasilloActual;
+    obstaculos.append(QRect(-30,1000, 1000, 4));//suelo
 
     switch (pasillo) {
     case 1:
@@ -145,9 +146,33 @@ void Interior::configurarObstaculos(){
         break;
 
     case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
         obstaculos.append(QRect(140, 442, 1000, 4)); //pared puerta arriba
         obstaculos.append(QRect(490,650, 20, 4)); //ruleta
         break;
+
+
+
+
+
+
+        break;
+    case 9:
+        obstaculos.append(QRect(460,612, 1000, 4));//arriba
+
+        break;
+    case 10:
+        obstaculos.append(QRect(354,708, 1000, 4));//
+        break;
+
+    case 11:
+
+        break;
+
+
     }
 }
 
@@ -233,7 +258,7 @@ void Interior::onMovimientoUpdate()
         this->pasilloActual=9;
         configurarEscena();
         configurarObstaculos();
-        jugador->move(426,850);
+        jugador->move(426,820);
         this->update();
         qDebug()<<"Entrar Seleccion";
         return;
@@ -253,7 +278,7 @@ void Interior::onMovimientoUpdate()
     }
 
     //SELECCION
-    if(pasilloActual==9 && rectJugador.intersects(QRect(426,1000, 100, 4))){ //volver a pasiilo izq
+    if(pasilloActual==9 && rectJugador.intersects(QRect(426,990, 200, 1))){ //volver a pasiilo izq
         this->pasilloActual=3;
         configurarEscena();
         configurarObstaculos();
@@ -282,6 +307,29 @@ void Interior::onMovimientoUpdate()
         qDebug() << "KD->3";
         return;
     }
+
+
+    //nuevo: descion conect ruleta
+    if(pasilloActual==9 && rectJugador.intersects(QRect(934,808, 10, 600))){ //voler
+        this->pasilloActual=4;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(90,782);
+        this->update();
+        qDebug() << "D->R";
+        return;
+    }
+
+    if(pasilloActual==4 && rectJugador.intersects(QRect(-52,772, 80, 80))){ //
+        this->pasilloActual=9;
+        configurarEscena();
+        configurarObstaculos();
+        jugador->move(756,790);
+        this->update();
+        qDebug() << "R->D";
+        return;
+    }
+
 
 }
 
@@ -668,7 +716,7 @@ void Interior::crearNpcs() {
 
     // PASILLOS 4-8 - NPC compartido (Ruleta)
     QStringList dRuleta;
-    dRuleta << "Bienvenido a la sala del destino."
+    dRuleta << "Bienvenido a la Ruleta del Saber"
             <<"Aqui Cargaras vida para \n el Combate del Conocimiento"
             << "¿Estas listo para ver \n que minijuego te espera?";
     for (int p : {4, 5, 6, 7, 8}) {

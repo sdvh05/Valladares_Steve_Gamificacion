@@ -41,12 +41,15 @@ void MapaWidget::inicializarGrafo()
     grafo.agregarConexion("Kant / Descartes", "Pasillo Izq", 25);
     grafo.agregarConexion("Pasillo Izq", "Kant / Descartes", 25);
 
-    grafo.agregarConexion("Desicion", "Pasillo Izq", 45);
-    grafo.agregarConexion("Pasillo Izq", "Desicion", 45);
+    grafo.agregarConexion("Desicion", "Pasillo Izq", 35);
+    grafo.agregarConexion("Pasillo Izq", "Desicion", 35);
 
-    grafo.agregarConexion("Desicion", "Combate", 25);
-    grafo.agregarConexion("Combate", "Desicion", 25);
+    grafo.agregarConexion("Desicion", "Combate", 15);
+    grafo.agregarConexion("Combate", "Desicion", 15);
 
+
+    grafo.agregarConexion("Desicion", "Ruleta", 25);
+    grafo.agregarConexion("Ruleta", "Desicion", 25);
 
 
 
@@ -133,7 +136,7 @@ void MapaWidget::dibujarGrafo(QPainter &painter)
 
             QPen pen;
             if(esPermanente) {
-                pen.setColor(Qt::red);  // Conexión permanente roja
+                pen.setColor(Qt::cyan);  // Conexión permanente
                 pen.setWidth(2);
             } else if(estaActiva) {
                 pen.setColor(Qt::green);  // Conexión condicional activa verde

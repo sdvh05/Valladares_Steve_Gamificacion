@@ -20,7 +20,7 @@ MinijuegoKant::MinijuegoKant(Personaje* jugadorExistente, QWidget* parent, int E
     : ControlPersonaje(jugadorExistente, parent), EstadoActual(EstadoActual)
 {
     this->resize(848, 1200);
-    this->setWindowTitle("Minijuego Historia");
+    this->setWindowTitle("Immanuel Kant");
 
     fondoLabel = new QLabel(this);
     fondoLabel->setGeometry(0, 0, width(), height());
