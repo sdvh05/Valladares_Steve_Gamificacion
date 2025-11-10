@@ -171,6 +171,7 @@ void MinijuegoCiencia::cargarPreguntaActual()
         }
         if (ganaste){
             ActualizarCorazones(true);
+            jugador->ganadas[2]=true;
             inventarioGlobal->agregarMedallaCiencia();
         }
         else
@@ -476,7 +477,7 @@ void MinijuegoCiencia::SalirMinijuego(){
     ResetearMovimiento();
 
     if (erroress >= 3){
-        ActualizarCorazones(true);
+       // ActualizarCorazones(true);
         puntos+=30;
     }
 
@@ -485,6 +486,7 @@ void MinijuegoCiencia::SalirMinijuego(){
 
     Interior* interior = new Interior(jugador,nullptr,4);
     jugador->move(434,472);
+    ResetearMovimiento();
     interior->show();
 
 

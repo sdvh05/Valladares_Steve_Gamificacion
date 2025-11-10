@@ -93,6 +93,7 @@ FrontView::FrontView(Personaje* jugadorExistente, QWidget* parent)
 
 
     Movimientos();
+    ResetearMovimiento();
 }
 
 

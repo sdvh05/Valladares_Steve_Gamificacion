@@ -449,54 +449,98 @@ void Interior::keyPressEvent(QKeyEvent* event) {
     }
 
     if (event->key() == Qt::Key_R && hayPuertaCerca) {
-        if(pasilloActual==4){
+        if (pasilloActual == 4) {
+
+            // Caso: todas las puertas ya jugadas
             if (!jugador->puertas.contains(false)) {
                 qDebug() << "Ya jugaste todos los minijuegos";
+
+                QLabel* aviso = new QLabel("🎯 Ya jugaste todos los minijuegos.\nNo puedes girar la ruleta.", this);
+                aviso->setStyleSheet("background: rgba(0,0,0,200); color: white; font: bold 14px 'Segoe UI';"
+                                     "border: 2px solid gray; border-radius: 10px; padding: 8px;");
+                aviso->adjustSize();
+                aviso->move(width()/2 - aviso->width()/2, height()/2 - aviso->height()/2);
+                aviso->show();
+
+                QTimer::singleShot(2500, aviso, [=]() { aviso->deleteLater(); });
+                return;
             }
 
-            int indice; //guardamos el indice
+            int indice = -1;
+            int intentos = 0;
             do {
-                indice = QRandomGenerator::global()->bounded(0, 4); // genera 0,1,2 o 3
+                indice = QRandomGenerator::global()->bounded(0, 4);
+                intentos++;
+                if (intentos > 100) break;
             } while (jugador->puertas[indice]);
 
-            qDebug() << indice;
+            qDebug() << "Ruleta seleccionó el índice:" << indice;
 
             this->ResetearMovimiento();
 
-            if(jugador->puertas.contains(false)){
-            ruleta = new RuletaWidget(jugador->puertas, indice, this);
-            connect(ruleta, &RuletaWidget::ruletaFinalizada, this, &Interior::actualizarPasilloRuleta);
-            ruleta->setGeometry(340, 80, 520, 520);
-            //ruleta->setGeometry(340, 520, 520, 520);
-            ruleta->setAttribute(Qt::WA_DeleteOnClose);
-            ruleta->show();
-            }else{
-                //mostrar un label de que ya no se puede girar
+            // Abre ruleta solo si hay minijuegos disponibles
+            if (jugador->puertas.contains(false)) {
+                ruleta = new RuletaWidget(jugador->puertas, indice, this);
+                connect(ruleta, &RuletaWidget::ruletaFinalizada, this, &Interior::actualizarPasilloRuleta);
+                ruleta->setGeometry(340, 80, 520, 520);
+                ruleta->setAttribute(Qt::WA_DeleteOnClose);
+                ruleta->show();
+
+                jugador->puertas[indice] = true;
+            } else {
+                QLabel* aviso = new QLabel("🎯 No hay minijuegos disponibles para girar.", this);
+                aviso->setStyleSheet("background: rgba(0,0,0,200); color: white; font: bold 14px 'Segoe UI';"
+                                     "border: 2px solid gray; border-radius: 10px; padding: 8px;");
+                aviso->adjustSize();
+                aviso->move(width()/2 - aviso->width()/2, height()/2 - aviso->height()/2);
+                aviso->show();
+
+                QTimer::singleShot(2500, aviso, [=]() { aviso->deleteLater(); });
             }
-
-
-
-            jugador->puertas[indice] = true;
-
-
         }
     }
+
 
     if (event->key() == Qt::Key_E) {
         if (npcs.contains(pasilloActual)) {
             Npc* npc = npcs[pasilloActual];
             if (npc && npc->isVisible()) {
-                npc->Interactuar(jugador);
-                //jugador->guardarPuntos(jugador->nombre, jugador->puntos);
 
+                // 🔹 NPC normal
+                if (pasilloActual != 4 && pasilloActual != 5 && pasilloActual != 6 && pasilloActual != 7 && pasilloActual != 8) {
+                    npc->Interactuar(jugador);
 
-                if (!jugador->tieneMapa && pasilloActual == 1) {
-                    inventarioGlobal->agregarMapa();
-                    jugador->tieneMapa = true;
+                    if (!jugador->tieneMapa && pasilloActual == 1) {
+                        inventarioGlobal->agregarMapa();
+                        jugador->tieneMapa = true;
+                    }
+                    return;
+                }
+
+                // 🔹 NPC de la ruleta
+                bool todasPuertasAbiertas = !jugador->puertas.contains(false);
+                bool todosGanados = !jugador->ganadas.contains(false);
+
+                if (todasPuertasAbiertas) {
+                    if (todosGanados) {
+                        npc->setDialogos(QStringList()
+                                         << "🏆 Ya ganaste todos los minijuegos."
+                                         << "No hay más desafíos disponibles.");
+                        npc->Interactuar(jugador);
+                    } else {
+                        mostrarPreguntaNPC();
+                    }
+                } else {
+                    npc->setDialogos(QStringList()
+                                         << "Bienvenido a la sala del destino."
+                                         <<"Aqui Cargaras vida para \n el Combate del Conocimiento"
+                                     << "¿Estas listo para ver \n que minijuego te espera?");
+                    npc->Interactuar(jugador);
                 }
             }
         }
     }
+
 
 
 
@@ -560,22 +604,29 @@ void Interior::mousePressEvent(QMouseEvent* event)
 {
     //qDebug() << "Coordenadas del click: " << event->pos();
     qDebug() << "Jugador en:" << jugador->pos();
-
-    qDebug()<<"Pasillo Act: " <<pasilloActual;
-
-    //this->ActualizarCorazones(true);
+    qDebug() << "Pasillo Act:" << pasilloActual;
     qDebug() << "Vidas:" << jugador->getCorazones();
 
+    // 🔹 Mostrar el estado de progreso
+    qDebug() << "Puertas abiertas:";
+    for (int i = 0; i < jugador->puertas.size(); ++i) {
+        qDebug() << " Puerta" << i << ":" << (jugador->puertas[i] ? "✅ Abierta" : "❌ Cerrada");
+    }
 
-    if(pasilloActual>4 && pasilloActual<9){
-        pasilloActual=4;
+    qDebug() << "Minijuegos ganados:";
+    for (int i = 0; i < jugador->ganadas.size(); ++i) {
+        qDebug() << " Juego" << i << ":" << (jugador->ganadas[i] ? "🏆 Ganado" : "⏳ Pendiente");
+    }
+
+    if (pasilloActual > 4 && pasilloActual < 9) {
+        pasilloActual = 4;
         configurarEscena();
         configurarObstaculos();
     }
 
     ResetearMovimiento();
-
 }
+
 
 
 
@@ -598,18 +649,20 @@ void Interior::crearNpcs() {
     npcs.insert(1, npc1);
 
 
-    // PASILLO 2 - Bibliotecaria
+    // PASILLO 2 -
     Npc* npc2 = new Npc(this);
-    npc2->setNombre("Empirista");
+    npc2->setNombre("Pass");
     npc2->move(610,578);
     npc2->hide();
     npc2->miradoDerecha=false;
     QStringList d2;
-    d2 << "Aquí se guardan los saberes de Descartes y Kant."
-       << "Usa la razón para avanzar, no solo el valor.";
+    d2 << "Mas Adelante se encuentra \n la sala de la Ruleta"
+       << "Estoy aqui porque perdi \n todos los minijuegos"
+       << "Se que al termirar los 4, \n puedo reintentar en los que perdi"
+       <<" Pero aun reintentandolos, \n sigo sin ganar vidas";
     npc2->setDialogos(d2);
     auto anim2 = npc2->obtenerAnimacion("idle");
-    npc2->SetAnimacion(anim2.ruta, anim2.frames);
+    npc2->SetAnimacion(anim2.ruta, 6);
     npcs.insert(2, npc2);
 
 
@@ -620,31 +673,34 @@ void Interior::crearNpcs() {
             << "¿Estas listo para ver \n que minijuego te espera?";
     for (int p : {4, 5, 6, 7, 8}) {
         Npc* npcR = new Npc(this);
-        npcR->setNombre("Empirista");
+        npcR->setNombre("Rubio");
         npcR->move(158,734);
         npcR->hide();
         npcR->setDialogos(dRuleta);
         auto animR = npcR->obtenerAnimacion("idle");
-        npcR->SetAnimacion(animR.ruta, animR.frames);
+        npcR->SetAnimacion(animR.ruta, 7);
         npcs.insert(p, npcR);
     }
 
 
-    // PASILLO 9 - Sabio
+    // PASILLO 9 - Eleccion
     Npc* npc9 = new Npc(this);
-    npc9->setNombre("Empirista");
+    npc9->setNombre("Mix");
     npc9->move(108,740);
     npc9->hide();
     QStringList d9;
     if(jugador->Bando==0){
         d9 << "Has llegado lejos, viajero."
-           << "Elige con sabiduría \n tu destino en el combate final.";
+           << "Elige con sabiduría \n tu destino en el combate final."
+           << "Recuerda que siempre puedes volver \n a La ruleta del Saber \n para cargar mas vidas";
     } else if (jugador->Bando==1){
         d9 << "Veo que eres Todo un Racionalista"
-           << "Te queda bien el Rojo";
+           << "Te queda bien el Rojo"
+            << "Recuerda que siempre puedes volver \n a jugar los minijuegos en los que fallaste";
     } else if (jugador->Bando==2){
         d9 << "Veo que eres Todo un Empirista"
-           << "Te queda bien el Blanco";
+           << "Te queda bien el Blanco"
+            << "Recuerda que siempre puedes volver \n a jugar los minijuegos en los que fallaste";
     }
 
     npc9->setDialogos(d9);
@@ -654,15 +710,16 @@ void Interior::crearNpcs() {
 
     //DESCARTES - Kant
     Npc* npc10 = new Npc(this);
-    npc10->setNombre("Empirista");
+    npc10->setNombre("bluey");
     npc10->move(18,786);
     npc10->hide();
     QStringList d10;
     d10 << "Estas En los \n Salones Finales:"
+        << "Aquí se guardan los saberes \n de Descartes y Kant."
        << "Buena Suerte con \n los acertijos";
     npc10->setDialogos(d10);
     auto anim10 = npc10->obtenerAnimacion("idle");
-    npc10->SetAnimacion(anim9.ruta, anim9.frames);
+    npc10->SetAnimacion(anim10.ruta, 7);
     npcs.insert(10, npc10);
 }
 
@@ -676,3 +733,65 @@ void Interior::actualizarNpc() {
         }
     }
 }
+
+void Interior::mostrarPreguntaNPC()
+{
+    ResetearMovimiento();
+
+    // Si todos los minijuegos fueron ganados
+    if (!jugador->ganadas.contains(false)) {
+        QLabel* mensaje = new QLabel("🏆 ¡Has ganado en todos los minijuegos!\nNo hay más retos por ahora.", this);
+        mensaje->setStyleSheet("background: rgba(0,0,0,200); color: white; font: bold 15px 'Segoe UI';"
+                               "border: 2px solid #d4af37; border-radius: 10px; padding: 10px;");
+        mensaje->adjustSize();
+        mensaje->move(width()/2 - mensaje->width()/2, height()/2 - mensaje->height()/2);
+        mensaje->show();
+        QTimer::singleShot(3000, mensaje, [=]() { mensaje->deleteLater(); });
+        return;
+    }
+
+    QLabel* pregunta = new QLabel("¿Deseas volver a intentar los minijuegos\nque aún no has ganado?", this);
+    pregunta->setStyleSheet("background: rgba(0,0,0,200); color: white; font: bold 16px 'Segoe UI';"
+                            "border: 2px solid #c9a44c; border-radius: 10px; padding: 10px;");
+    pregunta->setAlignment(Qt::AlignCenter);
+    pregunta->setFixedSize(440, 70);
+    pregunta->move(width()/2 - pregunta->width()/2, height()/2 - 100);
+    pregunta->show();
+
+    QPushButton* btnSi = new QPushButton("Sí", this);
+    QPushButton* btnNo = new QPushButton("No", this);
+    btnSi->setGeometry(pregunta->x() + 90, pregunta->y() + 80, 100, 35);
+    btnNo->setGeometry(pregunta->x() + 250, pregunta->y() + 80, 100, 35);
+
+    btnSi->setStyleSheet("background:#3a9a3a; color:white; font:bold 14px; border-radius:8px;");
+    btnNo->setStyleSheet("background:#a33; color:white; font:bold 14px; border-radius:8px;");
+
+    btnSi->show();
+    btnNo->show();
+
+    connect(btnSi, &QPushButton::clicked, this, [=]() {
+        pregunta->deleteLater();
+        btnSi->deleteLater();
+        btnNo->deleteLater();
+
+        // 🔄 Rehabilitamos los juegos NO ganados
+        for (int i = 0; i < jugador->puertas.size(); ++i) {
+            jugador->puertas[i] = jugador->ganadas[i]; // si no ganaste, vuelve a estar disponible
+        }
+
+        QLabel* aviso = new QLabel("🔄 Los minijuegos que no ganaste\nvuelven a estar disponibles.", this);
+        aviso->setStyleSheet("background: rgba(0,0,0,200); color: white; font: bold 14px 'Segoe UI';"
+                             "border: 2px solid #c9a44c; border-radius: 10px; padding: 8px;");
+        aviso->adjustSize();
+        aviso->move(width()/2 - aviso->width()/2, height()/2 - aviso->height()/2);
+        aviso->show();
+        QTimer::singleShot(3000, aviso, [=]() { aviso->deleteLater(); });
+    });
+
+    connect(btnNo, &QPushButton::clicked, this, [=]() {
+        pregunta->deleteLater();
+        btnSi->deleteLater();
+        btnNo->deleteLater();
+    });
+}
+

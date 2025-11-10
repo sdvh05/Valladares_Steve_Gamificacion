@@ -94,55 +94,41 @@ void MinijuegoKant::actualizarDialogoKant(){
     switch (EstadoActual) {
     case 0:
         dialogo << "Bienvenido al Aula"
-                << "Aqui Seras \n presentado con:"
-                << "Preguntas tal como en \n los Minijuegos"
-                << "Y un dilema a resolver"
-                <<"Usa las teclas 1,2,3,4 \n para Responder"
-                << "Mucha Suerte";
+                << "Alrededor del Aula \n hay Pistas escondidas"
+                <<"Estas te ayudaran a \n contestar las preguntas"
+                <<"Busca en los diferentes \n objetos que hay \n en el Aula"
+                <<"Estos 2 libros no son pistas: \n pero igual contienen conocimiento sobre  \n la Crítica de la razón ";
+
         break;
     case 1:
-        dialogo << "Aqui va Tu Primera Pista:"
-                << "No todo lo que se percibe es conocimiento. "
-                << "La experiencia necesita estructura.";
+        dialogo << "Recuerda que las pistas"
+                << "Van Acorde al numero de \n la pregunta";
         break;
     case 2:
-        dialogo << "Ahora una Segunda Pista"
-                <<"El deber no depende de las consecuencias,"
-                <<" sino de la intención.";
+        dialogo << "Aprendes Rapido"
+                <<"Continua asi y saldras \n lleno de conocimiento";
         break;
     case 3:
-        dialogo << "La Tercera Pista es:"
-                <<"La verdad sin ética puede ser violencia"
-                <<"La ética sin verdad puede ser ceguera";
-
+        dialogo << "Encuentra todas las pistas"
+                <<"Te hara la vida mas facil";
         break;
     case 4:
-        dialogo <<"Pasamos con la 4ta pista:"
-                <<"El conocimiento te dice qué es."
-                <<"La moral te dice qué debe ser.";
-
+        dialogo << "¿Has leigo los libros?"
+                <<"¿Que te parecieron?";
         break;
     case 5:
-        dialogo <<"Como ultima pista \n te digo:..."
-                <<"La libertad no es hacer lo que quieras..."
-                <<"sino obedecer la ley que tú mismo te das.”";
-
-    case 6:
-        dialogo <<"Quieres un Resumen de las Pistas?"
-                <<"1) No todo lo que se percibe es conocimiento. \nLa experiencia necesita estructura"
-                <<"2) El deber no depende de las consecuencias, \n sino de la intención.”"
-                <<"3) La verdad sin ética puede ser violencia. \n La ética sin verdad puede ser ceguera"
-                <<"4) El conocimiento te dice qué es. \n La moral te dice qué debe ser”"
-                <<"5) La libertad no es hacer lo que quieras, \n sino obedecer la ley que tú mismo te das";
+        dialogo <<"Ya casi llegas ahi"
+                <<"Sigue Adelante casi completas \n todas las preguntas.";
         break;
 
-    case 7: //cuando respondan bien el acertijo (DILEMA)
+    case 6:
         dialogo <<"EXCELENTE!!"
                 <<"Han comprendido. El deber moral no es ciego ni frío"
                 <<"es racional, universal y humano.”";
-
+        break;
     default:
-        dialogo << "Hola";
+        dialogo << "Excelente"
+            << "Si buscas el conocimiento \n las pistas te guiaran \n a la verdad";
         break;
     }
 
@@ -320,8 +306,7 @@ void MinijuegoKant::onMovimientoUpdate() {
 
 
     // --- Final ---
-    QRect zonaFinal(-28,408,50,50);
-
+    QRect zonaFinal(-68,554,10,500);
 
     if (rectJugador.intersects(zonaFinal) && termino) {
         SalirMinijuego();
@@ -473,11 +458,6 @@ void MinijuegoKant::actualizarRespuestas() {
 }
 
 void MinijuegoKant::ActualizarPregunta(){
-    if (preguntas.isEmpty()) {
-        responderAlDilema();
-        return;
-    }
-
     cargarPreguntaActual();
     EstadoActual++;
     qDebug() <<EstadoActual;
@@ -538,7 +518,7 @@ void MinijuegoKant::cargarPreguntaActual() {
         qDebug() << "No hay más preguntas en la cola.";
         labelPregunta->setText("¡Has Completado Misterio de Kant!");
         labelRespuestas->hide();
-
+        termino=true;
         ultimaPregunta =true;
     }
 }

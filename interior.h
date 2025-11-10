@@ -33,6 +33,7 @@ private:
     QMap<int, Npc*> npcs; // mapa pasillo -> npc
     void crearNpcs();
     void actualizarNpc();
+    void mostrarPreguntaNPC();
 
 protected:
     void onMovimientoUpdate() override;

@@ -272,37 +272,37 @@ void ColaPreguntas::cargarPreguntasKant() {
     clear();
 
     enqueue(Pregunta(
-        "Seleccione el mandato cuya obligación viene \n del miedo al castigo o la búsqueda de un premio:",
+        "1) Seleccione el mandato cuya obligación viene \n del miedo al castigo o la búsqueda de un premio:",
         "Imperativo Hipotético", "Imperativo categórico", "Ambos", "Ninguno",
         'A', "kant"
         ));
 
     enqueue(Pregunta(
-        "Para Emanuel Kant, es posible conocer lo que las cosas \n nos permiten a través de nuestros sentidos:",
+        "2) Para Emanuel Kant, es posible conocer lo que las cosas \n nos permiten a través de nuestros sentidos:",
         "Conocimiento Noumenico", "Conocimiento fenoménico", "Conocimiento Empírico", "Conocimiento Racional",
         'B', "kant"
         ));
 
     enqueue(Pregunta(
-        "Kant decía que el lema de la ilustración era \n 'Sapere aude', que significa:",
+        "3) Kant decía que el lema de la ilustración era \n 'Sapere aude', que significa:",
         "Sopesa tus acciones", "Atrévete a saber por ti mismo", "Saber a la fuerza", "Someterse al conocimiento",
         'B', "kant"
         ));
 
     enqueue(Pregunta(
-        "Kant (igual que Copérnico cambió el centro del universo de la tierra al sol),\n cambia el centro del conocimiento del objeto al sujeto, a esto se le llama:",
+        "4) Kant (igual que Copérnico cambió el centro del universo de la tierra al sol),\n cambia el centro del conocimiento del objeto al sujeto, a esto se le llama:",
         "Subjetivismo", "Prejuicio", "Giro copernicano", "Suerte",
         'C', "kant"
         ));
 
     enqueue(Pregunta(
-        "La postura conciliadora de Kant respecto a los empiristas y racionalistas \n define que los datos experimentales son la fuente del conocimiento racional del sujeto:",
+        "5) La postura conciliadora de Kant respecto a los empiristas y racionalistas \n define que los datos experimentales son la fuente del conocimiento racional del sujeto:",
         "Racionalismo", "Empirismo", "Criticismo", "Escepticismo",
         'C', "kant"
         ));
 
     enqueue(Pregunta(
-        "De las siguientes obras de Emanuel Kant, seleccione \n aquella que define su epistemología:",
+        "6) De las siguientes obras de Emanuel Kant, seleccione \n aquella que define su epistemología:",
         "Critica de la razón práctica", "Critica de la razón pura", "Critica del juicio", "Critica fenomenológica",
         'B', "kant"
         ));

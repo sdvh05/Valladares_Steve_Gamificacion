@@ -33,6 +33,9 @@ public:
     void DetenerAnimacion();
 
     QList<bool> puertas = {false, false, false, false};
+    // arte,politica.ciencia, historia...
+
+    QList<bool> ganadas = {false, false, false, false};
 
     void MoverSiNoColisiona(int dx, int dy, const QVector<QRect>& obstaculos);
     void SetAnimacionMovimiento(int velocidad);
@@ -52,7 +55,8 @@ public:
 
     int Bando=0;
     bool tieneMapa=false;
-    bool tieneLLave=false;
+    //bool tieneLLave=false;
+    bool tieneLLave=true;
 
     //nuevos
     QString nombre;

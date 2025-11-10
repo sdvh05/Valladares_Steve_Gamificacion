@@ -523,6 +523,7 @@ void MinijuegoDescartes::SalirMinijuego(){
     inventarioGlobal->agregarMedallaDescartes();
 
 
+
     this->close();
 }
 

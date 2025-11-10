@@ -338,6 +338,7 @@ void MinijuegoPolitica::SalirMinijuego(){
 
     jugador->move(150,500);
     interior->show();
+    ResetearMovimiento();
 
 
     this->close();
@@ -403,6 +404,7 @@ void MinijuegoPolitica::mostrarResultadoTemporal(bool reiniciar) {
                 ActualizarCorazones(ganaste);
                 if(ganaste){
                     inventarioGlobal->agregarMedallaPolitica();
+                    jugador->ganadas[1]=true;
                     puntos+=30;
                 }
                 timerMole->stop();

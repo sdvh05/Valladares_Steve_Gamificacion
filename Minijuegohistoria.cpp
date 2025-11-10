@@ -188,7 +188,7 @@ void MinijuegoHistoria::onMovimientoUpdate() {
         ResetearMovimiento();
         jugador->move(400,818);
         this->update();
-        ganaste = false;
+        //ganaste = false;
         actualizarRespuestas();
     }
 
@@ -219,6 +219,7 @@ void MinijuegoHistoria::onMovimientoUpdate() {
             ActualizarCorazones(ganaste);
             if(ganaste){
                 inventarioGlobal->agregarMedallaHistoria();
+                jugador->ganadas[3]=true;
                 puntos+=30;
                 }
             termino = true;

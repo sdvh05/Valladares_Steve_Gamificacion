@@ -184,7 +184,7 @@ void Combate::configurarObstaculos() { obstaculos.clear(); }
 void Combate::iniciarTurno() {
     jugadorRespondio = false;
     enemigoRespondio = false;
-    timerRespuesta->start(8000); // IA responde en 8 segundos
+    timerRespuesta->start(7000); // IA responde en 7 segundos
 }
 
 void Combate::cargarPreguntaActual() {
@@ -427,7 +427,7 @@ void Combate::AnimarAtaque(bool jugadorAtaca, std::function<void()> onFinalizado
     connect(mover, &QPropertyAnimation::finished, this, [=]() {
         // Cambiar animación a ataque
         if (jugadorAtaca) {
-            auto datosAtk = jugador->obtenerAnimacion("attack");
+            auto datosAtk = jugador->obtenerAnimacion("melee");
             jugador->SetAnimacion(datosAtk.ruta, datosAtk.frames);
 
             auto datosHurt = npc->obtenerAnimacion("hurt");

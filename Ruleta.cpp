@@ -152,12 +152,13 @@ void RuletaWidget::paintEvent(QPaintEvent*)
     }
 
     // Centrar bola / medallón en el centro
-    QRectF centroRect(cx - radio * 0.26, cy - radio * 0.26, radio * 0.52, radio * 0.52);
+    QRectF centroRect(cx - radio * 0.33, cy - radio * 0.33, radio * 0.66, radio * 0.66);
     QRadialGradient medGrad(centroRect.center(), centroRect.width() / 2);
-    medGrad.setColorAt(0.0, QColor(245, 240, 220));
-    medGrad.setColorAt(1.0, QColor(120, 80, 40));
+    medGrad.setColorAt(0.0, QColor(250, 245, 230));
+    medGrad.setColorAt(0.6, QColor(180, 140, 80));
+    medGrad.setColorAt(1.0, QColor(90, 60, 30));
     p.setBrush(medGrad);
-    p.setPen(QPen(QColor(40, 20, 10), 3));
+    p.setPen(QPen(QColor(40, 20, 10), 4));
     p.drawEllipse(centroRect);
 
     // Decoraciones: anillos concéntricos
@@ -181,10 +182,17 @@ void RuletaWidget::paintEvent(QPaintEvent*)
     // Si la ruleta ya se detuvo, dibujar un marco y el resultado en el centro
     if (!girando)
     {
-        p.setPen(QPen(QColor(245, 240, 220)));
-        QFont big("Times", 10, QFont::Bold);
+        p.setPen(QPen(QColor(30, 20, 10)));
+        //p.setPen(QPen(QColor(255, 245, 220)));
+        QFont big("Times New Roman", 16, QFont::Bold);
+        big.setStyleStrategy(QFont::PreferAntialias);
         p.setFont(big);
         QString txt = obtenerTextoCategoria(resultadoFinal);
+
+        // sombra leve para resaltar el texto
+        p.setPen(QPen(QColor(30, 20, 10)));
+       // p.drawText(centroRect.translated(2, 2), Qt::AlignCenter, txt);
+       // p.setPen(QPen(QColor(255, 245, 220)));
         p.drawText(centroRect, Qt::AlignCenter, txt);
     }
 }
@@ -241,7 +249,7 @@ void RuletaWidget::detenerRuleta()
 
     lblResultado->setText("Resultado: " + obtenerTextoCategoria(resultadoFinal));
     lblResultado->setGeometry(width()/2 - 140, height() - 110, 280, 30);
-    lblResultado->show();
+    //lblResultado->show();
 
     btnCerrar->setGeometry(width()/2 - 55, height() - 70, 110, 36);
     btnCerrar->show();

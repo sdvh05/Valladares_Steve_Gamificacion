@@ -249,6 +249,7 @@ void MinijuegoArte::SalirMinijuego(){
     ActualizarCorazones(ganaste);
     if (ganaste){
         inventarioGlobal->agregarMedallaArte();
+        jugador->puertas[0]=true;
         this->puntos+=30;
     }
 

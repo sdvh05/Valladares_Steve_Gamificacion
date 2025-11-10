@@ -183,23 +183,29 @@ Personaje::DatosAnimacion Npc::obtenerAnimacion(const QString& tipo)
     if (nombre.contains("Guardia", Qt::CaseInsensitive)) //gangster blanco
         base = "Sprites/Personajes/NPCs/Gangster/G2/";
 
-    else if (nombre.contains("Mercader", Qt::CaseInsensitive))
-        base = "Sprites/Personajes/NPCs/Mercader/";
+    else if (nombre.contains("Mix", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Rival/Mix/";
 
-    else if (nombre.contains("Aldeano", Qt::CaseInsensitive))
-        base = "Sprites/Personajes/NPCs/Aldeano/";
+    else if (nombre.contains("G1", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Grafiti/G1/";
 
-    else if (nombre.contains("Rey", Qt::CaseInsensitive))
-        base = "Sprites/Personajes/NPCs/Rey/";
+    else if (nombre.contains("G2", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Grafiti/G2/";
 
-    else if (nombre.contains("Sabio", Qt::CaseInsensitive))
-        base = "Sprites/Personajes/NPCs/Sabio/";
+    else if (nombre.contains("Rubio", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Gangster/G3/";
+
+    else if (nombre.contains("bluey", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Gangster/G4/";
+
+    else if (nombre.contains("Pass", Qt::CaseInsensitive))
+        base = "Sprites/Personajes/NPCs/Rival/Pass/";
 
     else if(nombre.contains("Empirista", Qt::CaseInsensitive))
         base = "Sprites/Personajes/NPCs/Rival/Emp/";
 
     else if(nombre.contains("Racionalista", Qt::CaseInsensitive))
-        base = "Sprites/Personajes/NPCs/Rival/Rac/";
+        base = "Sprites/Personajes/NPCs/Gangster/G4/";
 
     else if(nombre.contains("Kant", Qt::CaseInsensitive))
         base = "Sprites/Personajes/NPCs/Kant/";
@@ -210,11 +216,12 @@ Personaje::DatosAnimacion Npc::obtenerAnimacion(const QString& tipo)
 
     // Tipos de animaciones comunes
     if (tipo == "idle")      datos = { base + "Idle.png", 6 };
-    else if (tipo == "walk") datos = { base + "Walk.png", 8 };
+    else if (tipo == "walk") datos = { base + "Walk.png", 10};
     else if (tipo == "run")  datos = { base + "Run.png", 10 };
     else if (tipo == "talk") datos = { base + "Talk.png", 5 };
     else if (tipo == "hurt") datos = { base + "Hurt.png", 3};
     else if (tipo == "dead") datos = { base + "Dead.png", 4 };
+    else if (tipo == "attack") datos = { base + "Attack.png", 4 };
     else                     datos = { base + "Idle.png", 6 };
 
     return datos;
